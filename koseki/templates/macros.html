@@ -1,0 +1,78 @@
+{% macro render_field(field) %}
+    <div class="control-group{{ ' error' if field.errors }}">
+        <label class="control-label">{{ field.label }}</label>
+        <div class="controls">
+            {{ field(**kwargs)|safe }}
+            {% if field.errors %}
+            <span class="help-block">
+                {% for error in field.errors %}
+                {{ error }}</br>
+                {% endfor %}
+            </span>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+{% macro render_static(label, type, value) %}
+    <div class="control-group">
+        <label class="control-label">{{ label }}</label>
+        <div class="controls">
+            <input type="{{ type }}" value="{{ value }}" readonly>
+        </div>
+    </div>
+{% endmacro %}
+{% macro status(status) -%}
+{% if status == 'active': %}
+    <span class="label label-success">Active</span>
+{% elif status == 'pending': %}
+    <span class="label label-warning">Pending</span>
+{% elif status == 'expired': %}
+    <span class="label label-important">Expired</span>
+{% else : %}
+    <span class="label">{{ status }}</span>
+{% endif %}
+{%- endmacro %}
+{% macro group(group) -%}
+    <span class="label label-info">{{ group }}</span>
+{%- endmacro %}
+{% macro person_tabs(uid, current) -%}
+    <ul class="nav nav-tabs">
+    {% set tabs = (('','General'),('groups','Groups'),('fees','Fees'),('admin','Power Tools')) %}
+    {% for uri,name in tabs %}
+        <li{{ ' class=active' if current == uri }}>
+            <a href="{{ config['URL_BASE'] }}/user/{{ uid }}{{ '/'+uri if uri != '' }}">{{ name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{%- endmacro %}
+{% macro fee_tabs(current) -%}
+    <ul class="nav nav-tabs">
+    {% for uri,name in (('list_fees','List'),('register_fee','Register')) %}
+        <li{{ ' class=active' if current == uri }}>
+            <a href="{{ url_for(uri) }}">{{ name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{%- endmacro %}
+{% macro membership_tabs(current) -%}
+    <ul class="nav nav-tabs">
+    {% for uri,name in (('','Overview'),('edit','Edit profile')) %}
+        <li{{ ' class=active' if current == uri }}>
+            <a href="{{ config['URL_BASE'] }}/membership{{ '/'+uri if uri != '' }}">{{ name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{%- endmacro %}
+{% macro gravatar_blob(url) -%}
+<img src="{{ url }}?s=80&d=identicon" style="width: 80px; height: 80px; float:left; margin-right: 10px; border-radius: 500px;">
+{%- endmacro %}
+{% macro fee_id(fid, start, end, now) -%}
+{% if now > end : %}
+    <span class="label label-important">{{ fid }}</span>
+{% elif now > start : %}
+    <span class="label label-success">{{ fid }}</span>
+{% else : %}
+    <span class="label label-warning">{{ fid }}</span>
+{% endif %}
+{%- endmacro %}
+

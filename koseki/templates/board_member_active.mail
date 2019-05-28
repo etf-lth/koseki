@@ -1,0 +1,7 @@
+{{ member.fname }} {{ member.lname }}'s membership is now active.
+
+The user's profile:
+{{ config['URL_BASE'] }}/user/{{ member.uid }}
+
+/ koseki
+

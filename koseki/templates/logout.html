@@ -1,0 +1,14 @@
+{% extends "base_modal.html" %}
+{% block title %}Signed out{% endblock %}
+{% block modal_title %}Signed out{% endblock %}
+{% block body_class %}modal-login{% endblock %}
+{% block header %}
+{% endblock %}
+{% block content %}
+<div class="alert alert-success">
+    <h4>Signed out</h4>
+    You have now successfully signed out.<br/>
+    Close this browser for good measure.
+</div>
+<a href="{{ url_for('index') }}" class="btn"><i class="icon-lock"></i> Sign in</a>
+{% endblock %}

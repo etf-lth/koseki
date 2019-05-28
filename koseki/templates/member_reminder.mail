@@ -1,0 +1,18 @@
+Hello, {{ member.fname }}.
+
+Your membership will expire in {{ days_left }} days.
+
+You may renew your membership by either:
+
+1) Paying the fee specified on http://etf.nu/om-etf/ to Bankgiro 281-1362. Please state your name as reference.
+
+or 
+
+2) Paying the fee cash to the treasurer. 
+
+
+
+See you soon again!
+
+ElektroTekniska Föreningen
+http://medlem.etf.nu/

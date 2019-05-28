@@ -1,0 +1,6 @@
+Hello, {{ member.fname }}.
+
+Your membership is now active.
+
+ElektroTekniska Föreningen
+http://medlem.etf.nu/

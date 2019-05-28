@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "macros.html" import fee_tabs, fee_id %}
+{% block title %}Export mail addresses{% endblock %}
+{% block content %}
+<small>This is a listing of all active members.</small>
+<pre>
+{% for member in persons %}{{ member.email }};
+{% endfor %}
+</pre>
+{% endblock %}
+
+

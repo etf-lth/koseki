@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field %}
+{% block title %}Enroll member{% endblock %}
+{% block content %}
+<h1>Enroll member</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <div class="control-row">
+            {{ render_field(form.fname) }}
+            {{ render_field(form.lname) }}
+        </div>
+        <div class="control-row">
+            {{ render_field(form.email) }}
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Ancillary information</legend>
+        <div class="control-row">
+            {{ render_field(form.stil) }}
+        </div>
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary"><i class="icon-white icon-plus-sign"></i> Enroll</button>
+    </div>
+</form>
+{% endblock %}

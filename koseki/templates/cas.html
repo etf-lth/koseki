@@ -1,0 +1,21 @@
+{% extends "base_modal.html" %}
+{% block title %}CAS{% endblock %}
+{% block modal_title %}CAS Authentication{% endblock %}
+{% block body_class %}modal-login{% endblock %}
+{% block header %}
+{% endblock %}
+{% block content %}
+<div class="alert alert-error">
+    <h4>CAS Authentication failed</h4>
+    {% if error == 'unknown-uid' %}
+        CAS login was successful, but your identity is not
+        known to this system.
+    {% elif error == 'cas-failed' %}
+        CAS failed to verify your identity.
+    {% else %}
+        CAS authentication failed for an unknown reason.
+    {% endif %}
+</div>
+<a href="/" class="btn"><i class="icon-lock"></i> Sign in</a>
+{% endblock %}
+

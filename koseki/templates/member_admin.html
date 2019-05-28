@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field, status, group, person_tabs, gravatar_blob %}
+{% block title %}{{ person.fname }} {{ person.lname }}{% endblock %}
+{% block content %}
+{{ gravatar_blob(gravatar(person.email)) }}
+<h1>{{ person.fname }} {{ person.lname }}</h1>
+{{ person_tabs(person.uid, 'admin') }}
+<div class="row">
+<div class="span6">
+<form method="post">
+    <legend>Delete member</legend>
+    <div class="control-group">
+        <div class="controls">
+            <input type="checkbox" name="run_hooks" checked> Run hooks i.e remove from mailing lists, access control, etc.
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="checkbox" name="delete_all" checked> Delete fees, groups. Fix enroller id
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="checkbox" name="confirm"> <strong class="text-error">Yes, I understand that I am about to permanently delete NN</strong>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" name="delete" class="btn btn-danger"><i class="icon-white icon-trash"></i> Delete member</button>
+    </div>
+</form>
+</div>
+<div class="span6">
+<form method="post">
+    <legend>Delete fees</legend>
+    <div class="control-group">
+        <div class="controls">
+            <input type="checkbox" name="set_expired" checked> Set status to expired
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="checkbox" name="confirm"> <strong class="text-error">Yes, I understand that I am about to delete the payment history of NN</strong>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" name="delete" class="btn btn-danger"><i class="icon-white icon-trash"></i> Delete fees</button>
+    </div>
+</form>
+</div></div>
+
+{% endblock %}
+

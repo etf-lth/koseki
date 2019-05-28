@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Message{% endblock %}
+{% block content %}
+{% for msg in messages %}
+<div class="alert {{ msg.class }}">
+    <h4>{{ msg.title }}</h4>
+    {{ msg.message }}
+</div>
+{% endfor %}
+{% endblock %}

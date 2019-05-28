@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field, fee_tabs %}
+{% block title %}Register fee{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/jquery-ui-1.10.3.custom.min.css" />
+<script src="{{ config['URL_BASE']|safe }}/static/js/jquery-1.9.1.js"></script>
+<script src="{{ config['URL_BASE']|safe }}/static/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script>
+    $(function() {
+        $(".autocomplete_member").autocomplete({
+            source: function(req, resp) {
+                $.getJSON("{{ config['URL_BASE']|safe }}/api/ac/members",{
+                    term: req.term
+                    }, function(data) {
+                    resp(data.data);
+                })
+                .error(function(){response();});
+            }
+        });
+    });
+</script>
+{% endblock %}
+{% block content %}
+{{ fee_tabs('register_fee') }}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <div class="control-row">
+            {{ render_field(form.uid, class='autocomplete_member', autofocus=true) }}
+            {{ render_field(form.amount) }}
+            {{ render_field(form.method) }}
+            {% if member_of('admin') %}
+            <br/>
+            {{ render_field(form.retro) }}
+            {% endif %}
+        </div>
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary"><i class="icon-white icon-plus-sign"></i> Register</button>
+    </div>
+</form>
+{% endblock %}
+

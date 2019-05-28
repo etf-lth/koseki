@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/bootstrap.min.css" />
+        <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
+        <script src="{{ config['URL_BASE']|safe }}/static/js/jquery-1.9.1.js"></script>
+        <script src="{{ config['URL_BASE']|safe }}/static/js/bootstrap.min.js"></script>
+        <script src="{{ config['URL_BASE']|safe }}/static/js/koseki.js"></script>
+        <title>{% block title %}{% endblock %}</title>
+        <style>
+        @media print {
+            div.navbar { visibility: hidden; }
+            a[href]:after {
+                content: none !important;
+            }
+            thead {display: table-header-group;}
+        }
+        </style>
+        {% block scripts %}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <ul class="nav">
+                        {% if user %}
+                        <li><span class="brand">{{ user }}</span></li>
+                        {% endif %}
+                        {% for item in make_nav() %}
+                        <li><a href="{{ config['URL_BASE'] }}{{ item.uri }}"><i class="{{ item.icon }}"></i> {{ item.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% for alert in alerts %}
+            <div class="alert {{ alert.class }}">
+                <h4>{{ alert.title }}</h4>
+                {{ alert.message }}
+            </div>
+            {% endfor %}
+            {% block content %} {% endblock %}
+            <footer>
+                <hr>
+                <small class="muted">{{ config['FOOTER']|safe }}</small>
+            </footer>
+        </div>
+    </body>
+</html>

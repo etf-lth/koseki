@@ -1,0 +1,2 @@
+{% block content %}{% for fee in fees %}{{ fee.fid }};{{ uid_to_name(fee.uid) }};{{ fee.registered|date }};{{ fee.start|date }};{{ fee.end|date }};{{ fee.amount }};{{ fee.method if fee.method else 'N/A' }};{{ uid_to_name(fee.registered_by) }}
+{% endfor %}{% endblock %}
