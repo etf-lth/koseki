@@ -53,4 +53,4 @@ class Fee(Base):
     registered = Column(DateTime, default=datetime.now)
     start = Column(DateTime)
     end = Column(DateTime)
-    method = Column(Enum('cash','bankgiro','creditcard'), default='cash')
+    method = Column(Enum('swish','cash','bankgiro','creditcard'), default='swish')

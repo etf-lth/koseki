@@ -22,7 +22,7 @@ class FeeForm(Form):
 
     uid = TextField('Member ID', validators=[DataRequired()])
     amount = DecimalField('Amount (SEK)')
-    method = SelectField('Payment Method', choices=[('cash','Cash'),('bankgiro','Bankgiro'),('creditcard','Credit card')])
+    method = SelectField('Payment Method', choices=[('swish','Swish'),('cash','Cash'),('bankgiro','Bankgiro'),('creditcard','Credit card')])
     retro = DateField('Retroactive fee (Date)', validators=[Optional()])
 
 @app.route('/fees/csv')
