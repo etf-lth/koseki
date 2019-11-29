@@ -56,7 +56,7 @@ CREATE TABLE `group` (
 
 LOCK TABLES `group` WRITE;
 /*!40000 ALTER TABLE `group` DISABLE KEYS */;
-INSERT INTO `group` VALUES (1,'admin','System Administrator'),(2,'enroll','Allow enrolling new members'),(3,'accounter','Allow registering fees'),(4,'board','Allow enrolling and browsing'),(7,'ordf','Ordforande'),(8,'vordf','Vice ordforande'),(9,'sekr','Sekreterare'),(10,'krangare','Krangare'),(11,'m3','M3'),(12,'revisor','Revisor'),(13,'ddg','DDG'),(14,'pr','PR/Webb-ansvarig'),(15,'sales','Physical access (Salto) to the warehouse'),(16,'mek','Physical access (Salto) to the engineering workshop'),(17,'stper','Passagesystemet Sankte Per');
+INSERT INTO `group` VALUES (1,'admin','System Administrator'),(2,'enroll','Allow enrolling new members'),(3,'accounter','Allow registering fees'),(4,'board','Allow enrolling and browsing'),(7,'ordf','Ordforande'),(8,'vordf','Vice ordforande'),(9,'sekr','Sekreterare'),(10,'krangare','Krangare'),(11,'m3','M3'),(12,'revisor','Revisor'),(13,'ddg','DDG'),(14,'pr','PR/Webb-ansvarig'),(15,'sales','Physical access (Salto) to the warehouse'),(16,'mek','Physical access (Salto) to the engineering workshop');
 /*!40000 ALTER TABLE `group` ENABLE KEYS */;
 UNLOCK TABLES;
 
