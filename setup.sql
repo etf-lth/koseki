@@ -9,6 +9,10 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+CREATE DATABASE IF NOT EXISTS koseki;
+USE koseki;
+
 --
 -- Table structure for table `fee`
 --
@@ -24,6 +28,7 @@ CREATE TABLE `fee` (
   `registered` datetime DEFAULT NULL,
   `start` datetime DEFAULT NULL,
   `end` datetime DEFAULT NULL,
+  `method` enum('swish', 'cash', 'bankgiro', 'creditcard') COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`fid`),
   KEY `uid` (`uid`),
   KEY `registered_by` (`registered_by`)

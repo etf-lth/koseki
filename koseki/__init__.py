@@ -21,16 +21,11 @@ sched = Scheduler()
 import koseki.update
 
 def run_koseki():
-    #if storage.session.query(Person).count() < 1:
-    #    storage.add(Person(fname='Fredrik', lname='Ahlberg',
-    #        email='fredrik@z80.se', password='10e21d1b794002ca4113540e3605a8c461d61474'))
-    #    storage.add(Group(name='admin', descr='System Administrator'))
-    #    storage.add(Group(name='enroll', descr='Allow enrolling new members'))
-    #    storage.add(Group(name='accounter', descr='Allow registering fees'))
-    #    storage.add(Group(name='board', descr='Allow enrolling and browsing'))
-    #    storage.add(PersonGroup(uid=1, gid=1))
-    #    storage.commit()
-
+#    if storage.session.query(Person).count() < 1:
+#        storage.add(Person(fname='Test', lname='Testsson',
+#            email='test@example.com', password='5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8')) # pass: password
+#        storage.add(PersonGroup(uid=1, gid=1))
+#        storage.commit()
     sched.start()
     app.secret_key = os.urandom(24)
     app.wsgi_app = reverse.ReverseProxied(app.wsgi_app)

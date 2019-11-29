@@ -8,6 +8,11 @@ from datetime import datetime
 @nav('/','icon-home','Home',-999)
 @require_session()
 def index():
+    if storage.session.query(Person).count() < 1:
+        storage.add(Person(fname='Test', lname='Testsson',
+            email='test@example.com', password='5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8')) # pass: password
+        storage.add(PersonGroup(uid=1, gid=1))
+        storage.commit()
     if member_of('admin') or member_of('board'):
         active = storage.session.query(Person).filter_by(state='active').count()
         pending = storage.session.query(Person).filter_by(state='pending').count()
