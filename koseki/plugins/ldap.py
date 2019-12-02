@@ -3,7 +3,7 @@ from koseki.core import member_of, require_session
 from koseki.db.types import Person
 from flask import request, abort
 
-import ldap
+from . import ldap
 import json
 
 @app.route('/ldap/uid/<uid>')

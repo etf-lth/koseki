@@ -4,7 +4,7 @@ from koseki.mail import send_mail
 from datetime import datetime, timedelta
 import logging
 
-@sched.cron_schedule(hour=07, minute=00, second=0)
+@sched.cron_schedule(hour=7, minute=0, second=0)
 def update_members():
     with app.app_context():
         logging.info('Update members')

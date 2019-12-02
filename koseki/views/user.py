@@ -51,12 +51,12 @@ def member_groups(uid):
                 continue
 
             current_state = member_of(group, person)
-            if sum(1 for gid in request.form.keys() if gid == str(group.gid)):
+            if sum(1 for gid in list(request.form.keys()) if gid == str(group.gid)):
                 # Member of the group, add if needed
                 not current_state and storage.add(PersonGroup(uid=person.uid, gid=group.gid))
             else:
                 # Not a member, remove if needed
-                current_state and map(storage.delete, (g for g in person.groups if g.gid == group.gid))
+                current_state and list(map(storage.delete, (g for g in person.groups if g.gid == group.gid)))
 
         storage.commit()
 

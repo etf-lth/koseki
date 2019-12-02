@@ -1,7 +1,7 @@
 import logging
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG, filename='koseki.log')
-import reverse
-from db.storage import Storage
+from . import reverse
+from .db.storage import Storage
 from koseki.db.types import Person, Group, PersonGroup
 from flask import Flask
 from flask.ext.babel import Babel

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-apt install python-pymysql python-mysqldb -y
+apt install libmariadb-dev -y

@@ -1,5 +1,5 @@
 import sqlalchemy
-from types import *
+from .types import *
 from flask import g
 
 class Storage:

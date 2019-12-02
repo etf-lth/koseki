@@ -48,7 +48,7 @@ def calc_nav():
 @app.context_processor
 def gravatar_processor():
     def gravatar(mail):
-        return '//gravatar.com/avatar/' + hashlib.md5(mail).hexdigest()
+        return '//gravatar.com/avatar/' + hashlib.md5(mail.encode('utf-8')).hexdigest()
     return dict(gravatar=gravatar)
 
 @app.template_filter('date')
@@ -65,7 +65,7 @@ def uid_to_name():
 def member_of(group, person = None):
     if person is None:
         person = current_user()
-    if type(person) in (int, long):
+    if type(person) in (int, int):
         person = storage.session.query(Person).filter_by(uid=person).scalar()
     if type(group) == int:
         group = storage.session.query(Group).filter_by(gid=group).scalar()

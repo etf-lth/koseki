@@ -3,7 +3,7 @@ from flask import url_for, render_template, session, redirect, escape, request
 from koseki.core import start_session, alternate_login
 from koseki.db.types import Person
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 @alternate_login
 def cas_login():
@@ -18,7 +18,7 @@ def cas_ticket():
 
     alert = None
 
-    u = urllib.urlopen(app.config['CAS_SERVER']+'/cas/validate?ticket='+ticket+'&service='+app.config['URL_BASE']+'/cas')
+    u = urllib.request.urlopen(app.config['CAS_SERVER']+'/cas/validate?ticket='+ticket+'&service='+app.config['URL_BASE']+'/cas')
     response = u.readline()
     if response == "yes\n":
         uid = u.readline().strip()

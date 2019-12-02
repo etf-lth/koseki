@@ -9,7 +9,7 @@ def login():
     alert = None
     if request.method == 'POST':
         person = storage.session.query(Person).filter_by(email=request.form['email']).scalar()
-        if person and person.password == hashlib.sha1(request.form['password']).hexdigest():
+        if person and person.password == hashlib.sha1(request.form['password'].encode('utf-8')).hexdigest():
             start_session(person.uid)
             return redirect(request.form['redir'])
         else:
