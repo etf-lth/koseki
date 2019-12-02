@@ -19,9 +19,9 @@ def cas_ticket():
     alert = None
 
     u = urllib.request.urlopen(app.config['CAS_SERVER']+'/cas/validate?ticket='+ticket+'&service='+app.config['URL_BASE']+'/cas')
-    response = u.readline()
-    if response == "yes\n":
-        uid = u.readline().strip()
+    response = u.readline().decode('utf-8')
+    if response == 'yes\n':
+        uid = u.readline().decode('utf-8').strip()
         u.close()
 
         person = storage.session.query(Person).filter_by(stil=uid).scalar()
