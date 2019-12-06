@@ -2,11 +2,16 @@
 {% from "macros.html" import fee_tabs, fee_id %}
 {% block title %}Export mail addresses{% endblock %}
 {% block content %}
-<small>This is a listing of all active members.</small>
-<pre>
-{% for member in persons %}{{ member.email }};
+<h1>Export mail addresses</h1>
+<span class="text-muted">This is a listing of all active members.</span>
+<hr>
+
+<div class="alert alert-secondary">
+{% for member in persons %}
+    {{ member.email }};<br />
 {% endfor %}
-</pre>
+</div>
+
 {% endblock %}
 
 

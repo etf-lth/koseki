@@ -1,78 +1,104 @@
-{% macro render_field(field) %}
-    <div class="control-group{{ ' error' if field.errors }}">
-        <label class="control-label">{{ field.label }}</label>
-        <div class="controls">
-            {{ field(**kwargs)|safe }}
-            {% if field.errors %}
-            <span class="help-block">
-                {% for error in field.errors %}
-                {{ error }}</br>
-                {% endfor %}
-            </span>
-            {% endif %}
-        </div>
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% macro render_field(field, class='', autofocus=false) %}
+    <div class="form-group{{ ' error' if field.errors }}">
+        <div class="d-none">{{ kwargs }}</div>
+        {{ wtf.form_field(field, class="form-control " + class, autofocus=autofocus) }}
+        {% if field.errors %}
+        <span class="help-block">
+            {% for error in field.errors %}
+            {{ error }}</br>
+            {% endfor %}
+        </span>
+        {% endif %}
     </div>
 {% endmacro %}
-{% macro render_static(label, type, value) %}
-    <div class="control-group">
-        <label class="control-label">{{ label }}</label>
-        <div class="controls">
-            <input type="{{ type }}" value="{{ value }}" readonly>
-        </div>
+
+{% macro render_static(field, class='') %}
+    <div class="form-group">
+        <div class="d-none">{{ kwargs }}</div>
+        {{ wtf.form_field(field, class="form-control " + class, autofocus=autofocus, readonly=True) }}
     </div>
 {% endmacro %}
+
 {% macro status(status) -%}
 {% if status == 'active': %}
-    <span class="label label-success">Active</span>
+    <h5 class="d-inline"><span class="badge badge-success">Active</span></h5>
 {% elif status == 'pending': %}
-    <span class="label label-warning">Pending</span>
+    <h5 class="d-inline"><span class="badge badge-warning">Pending</span></h5>
 {% elif status == 'expired': %}
-    <span class="label label-important">Expired</span>
+    <h5 class="d-inline"><span class="badge badge-danger">Expired</span></h5>
 {% else : %}
-    <span class="label">{{ status }}</span>
+    <h5 class="d-inline"><span class="badge badge-secondary">{{ status }}</span></h5>
 {% endif %}
 {%- endmacro %}
+
 {% macro group(group) -%}
-    <span class="label label-info">{{ group }}</span>
+    <h5 class="d-inline"><span class="badge badge-primary">{{ group }}</span></h5>
 {%- endmacro %}
-{% macro person_tabs(uid, current) -%}
-    <ul class="nav nav-tabs">
-    {% set tabs = (('','General'),('groups','Groups'),('fees','Fees'),('admin','Power Tools')) %}
-    {% for uri,name in tabs %}
-        <li{{ ' class=active' if current == uri }}>
-            <a href="{{ config['URL_BASE'] }}/user/{{ uid }}{{ '/'+uri if uri != '' }}">{{ name }}</a>
-        </li>
-    {% endfor %}
-    </ul>
+
+{% macro fee_method(method) -%}
+    <h5 class="d-inline"><span class="badge badge-primary">{{ method if method else 'N/A' }}</span></h5>
 {%- endmacro %}
-{% macro fee_tabs(current) -%}
-    <ul class="nav nav-tabs">
-    {% for uri,name in (('list_fees','List'),('register_fee','Register')) %}
-        <li{{ ' class=active' if current == uri }}>
-            <a href="{{ url_for(uri) }}">{{ name }}</a>
-        </li>
-    {% endfor %}
-    </ul>
-{%- endmacro %}
-{% macro membership_tabs(current) -%}
-    <ul class="nav nav-tabs">
-    {% for uri,name in (('','Overview'),('edit','Edit profile')) %}
-        <li{{ ' class=active' if current == uri }}>
-            <a href="{{ config['URL_BASE'] }}/membership{{ '/'+uri if uri != '' }}">{{ name }}</a>
-        </li>
-    {% endfor %}
-    </ul>
-{%- endmacro %}
-{% macro gravatar_blob(url) -%}
-<img src="{{ url }}?s=80&d=identicon" style="width: 80px; height: 80px; float:left; margin-right: 10px; border-radius: 500px;">
-{%- endmacro %}
+
 {% macro fee_id(fid, start, end, now) -%}
 {% if now > end : %}
-    <span class="label label-important">{{ fid }}</span>
+    <h5 class="d-inline"><span class="badge badge-danger">{{ fid }}</span></h5>
 {% elif now > start : %}
-    <span class="label label-success">{{ fid }}</span>
+    <h5 class="d-inline"><span class="badge badge-success">{{ fid }}</span></h5>
 {% else : %}
-    <span class="label label-warning">{{ fid }}</span>
+    <h5 class="d-inline"><span class="badge badge-warning">{{ fid }}</span></h5>
 {% endif %}
+{%- endmacro %}
+
+{% macro person_header(person, current, grav) -%}
+    <div class="row mb-3">
+        <div class="col-1">
+            <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com">
+                {{ gravatar_blob(grav) }}
+            </a>
+        </div>
+        <div class="col-10">
+            <h1 class="mt-3">{{ person.fname }} {{ person.lname }}</h1>
+        </div>
+    </div>
+    <br />
+    <ul class="pagination">
+    {% set tabs = (('','General'),('groups','Groups'),('fees','Fees'),('admin','Power Tools')) %}
+    {% for uri,name in tabs %}
+        <li class="page-item {{ ' active' if current == uri }}">
+            <a class="page-link" href="{{ config['URL_BASE'] }}/user/{{ person.uid }}{{ '/'+uri if uri != '' }}">{{ name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    <hr />
+{%- endmacro %}
+
+{% macro fee_tabs(current) -%}
+    <br />
+    <ul class="pagination">
+    {% for uri,name in (('list_fees','List'),('register_fee','Register')) %}
+        <li class="page-item {{ ' active' if current == uri }}">
+            <a class="page-link" href="{{ url_for(uri) }}">{{ name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    <hr />
+{%- endmacro %}
+
+{% macro membership_tabs(current) -%}
+    <br />
+    <ul class="pagination">
+    {% for uri,name in (('','Overview'),('edit','Edit profile')) %}
+        <li class="page-item {{ ' active' if current == uri }}">
+            <a class="page-link" href="{{ config['URL_BASE'] }}/membership{{ '/'+uri if uri != '' }}">{{ name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    <hr />
+{%- endmacro %}
+
+{% macro gravatar_blob(url) -%}
+<img src="{{ url }}?s=80&d=identicon" style="width: 80px; height: 80px; border-radius: 500px;">
 {%- endmacro %}
 

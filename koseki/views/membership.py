@@ -8,7 +8,7 @@ from wtforms import TextField, SelectMultipleField
 from wtforms.validators import DataRequired, Email
 
 @app.route('/membership')
-@nav('/membership','icon-user','My membership',10)
+@nav('/membership','user','My membership',10)
 @require_session()
 def membership_general():
     person = storage.session.query(Person).filter_by(uid=current_user()).scalar()
@@ -20,6 +20,7 @@ class EditForm(Form):
     fname = TextField('First name', validators=[DataRequired()])
     lname = TextField('Last name', validators=[DataRequired()])
     email = TextField('Email', validators=[Email()])
+    stil = TextField('StiL')
 
 @app.route('/membership/edit', methods=['GET', 'POST'])
 @require_session()
@@ -33,7 +34,7 @@ def membership_edit():
         'message': 'Profile editing is currently disabled'})
 
     if request.method == 'POST':
-        alerts.append({'class': 'alert-error',
+        alerts.append({'class': 'alert-danger',
             'title': 'Error',
             'message': 'Profile editing is currently disabled'})
 

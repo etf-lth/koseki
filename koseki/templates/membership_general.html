@@ -1,49 +1,69 @@
 {% extends "base.html" %}
-{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_id %}
+{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_method, fee_id %}
 {% block title %}My membership{% endblock %}
 {% block content %}
-<a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com">{{ gravatar_blob(gravatar(person.email)) }}</a>
-<h1>My membership<br><small>{{ person.fname }} {{ person.lname }}</small></h1>
+
+<div class="row mb-3">
+    <div class="col-1">
+        <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com">
+            {{ gravatar_blob(gravatar(person.email)) }}
+        </a>
+    </div>
+    <div class="col-10">
+        <h1 class="mb-0 font-weight-bold">My membership</h1>
+        <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
+    </div>
+</div>
+
 {{ membership_tabs('') }}
 
 <h4>Hello {{ person.fname }}!</h4>
 <p>
-{% if person.state == 'active' %}
-You are currently an <strong>active member</strong>.<br>
-Your membership expires <strong>{{ last_fee.end|date if last_fee else "whenever (database inconsistency!)" }}</strong>.
-{% elif person.state == 'pending' %}
-Your enrollment is <strong>pending</strong>. You will become an active member as soon
-as we have registered your payment of the membership fee.
-{% elif person.state == 'expired' %}
-You are <strong>currently not an active member</strong>. Become an active member by
-paying your membership fee.
-{% else %}
-We're sorry, but the database does not seem to know anything about your
-current membership state. Please report this :)
-<pre>
-state={{ person.state }}
-</pre>
-{% endif %}
+    {% if person.state == 'active' %}
+
+    You are currently an <strong>active member</strong>.<br>
+    Your membership expires
+    <strong>{{ last_fee.end|date if last_fee else "whenever (database inconsistency!)" }}</strong>.
+
+    {% elif person.state == 'pending' %}
+
+    Your enrollment is <strong>pending</strong>. You will become an active member as soon
+    as we have registered your payment of the membership fee.
+
+    {% elif person.state == 'expired' %}
+
+    You are <strong>currently not an active member</strong>. Become an active member by
+    paying your membership fee.
+
+    {% else %}
+
+    We're sorry, but the database does not seem to know anything about your
+    current membership state. Please report this :)
+    <pre>
+        state={{ person.state }}
+    </pre>
+    {% endif %}
 </p>
 <h4>Membership profile</h4>
-<dl class="dl-horizontal">
-    <dt>First name</dt>
-    <dd>{{ person.fname }}</dd>
-    <dt>Last name</dt>
-    <dd>{{ person.lname }}</dd>
-    <dt>Email</dt>
-    <dd>{{ person.email }}</dd>
-    <dt>StiL</dt>
-    <dd>{{ person.stil if person.stil else '<span class="muted">None</span>'|safe}}</dd>
-    <dt>State</dt>
-    <dd>{{ status(person.state) }}</dd>
-    <dt>Enrolled</dt>
-    <dd>{{ person.enrolled|date }}</dd>
-    <dt>Enrolled by</dt>
-    <dd>{{ uid_to_name(person.enrolled_by) }}</dd>
-</dl>
+<div class="row">
+    <div class="col-2 font-weight-bold text-right">First name</div>
+    <div class="col-10">{{ person.fname }}</div>
+    <div class="col-2 font-weight-bold text-right">Last name</div>
+    <div class="col-10">{{ person.lname }}</div>
+    <div class="col-2 font-weight-bold text-right">Email</div>
+    <div class="col-10">{{ person.email }}</div>
+    <div class="col-2 font-weight-bold text-right">StiL</div>
+    <div class="col-10">{{ person.stil if person.stil else '<span class="text-muted">None</span>'|safe}}</div>
+    <div class="col-2 font-weight-bold text-right">State</div>
+    <div class="col-10">{{ status(person.state) }}</div>
+    <div class="col-2 font-weight-bold text-right">Enrolled</div>
+    <div class="col-10">{{ person.enrolled|date }}</div>
+    <div class="col-2 font-weight-bold text-right">Enrolled by</div>
+    <div class="col-10">{{ uid_to_name(person.enrolled_by) }}</div>
+</div>
+<br />
 <h4>Registered membership fees</h4>
-<table class="table table-striped table-condensed">
+<table class="table table-striped table-sm">
     <tr>
         <th style="width: 24px">#</th>
         <th>Registered</th>
@@ -54,25 +74,23 @@ state={{ person.state }}
         <th>Registered by</th>
     </tr>
     {% if person.fees %}
-        {% for fee in person.fees %}
-            <tr>
-                <td>{{ fee_id(fee.fid, fee.start, fee.end, now()) }}</td>
-                <td>{{ fee.registered|date }}</td>
-                <td>{{ fee.start|date }}</td>
-                <td>{{ fee.end|date }}</td>
-                <td>{{ fee.amount }}</td>
-                <td><span class="label label-info">{{ fee.method if fee.method else 'N/A' }}</span></td>
-                <td>{{ uid_to_name(fee.registered_by) }}</td>
-            </tr>
-        {% endfor %}
+    {% for fee in person.fees %}
+    <tr>
+        <td>{{ fee_id(fee.fid, fee.start, fee.end, now()) }}</td>
+        <td>{{ fee.registered|date }}</td>
+        <td>{{ fee.start|date }}</td>
+        <td>{{ fee.end|date }}</td>
+        <td>{{ fee.amount }}</td>
+        <td>{{ fee_method(fee.method) }}</td>
+        <td>{{ uid_to_name(fee.registered_by) }}</td>
+    </tr>
+    {% endfor %}
     {% else %}
-        <tr>
-            <td colspan="5">
-                <i>No fees registered so far.</i>
-            </td>
-        </tr>
+    <tr>
+        <td colspan="5">
+            <i>No fees registered so far.</i>
+        </td>
+    </tr>
     {% endif %}
 </table>
 {% endblock %}
-
-

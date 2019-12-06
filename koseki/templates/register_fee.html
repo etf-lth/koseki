@@ -2,42 +2,53 @@
 {% from "macros.html" import render_field, fee_tabs %}
 {% block title %}Register fee{% endblock %}
 {% block scripts %}
-<link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/jquery-ui-1.10.3.custom.min.css" />
-<script src="{{ config['URL_BASE']|safe }}/static/js/jquery-1.9.1.js"></script>
-<script src="{{ config['URL_BASE']|safe }}/static/js/jquery-ui-1.10.3.custom.min.js"></script>
+<link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/jquery-ui-1.12.1.min.css" />
+<script src="{{ config['URL_BASE']|safe }}/static/js/jquery-ui-1.12.1.min.js"></script>
 <script>
-    $(function() {
+    $(function () {
         $(".autocomplete_member").autocomplete({
-            source: function(req, resp) {
-                $.getJSON("{{ config['URL_BASE']|safe }}/api/ac/members",{
+            source: function (req, resp) {
+                $.getJSON("{{ config['URL_BASE']|safe }}/api/ac/members", {
                     term: req.term
-                    }, function(data) {
+                }).done(function (data) {
                     resp(data.data);
-                })
-                .error(function(){response();});
+                }).fail(function () { response(); });
             }
         });
     });
 </script>
 {% endblock %}
 {% block content %}
+
+<h1>Register fee</h1>
 {{ fee_tabs('register_fee') }}
+
 <form action="" method="post">
     {{ form.hidden_tag() }}
-    <fieldset>
-        <div class="control-row">
-            {{ render_field(form.uid, class='autocomplete_member', autofocus=true) }}
-            {{ render_field(form.amount) }}
-            {{ render_field(form.method) }}
-            {% if member_of('admin') %}
-            <br/>
-            {{ render_field(form.retro) }}
-            {% endif %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    {{ render_field(form.uid, class='autocomplete_member', autofocus=true) }}
+                </div>
+                <div class="col-3">
+                    {{ render_field(form.amount) }}
+                </div>
+                <div class="col-3">
+                    {{ render_field(form.method) }}
+                </div>
+                <div class="col-3">
+                    {% if member_of('admin') %}
+                    {{ render_field(form.retro) }}
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    </fieldset>
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary"><i class="icon-white icon-plus-sign"></i> Register</button>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-plus-circle mr-1"></i> Register
+            </button>
+        </div>
     </div>
 </form>
 {% endblock %}
-

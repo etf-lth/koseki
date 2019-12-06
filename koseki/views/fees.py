@@ -13,7 +13,7 @@ import re
 import logging
 
 @app.route('/fees')
-@nav('/fees','icon-certificate','Fees',3,['admin','accounter'])
+@nav('/fees','certificate','Fees',3,['admin','accounter'])
 @require_session(['admin','accounter'])
 def list_fees():
     return render_template('list_fees.html', fees=storage.session.query(Fee).order_by(Fee.registered.desc()).all())
@@ -41,7 +41,7 @@ def register_fee():
         person = storage.session.query(Person).filter_by(uid=form.uid.data).scalar()
 
         if person is None:
-            alerts.append({'class': 'alert-error',
+            alerts.append({'class': 'alert-danger',
                 'title': 'Error',
                 'message': 'No such member "%s". Did you try the auto-complete feature?' % form.uid.data})
             return render_template('register_fee.html', form=form, alerts=alerts)

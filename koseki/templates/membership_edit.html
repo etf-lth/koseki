@@ -2,27 +2,52 @@
 {% from "macros.html" import render_field, render_static, status, membership_tabs, gravatar_blob %}
 {% block title %}My membership{% endblock %}
 {% block content %}
-<a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com">{{ gravatar_blob(gravatar(person.email)) }}</a>
-<h1>My membership<br><small>{{ person.fname }} {{ person.lname }}</small></h1>
+
+<div class="row mb-3">
+    <div class="col-1">
+        <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com">
+            {{ gravatar_blob(gravatar(person.email)) }}
+        </a>
+    </div>
+    <div class="col-10">
+        <h1 class="mb-0 font-weight-bold">My membership</h1>
+        <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
+    </div>
+</div>
+
 {{ membership_tabs('edit') }}
+
 <form action="" method="post">
     {{ form.hidden_tag() }}
-    <fieldset>
-        <legend>User data</legend>
-        <div class="control-row">
-            {{ render_field(form.fname) }}
-            {{ render_field(form.lname) }}
+    <div class="card mb-3">
+        <h3 class="card-header">User data</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    {{ render_field(form.fname, autofocus=true) }}
+                </div>
+                <div class="col-3">
+                    {{ render_field(form.lname) }}
+                </div>
+                <div class="col-6"></div>
+                <div class="col-3">
+                    {{ render_field(form.email) }}
+                </div>
+            </div>
         </div>
-        <div class="control-row">
-            {{ render_field(form.email) }}
-            {{ render_static('StiL', 'text', person.stil) }}
+        <h3 class="card-header">Ancillary information</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    {{ render_static(form.stil) }}
+                </div>
+            </div>
         </div>
-    </fieldset>
-
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary" disabled><i class="icon-white icon-ok"></i> Save</button>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-check mr-1"></i> Save
+            </button>
+        </div>
     </div>
 </form>
 {% endblock %}
-
-

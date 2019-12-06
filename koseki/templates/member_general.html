@@ -1,52 +1,59 @@
 {% extends "base.html" %}
-{% from "macros.html" import render_field, status, group, person_tabs, gravatar_blob %}
+{% from "macros.html" import render_field, status, group, person_header %}
 {% block title %}{{ person.fname }} {{ person.lname }}{% endblock %}
 {% block content %}
-{{ gravatar_blob(gravatar(person.email)) }}
-<h1>{{ person.fname }} {{ person.lname }}</h1>
-{{ person_tabs(person.uid, '') }}
+
+{{ person_header(person, '', gravatar(person.email)) }}
+
 <form action="" method="post">
     {{ form.hidden_tag() }}
-    <fieldset>
-        <legend>User data</legend>
-        <div class="control-row">
-            {{ render_field(form.fname) }}
-            {{ render_field(form.lname) }}
-        </div>
-        <div class="control-row">
-            {{ render_field(form.email) }}
-            <div class="control-group">
-                <label class="control-label">Status</label>
-                <div class="controls">
-                    {{ status(person.state) }}
+    <div class="card mb-3">
+        <h3 class="card-header">User data</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    {{ render_field(form.fname) }}
                 </div>
-            </div>
-        </div>
-        <div class="control-row">
-            <div class="control-group">
-                <label class="control-label">Enrolled</label>
-                <div class="controls">
+                <div class="col-3">
+                    {{ render_field(form.lname) }}
+                </div>
+                <div class="col-6"></div>
+                <div class="col-3">
+                    {{ render_field(form.email) }}
+                </div>
+                <div class="col-3 form-group">
+                    <label class="control-label">Status</label>
+                    <br />
+                    <h4>{{ status(person.state) }}</h4>
+                </div>
+                <div class="col-6"></div>
+                <div class="col-3 form-group">
+                    <label class="control-label">Enrolled</label>
+                    <br />
                     {{ person.enrolled|date }}
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Enrolled by</label>
-                <div class="controls">
-                    <a href="{{ url_for('member_general', uid=person.enrolled_by) if person.enrolled_by else '#' }}">{{ uid_to_name(person.enrolled_by) }}</a>
+                <div class="col-3 form-group">
+                    <label class="control-label">Enrolled by</label>
+                    <br />
+                    <a href="{{ url_for('member_general', uid=person.enrolled_by) if person.enrolled_by else '#' }}">
+                        {{ uid_to_name(person.enrolled_by) }}
+                    </a>
                 </div>
             </div>
         </div>
-    </fieldset>
-    <fieldset>
-        <legend>Ancillary information</legend>
-        <div class="control-row">
-            {{ render_field(form.stil) }}
+        <h3 class="card-header">Ancillary information</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    {{ render_field(form.stil) }}
+                </div>
+            </div>
         </div>
-    </fieldset>
-
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary"><i class="icon-white icon-ok"></i> Save</button>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-check mr-1"></i> Save
+            </button>
+        </div>
     </div>
 </form>
 {% endblock %}
-

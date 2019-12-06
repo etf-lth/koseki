@@ -1,47 +1,59 @@
 {% extends "base.html" %}
-{% from "macros.html" import fee_tabs, fee_id %}
+{% from "macros.html" import fee_tabs, fee_method, fee_id %}
 {% block title %}List fees{% endblock %}
 {% block content %}
+
+<h1>List fees</h1>
 {{ fee_tabs('list_fees') }}
-<table class="table table-striped table-condensed">
-    <tr>
-        <th style="width: 24px">#</th>
-        <th>Member</th>
-        <th>
-            <div class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Registered <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><div style="display: block; padding: 3px 20px;">Filter:</div></li>
-                    <li><div style="display: block; padding: 3px 20px;"><label class="checkbox inline"><input class="fee_registered_filter" type="checkbox"> Only this year</label></div></li>
-                </ul>
-            </div>
-        </th>
-        <th>Start</th>
-        <th>End</th>
-        <th>Amount</th>
-        <th>Method</th>
-        <th>Registered by</th>
-    </tr>
-    {% if fees %}
+
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <tr>
+            <th style="width: 24px">#</th>
+            <th>Member</th>
+            <th>
+                <div class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Registered <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div style="display: block; padding: 3px 20px;">Filter:</div>
+                        </li>
+                        <li>
+                            <div style="display: block; padding: 3px 20px;"><label class="checkbox-inline"><input
+                                        class="fee_registered_filter" type="checkbox"> Only this year</label></div>
+                        </li>
+                    </ul>
+                </div>
+            </th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Registered by</th>
+        </tr>
+        {% if fees %}
         {% for fee in fees %}
-            <tr>
-                <td>{{ fee_id(fee.fid, fee.start, fee.end, now()) }}</td>
-                <td><a href="{{ url_for('member_general', uid=fee.uid) }}">{{ uid_to_name(fee.uid) }}</a></td>
-                <td>{{ fee.registered|date }}</td>
-                <td>{{ fee.start|date }}</td>
-                <td>{{ fee.end|date }}</td>
-                <td>{{ fee.amount }}</td>
-                <td><span class="label label-info">{{ fee.method if fee.method else 'N/A' }}</span></td>
-                <td><a href="{{ url_for('member_general', uid=fee.registered_by) }}">{{ uid_to_name(fee.registered_by) }}</a></td>
-            </tr>
+        <tr>
+            <td>{{ fee_id(fee.fid, fee.start, fee.end, now()) }}</td>
+            <td><a href="{{ url_for('member_general', uid=fee.uid) }}">{{ uid_to_name(fee.uid) }}</a></td>
+            <td>{{ fee.registered|date }}</td>
+            <td>{{ fee.start|date }}</td>
+            <td>{{ fee.end|date }}</td>
+            <td>{{ fee.amount }}</td>
+            <td>{{ fee_method(fee.method) }}</td>
+            <td><a
+                    href="{{ url_for('member_general', uid=fee.registered_by) }}">{{ uid_to_name(fee.registered_by) }}</a>
+            </td>
+        </tr>
         {% endfor %}
-    {% else %}
+        {% else %}
         <tr>
             <td colspan="7">
                 <i>No fees registered so far.</i>
             </td>
         </tr>
-    {% endif %}
-</table>
+        {% endif %}
+    </table>
+</div>
 {% endblock %}
-
