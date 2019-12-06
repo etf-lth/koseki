@@ -1,30 +1,33 @@
 {% extends "base.html" %}
-{% from "macros.html" import render_field, status, group, person_tabs, gravatar_blob %}
+{% from "macros.html" import render_field, status, group, person_header %}
 {% block title %}{{ person.fname }} {{ person.lname }}{% endblock %}
 {% block content %}
-{{ gravatar_blob(gravatar(person.email)) }}
-<h1>{{ person.fname }} {{ person.lname }}</h1>
-{{ person_tabs(person.uid, 'groups') }}
-<form action="" method="post">
 
-    <table class="table table-striped table-condensed" style="width: 500px">
+{{ person_header(person, 'groups', gravatar(person.email)) }}
+
+<form class="container" action="" method="post">
+    <div class="row">
+    <table class="col-md-9 col-lg-7 col-xl-6 table table-striped table-sm">
         <tr>
-            <th style="width: 24px"><i class="icon-ok"></i></th>
+            <th style="width: 24px"><i class="glyphicon glyphicon-ok"></i></th>
             <th>Name</th>
             <th>Description</th>
         </tr>
-    {% for grp in groups %}
+        {% for grp in groups %}
         <tr>
-            <td><input type="checkbox" name="{{ grp.gid }}"{{ ' checked' if member_of(grp, person)}} {{ 'disabled' if grp.name == 'admin' and not member_of('admin') }}></td>
+            <td><input type="checkbox" name="{{ grp.gid }}" {{ ' checked' if member_of(grp, person)}}
+                    {{ 'disabled' if grp.name == 'admin' and not member_of('admin') }}></td>
             <td>{{ group(grp.name) }}</td>
             <td>{{ grp.descr }}</td>
         </tr>
-    {% endfor %}
+        {% endfor %}
     </table>
+    </div>
 
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary"><i class="icon-white icon-ok"></i> Save</button>
+    <div class="">
+        <button type="submit" class="btn btn-primary">
+            <i class="fa fa-check mr-1"></i> Save
+        </button>
     </div>
 </form>
 {% endblock %}
-

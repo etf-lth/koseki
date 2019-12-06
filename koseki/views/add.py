@@ -19,7 +19,7 @@ class EnrollForm(Form):
 
 
 @app.route('/enroll', methods=['GET', 'POST'])
-@nav('/enroll','icon-plus-sign','Enroll', 2, ['admin','board','enroll'])
+@nav('/enroll','plus-circle','Enroll', 2, ['admin','board','enroll'])
 @require_session(['admin','board','enroll'])
 def enroll_member():
     form = EnrollForm()
@@ -27,11 +27,11 @@ def enroll_member():
 
     if form.validate_on_submit():
         if storage.session.query(Person).filter_by(email=form.email.data).scalar():
-            alerts.append({'class': 'alert-error',
+            alerts.append({'class': 'alert-danger',
                 'title': 'Error',
                 'message': 'The specified email %s is already in use!' % form.email.data})
         elif form.stil.data and storage.session.query(Person).filter_by(stil=form.stil.data).scalar():
-            alerts.append({'class': 'alert-error',
+            alerts.append({'class': 'alert-danger',
                 'title': 'Error',
                 'message': 'The specified StiL %s is already in use!' % form.stil.data})
         else:

@@ -1,44 +1,56 @@
+<!-- -->
 {% extends "base_modal.html" %}
+<!-- -->
 {% block title %}Sign in{% endblock %}
+<!-- -->
 {% block modal_title %}Sign in{% endblock %}
-{% block body_class %}modal-login{{ ' modal-login-alternate' if alternate }}{% endblock %}
-{% block header %}
-{% endblock %}
-{% block content %}
-{% if alert %}
+<!-- -->
+{% block content %} {% if alert %}
 <div class="alert {{ alert.class }}">
-    <h4>{{ alert.title }}</h4>
-    {{ alert.message }}
+    <h4 class="alert-heading">{{ alert.title }}</h4>
+    <p class="mb-0">
+        {{ alert.message }}
+    </p>
 </div>
 {% endif %}
-<form class="form-horizontal" action="" method="post">
-    <input type="hidden" name="redir" value="{{ redir }}">
-    <div class="control-group">
-        <label class="control-label" for="inputEmail">Email</label>
-        <div class="controls">
-            <input type="text" id="inputEmail" name="email" placeholder="Email">
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 main-login">
+            <form class="form-horizontal" action="" method="post">
+                <input type="hidden" name="redir" value="{{ redir }}">
+                <div class="form-group row">
+                    <label class="col-sm-3 pr-sm-0 col-form-label text-sm-right" for="inputEmail">Email</label>
+                    <div class="col-sm-8 pt-1">
+                        <input class="w-100" type="text" id="inputEmail" name="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 pr-sm-0 col-form-label text-sm-right" for="inputPassword">Password</label>
+                    <div class="col-sm-8 pt-1">
+                        <input class="w-100" type="password" id="inputPassword" name="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9 mt-3 mt-sm-0 pr-0">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-lock mr-1"></i> Sign in
+                        </button>
+                        <a class="btn btn-secondary">Reset password</a>
+                    </div>
+                </div>
+            </form>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="inputPassword">Password</label>
-        <div class="controls">
-            <input type="password" id="inputPassword" name="password" placeholder="Password">
+        {% if alternate %}
+        <div class="col-md-4 alternate mt-3 mt-md-0 mb-3">
+            <small>
+                {{ alternate['text'] }}
+            </small>
+            <br />
+            <a href="{{ alternate['url'] }}" class="btn btn-primary mt-3">
+                <i class="fas fa-lock mr-1"></i> {{ alternate['button'] }}</a>
         </div>
+        {% endif %}
     </div>
-    <div class="control-group">
-        <div class="controls">
-            <button type="submit" class="btn btn-primary"><i class="icon-white icon-lock"></i> Sign in</button>
-            <a class="btn">Reset password</a>
-        </div>
-    </div>
-</form>
-{% if alternate %}
-<div class="alternate">
-    <small>
-    {{ alternate['text'] }}
-    </small>
-    <a href="{{ alternate['url'] }}" class="btn btn-primary" style="margin-top:10px;">
-        <i class="icon-white icon-lock"></i> {{ alternate['button'] }}</a>
 </div>
-{% endif %}
 {% endblock %}

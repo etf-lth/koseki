@@ -1,5 +1,6 @@
 *.pyc
 *.log
 *.swp
+*.png~
 koseki.cfg
 /mariadb

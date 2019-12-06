@@ -2,26 +2,40 @@
 {% from "macros.html" import render_field %}
 {% block title %}Enroll member{% endblock %}
 {% block content %}
+
 <h1>Enroll member</h1>
+
 <form action="" method="post">
     {{ form.hidden_tag() }}
-    <fieldset>
-        <div class="control-row">
-            {{ render_field(form.fname) }}
-            {{ render_field(form.lname) }}
+    <div class="card mb-3">
+        <h3 class="card-header">User data</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    {{ render_field(form.fname, autofocus=true) }}
+                </div>
+                <div class="col-3">
+                    {{ render_field(form.lname) }}
+                </div>
+                <div class="col-6"></div>
+                <div class="col-3">
+                    {{ render_field(form.email) }}
+                </div>
+            </div>
         </div>
-        <div class="control-row">
-            {{ render_field(form.email) }}
+        <h3 class="card-header">Ancillary information</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    {{ render_field(form.stil) }}
+                </div>
+            </div>
         </div>
-    </fieldset>
-    <fieldset>
-        <legend>Ancillary information</legend>
-        <div class="control-row">
-            {{ render_field(form.stil) }}
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-plus-circle mr-1"></i> Enroll
+            </button>
         </div>
-    </fieldset>
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary"><i class="icon-white icon-plus-sign"></i> Enroll</button>
     </div>
 </form>
 {% endblock %}

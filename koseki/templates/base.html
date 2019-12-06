@@ -1,52 +1,63 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!DOCTYPE html>
 <html lang="en">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        {% block head %}
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/bootstrap.min.css" />
-        <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
-        <script src="{{ config['URL_BASE']|safe }}/static/js/jquery-1.9.1.js"></script>
-        <script src="{{ config['URL_BASE']|safe }}/static/js/bootstrap.min.js"></script>
-        <script src="{{ config['URL_BASE']|safe }}/static/js/koseki.js"></script>
-        <title>{% block title %}{% endblock %}</title>
-        <style>
-        @media print {
-            div.navbar { visibility: hidden; }
-            a[href]:after {
-                content: none !important;
-            }
-            thead {display: table-header-group;}
-        }
-        </style>
-        {% block scripts %}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/bootstrap-4.4.1.lumen.min.css" />
+    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/fontawesome-5-all.css" />
+    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/koseki.css" />
+
+    <script src="{{ config['URL_BASE']|safe }}/static/js/jquery-3.4.1.min.js"></script>
+    <script src="{{ config['URL_BASE']|safe }}/static/js/popper.min.js"></script>
+    <script src="{{ config['URL_BASE']|safe }}/static/js/bootstrap.min.js"></script>
+    <script src="{{ config['URL_BASE']|safe }}/static/js/koseki.js"></script>
+
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block scripts %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary mb-3">
         <div class="container">
-            <div class="navbar">
-                <div class="navbar-inner">
-                    <ul class="nav">
-                        {% if user %}
-                        <li><span class="brand">{{ user }}</span></li>
-                        {% endif %}
-                        {% for item in make_nav() %}
-                        <li><a href="{{ config['URL_BASE'] }}{{ item.uri }}"><i class="{{ item.icon }}"></i> {{ item.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
+            <a class="navbar-brand d-block d-lg-none text-white font-weight-bold"
+                href="#">{{ config['ORG_NAME']|safe }}</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    {% for item in make_nav() %}
+                    <li class="nav-item px-0 px-lg-3 p">
+                        <a class="nav-link text-white font-weight-bold" href="{{ config['URL_BASE'] }}{{ item.uri }}">
+                            <i class="fa fa-{{ item.icon }} mr-1"></i> {{ item.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
-            {% for alert in alerts %}
-            <div class="alert {{ alert.class }}">
-                <h4>{{ alert.title }}</h4>
-                {{ alert.message }}
-            </div>
-            {% endfor %}
-            {% block content %} {% endblock %}
-            <footer>
-                <hr>
-                <small class="muted">{{ config['FOOTER']|safe }}</small>
-            </footer>
         </div>
-    </body>
+    </nav>
+
+    <div class="container">
+        {% for alert in alerts %}
+        <div class="alert {{ alert.class }}">
+            <h4>{{ alert.title }}</h4>
+            {{ alert.message }}
+        </div>
+        {% endfor %}
+        {% if alerts|length == 0: %}
+        <div class="mb-5"></div>
+        {% endif %}
+
+        {% block content %} {% endblock %}
+        <footer class="mb-5">
+            <hr>
+            <span class="text-muted">{{ config['FOOTER']|safe }}</span>
+        </footer>
+    </div>
+</body>
+
 </html>

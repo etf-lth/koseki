@@ -2,10 +2,11 @@ from koseki import app, storage
 from flask import url_for, render_template, session, redirect, escape, request
 from koseki.core import require_session, member_of, current_user, nav
 from koseki.db.types import Person
+from koseki.db.types import PersonGroup
 from datetime import datetime
 
 @app.route('/')
-@nav('/','icon-home','Home',-999)
+@nav('/','home','Home',-999)
 @require_session()
 def index():
     if storage.session.query(Person).count() < 1:

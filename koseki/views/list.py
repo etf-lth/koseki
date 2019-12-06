@@ -4,7 +4,7 @@ from koseki.core import require_session, nav
 from koseki.db.types import Person
 
 @app.route('/list')
-@nav('/list','icon-list','List',1,['admin','board'])
+@nav('/list','list','List',1,['admin','board'])
 @require_session(['admin','board'])
 def list_members():
     return render_template('list_members.html', persons=storage.session.query(Person).all())

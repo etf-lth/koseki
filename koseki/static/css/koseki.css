@@ -1,0 +1,44 @@
+* {
+    outline: 0px solid red;
+}
+
+.bg-custom-blue {
+    background-color: #2D3E81 !important;
+}
+
+.bg-custom-black {
+    background-color: #000000 !important;
+}
+
+.bg-custom-grey {
+    background-color: #535C50 !important;
+}
+
+.bg-custom-grey-comp1 {
+    background-color: #B9B9B9 !important;
+}
+
+.bg-custom-grey-comp2 {
+    background-color: #F0F0F0 !important;
+}
+
+.base-modal {
+    background: url(../img/grimeton.jpg) no-repeat center bottom fixed;
+    background-size: cover;
+}
+
+.base-modal .card-header {
+    height: 141px;
+    border: 0;
+    background: url(../img/login-head.png) no-repeat;
+}
+
+.base-modal .alternate {
+    border-left: 1px solid #B9B9B9;
+}
+
+@media screen and (max-width: 575px) {
+    .base-modal .main-login {
+        border-left: 1px solid #B9B9B9;
+    }
+}
