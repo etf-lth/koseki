@@ -1,6 +1,6 @@
 from apscheduler.scheduler import Scheduler
 from koseki.db.types import Person, Fee
-from koseki.mail import send_mail
+from koseki.mail import Mailer
 from datetime import datetime, timedelta
 import logging
 
@@ -33,9 +33,10 @@ class Updater:
                     self.storage.commit()
 
                     # Send mail to member and board
-                    send_mail(member, 'member_expired.mail', member=member)
-                    send_mail(self.app.config['BOARD_EMAIL'],
-                              'board_member_expired.mail', member=member)
+                    self.app.mailer.send_mail(
+                        member, 'member_expired.mail', member=member)
+                    self.app.mailer.send_mail(self.app.config['BOARD_EMAIL'],
+                                              'board_member_expired.mail', member=member)
                 else:
                     # Check expiration date
                     last_fee = self.storage.session.query(Fee).filter_by(
@@ -46,5 +47,5 @@ class Updater:
                     if days_left == 14:
                         logging.info('Member %s %s has %d days left, sending reminder' % (
                             member.fname, member.lname, days_left))
-                        send_mail(member, 'member_reminder.mail',
-                                  member=member, days_left=days_left)
+                        self.app.mailer.send_mail(member, 'member_reminder.mail',
+                                                  member=member, days_left=days_left)

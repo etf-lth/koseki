@@ -2,7 +2,6 @@ from koseki import app, storage
 from flask import url_for, render_template, session, redirect, escape, request
 from koseki.core import require_session, current_user, nav
 from koseki.db.types import Person
-from koseki.mail import send_mail
 
 from flask_wtf import Form
 from wtforms import TextField
@@ -42,8 +41,8 @@ def enroll_member():
 
             logging.info('Enrolled %s %s' % (person.fname, person.lname))
 
-            send_mail(person, 'member_enrolled.mail', member=person)
-            send_mail(app.config['BOARD_EMAIL'], 'board_member_enrolled.mail', member=person)
+            app.mailer.send_mail(person, 'member_enrolled.mail', member=person)
+            app.mailer.send_mail(app.config['BOARD_EMAIL'], 'board_member_enrolled.mail', member=person)
 
             msg = [{'class': 'alert-success',
                 'title': 'Success',

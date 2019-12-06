@@ -1,3 +1,5 @@
+from koseki.update import Updater
+from koseki.mail import Mailer
 import os
 from flask_bootstrap import Bootstrap
 from flask_babel import Babel
@@ -16,14 +18,13 @@ storage = Storage('mysql://%s:%s@%s/%s' %
 babel = Babel(app)
 boostrap = Bootstrap(app)
 
-import koseki.update
 import koseki.core
-from koseki.update import Updater
-
-from koseki.plugins import *
 from koseki.views import *
+from koseki.plugins import *
 
 updater = Updater(app, storage)
+mail = Mailer(app)
+
 
 def run_koseki():
     with app.app_context():

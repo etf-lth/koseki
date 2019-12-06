@@ -2,7 +2,6 @@ from koseki import app, storage
 from flask import url_for, render_template, session, redirect, escape, request
 from koseki.core import require_session, nav, current_user
 from koseki.db.types import Person, Fee
-from koseki.mail import send_mail
 
 from flask_wtf import Form
 from wtforms import TextField, DecimalField, DateField, SelectField
@@ -74,8 +73,8 @@ def register_fee():
             person.state = 'active'
             storage.commit()
             logging.info('%s %s is now active' % (person.fname, person.lname))
-            send_mail(app.config['BOARD_EMAIL'], 'board_member_active.mail', member=person)
-            send_mail(person, 'member_active.mail', member=person)
+            app.mailer.send_mail(app.config['BOARD_EMAIL'], 'board_member_active.mail', member=person)
+            app.mailer.send_mail(person, 'member_active.mail', member=person)
 
         alerts.append({'class': 'alert-success',
             'title': 'Success',
