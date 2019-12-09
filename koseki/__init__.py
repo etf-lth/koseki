@@ -23,6 +23,7 @@ from koseki.views import *
 from koseki.plugins import *
 
 from koseki.views.add import AddView
+from koseki.views.error import ErrorView
 
 updater = Updater(app, storage)
 mailer = Mailer(app)
@@ -31,6 +32,7 @@ core = koseki.core
 def register_views():
     views = []
     views.append(AddView(app, core, storage, mailer))
+    views.append(ErrorView(app))
     for v in views:
         v.register()
 
