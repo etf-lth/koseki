@@ -20,7 +20,7 @@ class FeeForm(Form):
     retro = DateField('Retroactive fee (Date)', validators=[Optional()])
 
 
-class AddView:
+class FeesView:
 
     def __init__(self, app, core, storage, mailer):
         self.app = app
@@ -40,7 +40,6 @@ class AddView:
     def list_fees(self):
         return render_template('list_fees.html', fees=self.storage.session.query(Fee).order_by(Fee.registered.desc()).all())
 
-    @app.route('/fees/csv')
     @require_session(['admin', 'accounter'])
     def export_csv(self):
         return render_template('list_fees.csv', fees=self.storage.session.query(Fee).order_by(Fee.registered.desc()).all())
