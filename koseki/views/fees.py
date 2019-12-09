@@ -87,15 +87,15 @@ class FeesView:
                          (form.amount.data, person.fname, person.lname))
 
             # Check for user state changes
-            if person.state != 'active' and storage.session.query(Fee).\
+            if person.state != 'active' and self.storage.session.query(Fee).\
                     filter(Fee.uid == person.uid, Fee.start <= datetime.now(), Fee.end >= datetime.now()).all():
                 person.state = 'active'
                 self.storage.commit()
                 logging.info('%s %s is now active' %
                              (person.fname, person.lname))
-                self.app.mailer.send_mail(
+                self.mailer.send_mail(
                     self.app.config['BOARD_EMAIL'], 'board_member_active.mail', member=person)
-                self.app.mailer.send_mail(
+                self.mailer.send_mail(
                     person, 'member_active.mail', member=person)
 
             alerts.append({'class': 'alert-success',
