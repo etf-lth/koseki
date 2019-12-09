@@ -22,9 +22,17 @@ import koseki.core
 from koseki.views import *
 from koseki.plugins import *
 
-updater = Updater(app, storage)
-mail = Mailer(app)
+from koseki.views.add import AddView
 
+updater = Updater(app, storage)
+mailer = Mailer(app)
+core = koseki.core
+
+def register_views():
+    views = []
+    views.append(AddView(app, core, storage, mailer))
+    for v in views:
+        v.register()
 
 def run_koseki():
     with app.app_context():
@@ -34,6 +42,7 @@ def run_koseki():
             storage.add(PersonGroup(uid=1, gid=1))
             storage.commit()
         updater.start()
+        register_views()
         app.secret_key = os.urandom(24)
         app.debug = app.config['DEBUG']
         app.wsgi_app = reverse.ReverseProxied(app.wsgi_app)

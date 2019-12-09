@@ -31,6 +31,6 @@ class Mailer:
             s = smtplib.SMTP(self.app.config['SMTP_SERVER'])
             s.sendmail(from_mail, [to], msg.as_string())
             s.quit()
-        except Exception as e:
+        except (Exception, ConnectionRefusedError) as e:
             logging.exception('send_mail failed: %s' % e)
             pass
