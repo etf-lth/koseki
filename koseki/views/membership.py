@@ -3,7 +3,7 @@ from flask import url_for, render_template, session, redirect, escape, request, 
 from koseki.core import require_session, member_of, current_user, nav
 from koseki.db.types import Person, Fee
 
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import TextField, SelectMultipleField
 from wtforms.validators import DataRequired, Email
 
@@ -15,7 +15,7 @@ def membership_general():
     last_fee = storage.session.query(Fee).filter_by(uid=current_user()).order_by(Fee.end.desc()).first()
     return render_template('membership_general.html', person=person, last_fee=last_fee)
 
-class EditForm(Form):
+class EditForm(FlaskForm):
 
     fname = TextField('First name', validators=[DataRequired()])
     lname = TextField('Last name', validators=[DataRequired()])

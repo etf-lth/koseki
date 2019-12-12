@@ -2,7 +2,7 @@ from flask import url_for, render_template, session, redirect, escape, request
 from koseki.core import require_session, nav, current_user
 from koseki.db.types import Person, Fee
 
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import TextField, DecimalField, DateField, SelectField
 from wtforms.validators import DataRequired, Email, Optional
 
@@ -11,7 +11,7 @@ import re
 import logging
 
 
-class FeeForm(Form):
+class FeeForm(FlaskForm):
 
     uid = TextField('Member ID', validators=[DataRequired()])
     amount = DecimalField('Amount (SEK)')

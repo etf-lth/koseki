@@ -2,14 +2,14 @@ from flask import url_for, render_template, session, redirect, escape, request
 from koseki.core import require_session, current_user, nav
 from koseki.db.types import Person
 
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import TextField
 from wtforms.validators import DataRequired, Email
 
 import logging
 
 
-class EnrollForm(Form):
+class EnrollForm(FlaskForm):
 
     fname = TextField('First name', validators=[DataRequired()])
     lname = TextField('Last name', validators=[DataRequired()])
