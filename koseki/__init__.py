@@ -40,7 +40,7 @@ def register_views():
     for v in views:
         v.register()
 
-def run_koseki():
+def create_app():
     with app.app_context():
         if storage.session.query(Person).count() < 1:
             storage.add(Person(uid=1, fname='Test', lname='Testsson',
@@ -52,7 +52,9 @@ def run_koseki():
         app.secret_key = os.urandom(24)
         app.debug = app.config['DEBUG']
         app.wsgi_app = reverse.ReverseProxied(app.wsgi_app)
-        app.run()
+    return app
 
+def run_koseki():
+    create_app().run()
 
 __all__ = ['run_koseki']
