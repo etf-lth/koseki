@@ -1,6 +1,6 @@
 from koseki import app, storage, babel
 from flask import url_for, render_template, session, redirect, escape, request, abort, jsonify
-from flask.ext.babel import format_datetime
+from flask_babel import format_datetime
 from koseki.db.types import Person, Group
 import re
 import hashlib

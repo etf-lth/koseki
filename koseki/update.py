@@ -1,4 +1,4 @@
-from apscheduler.scheduler import Scheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from koseki.db.types import Person, Fee
 from koseki.mail import Mailer
 from datetime import datetime, timedelta
@@ -10,11 +10,11 @@ class Updater:
     def __init__(self, app, storage):
         self.app = app
         self.storage = storage
-        self.sched = Scheduler()
+        self.sched = BackgroundScheduler()
 
     def start(self):
         self.sched.start()
-        self.sched.add_cron_job(self.update_members,
+        self.sched.add_job(self.update_members, 'cron',
                                 hour=7, minute=0, second=0)
 
     def update_members(self):
