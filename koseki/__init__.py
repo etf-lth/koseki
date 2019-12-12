@@ -1,6 +1,7 @@
 from koseki.update import Updater
 from koseki.mail import Mailer
 import os
+import base64
 from flask_bootstrap import Bootstrap
 from flask_babel import Babel
 from flask import Flask
@@ -49,7 +50,7 @@ def create_app():
             storage.commit()
         updater.start()
         register_views()
-        app.secret_key = os.urandom(24)
+        app.secret_key = base64.b64decode(app.config['SECRET_KEY'])
         app.debug = app.config['DEBUG']
         app.wsgi_app = reverse.ReverseProxied(app.wsgi_app)
     return app
