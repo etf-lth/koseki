@@ -20,7 +20,7 @@ class Person(Base):
     enrolled_by = Column(Integer, ForeignKey('person.uid'))
 
     groups = relationship('PersonGroup', backref='person')
-    fees = relationship('Fee', primaryjoin="Fee.uid==Person.uid")
+    fees = relationship('Fee', primaryjoin="Fee.uid==Person.uid", order_by="desc(Fee.fid)")
 
     #def __init__(self, uid, fname, lname, email):
     #    self.uid = uid

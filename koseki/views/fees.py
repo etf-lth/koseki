@@ -38,11 +38,11 @@ class FeesView:
 
     @require_session(['admin', 'accounter'])
     def list_fees(self):
-        return render_template('list_fees.html', fees=self.storage.session.query(Fee).order_by(Fee.registered.desc()).all())
+        return render_template('list_fees.html', fees=self.storage.session.query(Fee).order_by(Fee.fid.desc()).all())
 
     @require_session(['admin', 'accounter'])
     def export_csv(self):
-        return render_template('list_fees.csv', fees=self.storage.session.query(Fee).order_by(Fee.registered.desc()).all())
+        return render_template('list_fees.csv', fees=self.storage.session.query(Fee).order_by(Fee.fid.desc()).all())
 
     @require_session(['admin', 'accounter'])
     def register_fee(self):
