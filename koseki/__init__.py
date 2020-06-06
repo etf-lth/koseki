@@ -28,8 +28,9 @@ babel = Babel(app)
 boostrap = Bootstrap(app)
 
 import koseki.core
-from koseki.plugins import *
 
+from koseki.plugins.cas import CASPlugin
+from koseki.plugins.ldap import LDAPPlugin
 from koseki.plugins.mail import MailPlugin
 from koseki.plugins.salto import SaltoPlugin
 
@@ -47,10 +48,15 @@ mailer = Mailer(app)
 core = koseki.core
 
 
-def register_views():
+def register_plugins():
+    core.alternate_login(CASPlugin.cas_login)
+    CASPlugin(app, core, storage).register()
+    LDAPPlugin(app, core, storage).register()
     MailPlugin(app, core, storage).register()
     SaltoPlugin(app, core, storage).register()
 
+
+def register_views():
     views = []
     views.append(AddView(app, core, storage, mailer))
     views.append(ErrorView(app))
@@ -80,6 +86,7 @@ def create_app():
             storage.add(PersonGroup(uid=1, gid=1))
             storage.commit()
         updater.start()
+        register_plugins()
         register_views()
         app.secret_key = base64.b64decode(app.config["SECRET_KEY"])
         app.debug = app.config["DEBUG"]

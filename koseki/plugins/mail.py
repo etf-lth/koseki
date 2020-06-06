@@ -1,4 +1,3 @@
-from koseki import app, storage
 from koseki.core import require_session, nav
 from koseki.db.types import Person
 from flask import render_template
