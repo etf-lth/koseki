@@ -38,6 +38,7 @@ from koseki.views.index import IndexView
 from koseki.views.list import ListView
 from koseki.views.membership import MembershipView
 from koseki.views.session import SessionView
+from koseki.views.user import UserView
 
 updater = Updater(app, storage)
 mailer = Mailer(app)
@@ -53,6 +54,7 @@ def register_views():
     views.append(ListView(app, core, storage))
     views.append(MembershipView(app, core, storage))
     views.append(SessionView(app, core, storage))
+    views.append(UserView(app, core, storage))
     for v in views:
         v.register()
 
@@ -82,5 +84,5 @@ def create_app():
 def run_koseki():
     create_app().run()
 
-__all__ = ["run_koseki"]
 
+__all__ = ["run_koseki"]
