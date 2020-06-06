@@ -28,7 +28,6 @@ babel = Babel(app)
 boostrap = Bootstrap(app)
 
 import koseki.core
-from koseki.views import *
 from koseki.plugins import *
 
 from koseki.views.add import AddView
@@ -68,6 +67,7 @@ def create_app():
                     fname="Test",
                     lname="Testsson",
                     email="test@example.com",
+                    stil="admin",
                     password="5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
                 )
             )  # pass: password
