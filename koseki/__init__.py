@@ -47,6 +47,7 @@ updater = Updater(app, storage)
 mailer = Mailer(app)
 core = KosekiCore(app, storage, babel)
 
+
 def register_plugins():
     cas = CASPlugin(app, core, storage)
     cas.register()
