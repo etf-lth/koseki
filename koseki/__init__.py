@@ -30,6 +30,8 @@ boostrap = Bootstrap(app)
 import koseki.core
 from koseki.plugins import *
 
+from koseki.plugins.salto import SaltoPlugin
+
 from koseki.views.add import AddView
 from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
@@ -45,6 +47,11 @@ core = koseki.core
 
 
 def register_views():
+    plugins = []
+    plugins.append(SaltoPlugin(app, core, storage))
+    for p in plugins:
+        p.register()
+
     views = []
     views.append(AddView(app, core, storage, mailer))
     views.append(ErrorView(app))
