@@ -1,5 +1,4 @@
 from flask import url_for, render_template, session, redirect, escape, request
-from koseki.core import require_session, current_user, nav
 from koseki.db.types import Person
 
 from flask_wtf import FlaskForm
@@ -25,13 +24,15 @@ class AddView:
 
     def register(self):
         self.app.add_url_rule(
-            "/enroll", None, self.enroll_member, methods=["GET", "POST"]
+            "/enroll",
+            None,
+            self.core.require_session(self.enroll_member, ["admin", "board", "enroll"]),
+            methods=["GET", "POST"],
         )
         self.core.nav(
             "/enroll", "plus-circle", "Enroll", 2, ["admin", "board", "enroll"]
         )
 
-    @require_session(["admin", "board", "enroll"])
     def enroll_member(self):
         form = EnrollForm()
         alerts = []
@@ -65,7 +66,7 @@ class AddView:
                     }
                 )
             else:
-                person = Person(enrolled_by=current_user())
+                person = Person(enrolled_by=self.core.current_user())
                 form.populate_obj(person)
                 self.storage.add(person)
                 self.storage.commit()

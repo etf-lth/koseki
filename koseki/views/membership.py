@@ -1,5 +1,4 @@
 from flask import url_for, render_template, session, redirect, escape, request, abort
-from koseki.core import require_session, member_of, current_user, nav
 from koseki.db.types import Person, Fee
 
 from flask_wtf import FlaskForm
@@ -22,18 +21,26 @@ class MembershipView:
         self.storage = storage
 
     def register(self):
-        self.app.add_url_rule("/membership", None, self.membership_general)
         self.app.add_url_rule(
-            "/membership/edit", None, self.membership_edit, methods=["GET", "POST"]
+            "/membership", None, self.core.require_session(self.membership_general)
+        )
+        self.app.add_url_rule(
+            "/membership/edit",
+            None,
+            self.core.require_session(self.membership_edit),
+            methods=["GET", "POST"],
         )
         self.core.nav("/membership", "user", "My membership", 10)
 
-    @require_session()
     def membership_general(self):
-        person = self.storage.session.query(Person).filter_by(uid=current_user()).scalar()
+        person = (
+            self.storage.session.query(Person)
+            .filter_by(uid=self.core.current_user())
+            .scalar()
+        )
         last_fee = (
             self.storage.session.query(Fee)
-            .filter_by(uid=current_user())
+            .filter_by(uid=self.core.current_user())
             .order_by(Fee.end.desc())
             .first()
         )
@@ -41,10 +48,11 @@ class MembershipView:
             "membership_general.html", person=person, last_fee=last_fee
         )
 
-    @require_session()
     def membership_edit(self):
         person = (
-            self.storage.session.query(Person).filter_by(uid=current_user()).scalar()
+            self.storage.session.query(Person)
+            .filter_by(uid=self.core.current_user())
+            .scalar()
         )
         form = EditForm(obj=person)
 

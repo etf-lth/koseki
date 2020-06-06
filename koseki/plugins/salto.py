@@ -1,4 +1,3 @@
-from koseki.core import member_of
 from koseki.db.types import Person
 from flask import request, abort
 
@@ -40,7 +39,7 @@ class SaltoPlugin:
         ):
             if member.stil is None or len(member.stil) < 1:
                 continue
-            if member_of("sales", member):
+            if self.core.member_of("sales", member):
                 out = out + member.stil + "\r\n"
         return out
 
@@ -55,6 +54,6 @@ class SaltoPlugin:
         ):
             if member.stil is None or len(member.stil) < 1:
                 continue
-            if member_of("mek", member):
+            if self.core.member_of("mek", member):
                 out = out + member.stil + "\r\n"
         return out

@@ -1,4 +1,3 @@
-from koseki.core import require_session, nav
 from koseki.db.types import Person
 from flask import render_template
 
@@ -10,12 +9,17 @@ class MailPlugin:
         self.storage = storage
 
     def register(self):
-        self.app.add_url_rule("/mail", None, self.mail)
+        self.app.add_url_rule(
+            "/mail",
+            None,
+            self.core.require_session(
+                self.mail, ["admin", "board", "pr", "m3", "krangare"]
+            ),
+        )
         self.core.nav(
             "/mail", "envelope", "Mail", 4, ["admin", "board", "pr", "m3", "krangare"]
         )
 
-    @require_session(["admin", "board", "pr", "m3", "krangare"])
     def mail(self):
         return render_template(
             "list_mail.html",

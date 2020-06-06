@@ -1,7 +1,5 @@
-from koseki import app
 from flask import url_for, render_template, session, redirect, escape, request
 from xml.etree import ElementTree as ET
-from koseki.core import start_session
 from koseki.db.types import Person
 
 import urllib.request
@@ -18,13 +16,13 @@ class CASPlugin:
     def register(self):
         self.app.add_url_rule("/cas", None, self.cas_ticket)
 
-    def cas_login():
+    def cas_login(self):
         return {
             "text": "Please sign in using CAS "
             + "if you are a student or employee at Lund University.",
-            "url": app.config["CAS_SERVER"]
+            "url": self.app.config["CAS_SERVER"]
             + "/cas/login?service="
-            + app.config["URL_BASE"]
+            + self.app.config["URL_BASE"]
             + "/cas&renew=false",
             "button": "Sign in using CAS",
         }
@@ -53,7 +51,7 @@ class CASPlugin:
                 person = self.storage.session.query(Person).filter_by(stil=uid).scalar()
                 if person:
                     # valid user, move along
-                    start_session(person.uid)
+                    self.core.start_session(person.uid)
                     return redirect(url_for("index"))
                 else:
                     # authenticated by cas but unknown to us

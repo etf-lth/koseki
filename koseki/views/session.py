@@ -1,6 +1,5 @@
 
 from flask import url_for, render_template, session, redirect, escape, request
-from koseki.core import start_session, destroy_session, nav, get_alternate_login
 from koseki.db.types import Person
 import hashlib
 
@@ -20,16 +19,16 @@ class SessionView:
         if request.method == 'POST':
             person = self.storage.session.query(Person).filter_by(email=request.form['email']).scalar()
             if person and person.password == hashlib.sha1(request.form['password'].encode('utf-8')).hexdigest():
-                start_session(person.uid)
+                self.core.start_session(person.uid)
                 return redirect(request.form['redir'])
             else:
                 alert = {'class': 'alert-danger',
                         'title': 'Authentication error',
                         'message': 'The username or password is incorrect.'}
 
-        return render_template('login.html', redir=request.args.get('redir',url_for('index')), alert=alert, alternate=get_alternate_login())
+        return render_template('login.html', redir=request.args.get('redir',url_for('index')), alert=alert, alternate=self.core.get_alternate_login())
 
     def logout(self):
-        destroy_session()
+        self.core.destroy_session()
         return render_template('logout.html')
 

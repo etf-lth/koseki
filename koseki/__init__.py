@@ -10,6 +10,22 @@ from koseki.db.storage import Storage
 from . import reverse
 import logging
 
+from koseki.core import KosekiCore
+
+from koseki.plugins.cas import CASPlugin
+from koseki.plugins.ldap import LDAPPlugin
+from koseki.plugins.mail import MailPlugin
+from koseki.plugins.salto import SaltoPlugin
+
+from koseki.views.add import AddView
+from koseki.views.error import ErrorView
+from koseki.views.fees import FeesView
+from koseki.views.index import IndexView
+from koseki.views.list import ListView
+from koseki.views.membership import MembershipView
+from koseki.views.session import SessionView
+from koseki.views.user import UserView
+
 logging.basicConfig(
     format="%(asctime)s %(message)s", level=logging.DEBUG, filename="koseki.log"
 )
@@ -27,33 +43,17 @@ storage = Storage(
 babel = Babel(app)
 boostrap = Bootstrap(app)
 
-import koseki.core
-
-from koseki.plugins.cas import CASPlugin
-from koseki.plugins.ldap import LDAPPlugin
-from koseki.plugins.mail import MailPlugin
-from koseki.plugins.salto import SaltoPlugin
-
-from koseki.views.add import AddView
-from koseki.views.error import ErrorView
-from koseki.views.fees import FeesView
-from koseki.views.index import IndexView
-from koseki.views.list import ListView
-from koseki.views.membership import MembershipView
-from koseki.views.session import SessionView
-from koseki.views.user import UserView
-
 updater = Updater(app, storage)
 mailer = Mailer(app)
-core = koseki.core
-
+core = KosekiCore(app, storage, babel)
 
 def register_plugins():
-    core.alternate_login(CASPlugin.cas_login)
-    CASPlugin(app, core, storage).register()
+    cas = CASPlugin(app, core, storage)
+    cas.register()
     LDAPPlugin(app, core, storage).register()
     MailPlugin(app, core, storage).register()
     SaltoPlugin(app, core, storage).register()
+    core.alternate_login(cas.cas_login)
 
 
 def register_views():

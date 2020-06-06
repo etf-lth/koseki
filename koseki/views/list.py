@@ -1,6 +1,6 @@
 from flask import url_for, render_template, session, redirect, escape, request
-from koseki.core import require_session, nav
 from koseki.db.types import Person
+
 
 class ListView:
     def __init__(self, app, core, storage):
@@ -9,10 +9,13 @@ class ListView:
         self.storage = storage
 
     def register(self):
-        self.app.add_url_rule("/list", None, self.list_members)
+        self.app.add_url_rule(
+            "/list",
+            None,
+            self.core.require_session(self.list_members, ["admin", "board"]),
+        )
         self.core.nav("/list", "list", "List", 1, ["admin", "board"])
 
-    @require_session(["admin", "board"])
     def list_members(self):
         return render_template(
             "list_members.html",
@@ -20,4 +23,3 @@ class ListView:
             .order_by(Person.uid.desc())
             .all(),
         )
-
