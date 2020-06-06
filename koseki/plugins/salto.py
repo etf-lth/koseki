@@ -1,4 +1,3 @@
-from koseki import app, storage
 from koseki.core import member_of
 from koseki.db.types import Person
 from flask import request, abort
