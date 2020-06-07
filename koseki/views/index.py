@@ -1,9 +1,9 @@
 
-from flask import url_for, render_template, session, redirect, escape, request
-from koseki.core import require_session, member_of, current_user, nav
-from koseki.db.types import Person
-from koseki.db.types import PersonGroup
 from datetime import datetime
+
+from flask import escape, redirect, render_template, request, session, url_for
+
+from koseki.db.types import Person, PersonGroup
 
 
 class IndexView:
@@ -14,12 +14,11 @@ class IndexView:
         self.storage = storage
 
     def register(self):
-        self.app.add_url_rule('/', None, self.index)
+        self.app.add_url_rule('/', None, self.core.require_session(self.index))
         self.core.nav('/', 'home', 'Home', -999)
 
-    @require_session()
     def index(self):
-        if member_of('admin') or member_of('board'):
+        if self.core.member_of('admin') or self.core.member_of('board'):
             active = self.storage.session.query(
                 Person).filter_by(state='active').count()
             pending = self.storage.session.query(

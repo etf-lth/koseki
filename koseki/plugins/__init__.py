@@ -1,1 +1,1 @@
-__all__ = ['cas','salto','mail','ldap']
+__all__ = ["cas", "salto", "mail", "ldap"]
