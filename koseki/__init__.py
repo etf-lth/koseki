@@ -4,7 +4,7 @@ import os
 import base64
 from flask_bootstrap import Bootstrap
 from flask_babel import Babel
-from flask import Flask
+from flask import Flask, g
 from koseki.db.types import Person, Group, PersonGroup
 from koseki.db.storage import Storage
 from . import reverse
@@ -31,6 +31,13 @@ from koseki.views.index import IndexView
 updater = Updater(app, storage)
 mailer = Mailer(app)
 core = koseki.core
+
+## Return connections to db pool after closure
+@app.teardown_appcontext
+def close_db(error):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
 def register_views():
     views = []

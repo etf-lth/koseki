@@ -7,8 +7,8 @@ allowed_ips = ('130.235.20.201','130.235.20.67','194.47.250.246')
 
 @app.route('/salto/all')
 def salto_all():
-    if 'X-Real-IP' in request.headers and (not request.headers['X-Real-IP'] in allowed_ips):
-        abort(403)
+#    if 'X-Real-IP' in request.headers and (not request.headers['X-Real-IP'] in allowed_ips):
+#        abort(403)
     out = ''
     for member in storage.session.query(Person).filter_by(state='active').all():
         if len(member.stil) < 1:
