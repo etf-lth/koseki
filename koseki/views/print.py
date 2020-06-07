@@ -21,7 +21,7 @@ class PrintView:
         self.core = core
         self.storage = storage
         self.cupsConn = cups.Connection()
-        self.ALLOWED_EXTENSIONS = {'pdf', 'docx'}
+        self.ALLOWED_EXTENSIONS = {'pdf'}
 
     def register(self):
         self.app.add_url_rule(
@@ -68,7 +68,7 @@ class PrintView:
                     {
                         "class": "alert-danger",
                         "title": "Error",
-                        "message": 'That type of file is not allowed. Please try again or with a different file. Only PDF and DOCX is supported at the moment.',
+                        "message": 'That type of file is not allowed. Please try again or with a different file. At the moment only PDF files are supported.',
                     }
                 )
                 return render_template("print.html", form=form, alerts=alerts)
