@@ -37,11 +37,11 @@ class CASPlugin:
 
         try:
             u = urllib.request.urlopen(
-                app.config["CAS_SERVER"]
+                self.app.config["CAS_SERVER"]
                 + "/cas/serviceValidate?renew=false&ticket="
                 + ticket
                 + "&service="
-                + urllib.parse.quote_plus(app.config["URL_BASE"] + "/cas")
+                + urllib.parse.quote_plus(self.app.config["URL_BASE"] + "/cas")
             )
             response = u.read().decode("utf-8")
             u.close()
