@@ -27,10 +27,10 @@ class PrintView:
         self.app.add_url_rule(
             "/print",
             None,
-            self.core.require_session(self.print, ["admin", "board"]),
+            self.core.require_session(self.print),
             methods=["GET", "POST"],
         )
-        self.core.nav("/print", "print", "Print", 5, ["admin", "board"])
+        self.core.nav("/print", "print", "Print", 5)
 
     def allowed_file(self, filename):
         return '.' in filename and \
@@ -79,7 +79,7 @@ class PrintView:
             file.save(filepath)
 
             # send file to printer
-            self.cupsConn.printFile("printer1", filepath, "", {})
+            self.cupsConn.printFile("printer1", filepath, "", {"media": "A4"})
 
             # log that a document has been printed
             logging.info(
