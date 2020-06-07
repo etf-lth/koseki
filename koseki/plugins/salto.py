@@ -1,5 +1,6 @@
+from flask import abort, request
+
 from koseki.db.types import Person
-from flask import request, abort
 
 
 class SaltoPlugin:

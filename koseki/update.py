@@ -1,8 +1,10 @@
-from apscheduler.schedulers.background import BackgroundScheduler
-from koseki.db.types import Person, Fee
-from koseki.mail import Mailer
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
+
+from apscheduler.schedulers.background import BackgroundScheduler
+
+from koseki.db.types import Fee, Person
+from koseki.mail import Mailer
 
 
 class Updater:

@@ -1,10 +1,10 @@
 import logging
-from koseki.db.types import Person, Fee
+import smtplib
+from email.mime.text import MIMEText
 
 from flask import render_template
 
-import smtplib
-from email.mime.text import MIMEText
+from koseki.db.types import Fee, Person
 
 
 class Mailer:

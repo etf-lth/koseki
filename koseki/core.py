@@ -1,21 +1,23 @@
+import datetime
+import hashlib
+import logging
+import re
+import time
+
 from flask import (
-    url_for,
-    render_template,
-    session,
-    redirect,
-    escape,
-    request,
     abort,
+    escape,
     jsonify,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
 )
 from flask_babel import format_datetime
-from koseki.db.types import Person, Group
-import re
-import hashlib
 from sqlalchemy import or_
-import logging
-import time
-import datetime
+
+from koseki.db.types import Group, Person
 
 
 class KosekiCore:

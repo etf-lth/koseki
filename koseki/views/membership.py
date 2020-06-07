@@ -1,9 +1,9 @@
-from flask import url_for, render_template, session, redirect, escape, request, abort
-from koseki.db.types import Person, Fee
-
+from flask import abort, escape, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
-from wtforms import TextField, SelectMultipleField
+from wtforms import SelectMultipleField, TextField
 from wtforms.validators import DataRequired, Email
+
+from koseki.db.types import Fee, Person
 
 
 class EditForm(FlaskForm):

@@ -1,10 +1,11 @@
-from flask import url_for, render_template, session, redirect, escape, request
-from xml.etree import ElementTree as ET
-from koseki.db.types import Person
-
-import urllib.request
-import urllib.parse
 import urllib.error
+import urllib.parse
+import urllib.request
+from xml.etree import ElementTree as ET
+
+from flask import escape, redirect, render_template, request, session, url_for
+
+from koseki.db.types import Person
 
 
 class CASPlugin:

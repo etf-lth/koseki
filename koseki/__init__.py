@@ -1,22 +1,20 @@
-from koseki.update import Updater
-from koseki.mail import Mailer
-import os
 import base64
-from flask_bootstrap import Bootstrap
-from flask_babel import Babel
-from flask import Flask
-from koseki.db.types import Person, Group, PersonGroup
-from koseki.db.storage import Storage
-from . import reverse
 import logging
+import os
+
+from flask import Flask
+from flask_babel import Babel
+from flask_bootstrap import Bootstrap
 
 from koseki.core import KosekiCore
-
+from koseki.db.storage import Storage
+from koseki.db.types import Group, Person, PersonGroup
+from koseki.mail import Mailer
 from koseki.plugins.cas import CASPlugin
 from koseki.plugins.ldap import LDAPPlugin
 from koseki.plugins.mail import MailPlugin
 from koseki.plugins.salto import SaltoPlugin
-
+from koseki.update import Updater
 from koseki.views.add import AddView
 from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
@@ -25,6 +23,8 @@ from koseki.views.list import ListView
 from koseki.views.membership import MembershipView
 from koseki.views.session import SessionView
 from koseki.views.user import UserView
+
+from . import reverse
 
 logging.basicConfig(
     format="%(asctime)s %(message)s", level=logging.DEBUG, filename="koseki.log"

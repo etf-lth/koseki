@@ -1,13 +1,13 @@
-from flask import url_for, render_template, session, redirect, escape, request
-from koseki.db.types import Person, Fee
+import logging
+import re
+from datetime import datetime, timedelta
 
+from flask import escape, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
-from wtforms import TextField, DecimalField, DateField, SelectField
+from wtforms import DateField, DecimalField, SelectField, TextField
 from wtforms.validators import DataRequired, Email, Optional
 
-from datetime import datetime, timedelta
-import re
-import logging
+from koseki.db.types import Fee, Person
 
 
 class FeeForm(FlaskForm):

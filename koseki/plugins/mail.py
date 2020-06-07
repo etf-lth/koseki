@@ -1,5 +1,6 @@
-from koseki.db.types import Person
 from flask import render_template
+
+from koseki.db.types import Person
 
 
 class MailPlugin:

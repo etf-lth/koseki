@@ -1,7 +1,10 @@
 
-from flask import url_for, render_template, session, redirect, escape, request
-from koseki.db.types import Person
 import hashlib
+
+from flask import escape, redirect, render_template, request, session, url_for
+
+from koseki.db.types import Person
+
 
 class SessionView:
     def __init__(self, app, core, storage):
@@ -31,4 +34,3 @@ class SessionView:
     def logout(self):
         self.core.destroy_session()
         return render_template('logout.html')
-
