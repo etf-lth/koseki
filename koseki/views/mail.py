@@ -3,7 +3,7 @@ from flask import render_template
 from koseki.db.types import Person
 
 
-class MailPlugin:
+class MailView:
     def __init__(self, app, core, storage):
         self.app = app
         self.core = core

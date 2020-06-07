@@ -28,16 +28,16 @@
     <div class="card mb-3">
         <div class="card-body">
             <div class="row">
-                <div class="col-3">
+                <div class="col-12 col-md-3">
                     {{ render_field(form.uid, class='autocomplete_member', autofocus=true) }}
                 </div>
-                <div class="col-3">
+                <div class="col-12 col-md-3">
                     {{ render_field(form.amount) }}
                 </div>
-                <div class="col-3">
+                <div class="col-12 col-md-3">
                     {{ render_field(form.method) }}
                 </div>
-                <div class="col-3">
+                <div class="col-12 col-md-3">
                     {% if member_of('admin') %}
                     {{ render_field(form.retro) }}
                     {% endif %}

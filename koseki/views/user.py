@@ -44,7 +44,6 @@ class UserView:
             self.core.require_session(self.member_admin, ["admin"]),
             methods=["GET", "POST"],
         )
-        self.core.nav("/logout", "power-off", "Sign out", 999)
 
     def member_general(self, uid):
         person = self.storage.session.query(Person).filter_by(uid=uid).scalar()

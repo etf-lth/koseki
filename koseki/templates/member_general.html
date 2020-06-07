@@ -11,28 +11,28 @@
         <h3 class="card-header">User data</h3>
         <div class="card-body">
             <div class="row">
-                <div class="col-3">
+                <div class="col-6 col-md-3">
                     {{ render_field(form.fname) }}
                 </div>
-                <div class="col-3">
+                <div class="col-6 col-md-3">
                     {{ render_field(form.lname) }}
                 </div>
-                <div class="col-6"></div>
-                <div class="col-3">
+                <div class="col-6 d-none d-md-block"></div>
+                <div class="col-6 col-md-3">
                     {{ render_field(form.email) }}
                 </div>
-                <div class="col-3 form-group">
+                <div class="col-6 col-md-3 form-group">
                     <label class="control-label">Status</label>
                     <br />
                     <h4>{{ status(person.state) }}</h4>
                 </div>
-                <div class="col-6"></div>
-                <div class="col-3 form-group">
+                <div class="col-6 d-none d-md-block"></div>
+                <div class="col-6 col-md-3 form-group">
                     <label class="control-label">Enrolled</label>
                     <br />
                     {{ person.enrolled|date }}
                 </div>
-                <div class="col-3 form-group">
+                <div class="col-6 col-md-3 form-group">
                     <label class="control-label">Enrolled by</label>
                     <br />
                     <a href="{{ url_for('member_general', uid=person.enrolled_by) if person.enrolled_by else '#' }}">
@@ -44,7 +44,7 @@
         <h3 class="card-header">Ancillary information</h3>
         <div class="card-body">
             <div class="row">
-                <div class="col-3">
+                <div class="col-6 col-md-3">
                     {{ render_field(form.stil) }}
                 </div>
             </div>

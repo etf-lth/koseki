@@ -4,12 +4,12 @@
 {% block content %}
 
 <div class="row mb-3">
-    <div class="col-1">
+    <div class="col-3 col-md-1">
         <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com">
             {{ gravatar_blob(gravatar(person.email)) }}
         </a>
     </div>
-    <div class="col-10">
+    <div class="col-8 col-md-10">
         <h1 class="mb-0 font-weight-bold">My membership</h1>
         <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
     </div>
@@ -46,20 +46,20 @@
 </p>
 <h4>Membership profile</h4>
 <div class="row">
-    <div class="col-2 font-weight-bold text-right">First name</div>
-    <div class="col-10">{{ person.fname }}</div>
-    <div class="col-2 font-weight-bold text-right">Last name</div>
-    <div class="col-10">{{ person.lname }}</div>
-    <div class="col-2 font-weight-bold text-right">Email</div>
-    <div class="col-10">{{ person.email }}</div>
-    <div class="col-2 font-weight-bold text-right">StiL</div>
-    <div class="col-10">{{ person.stil if person.stil else '<span class="text-muted">None</span>'|safe}}</div>
-    <div class="col-2 font-weight-bold text-right">State</div>
-    <div class="col-10">{{ status(person.state) }}</div>
-    <div class="col-2 font-weight-bold text-right">Enrolled</div>
-    <div class="col-10">{{ person.enrolled|date }}</div>
-    <div class="col-2 font-weight-bold text-right">Enrolled by</div>
-    <div class="col-10">{{ uid_to_name(person.enrolled_by) }}</div>
+    <div class="col-4 col-md-2 font-weight-bold text-right">First name</div>
+    <div class="col-8 col-md-10">{{ person.fname }}</div>
+    <div class="col-4 col-md-2 font-weight-bold text-right">Last name</div>
+    <div class="col-8 col-md-10">{{ person.lname }}</div>
+    <div class="col-4 col-md-2 font-weight-bold text-right">Email</div>
+    <div class="col-8 col-md-10">{{ person.email }}</div>
+    <div class="col-4 col-md-2 font-weight-bold text-right">StiL</div>
+    <div class="col-8 col-md-10">{{ person.stil if person.stil else '<span class="text-muted">None</span>'|safe}}</div>
+    <div class="col-4 col-md-2 font-weight-bold text-right">State</div>
+    <div class="col-8 col-md-10">{{ status(person.state) }}</div>
+    <div class="col-4 col-md-2 font-weight-bold text-right">Enrolled</div>
+    <div class="col-8 col-md-10">{{ person.enrolled|date }}</div>
+    <div class="col-4 col-md-2 font-weight-bold text-right">Enrolled by</div>
+    <div class="col-8 col-md-10">{{ uid_to_name(person.enrolled_by) }}</div>
 </div>
 <br />
 <h4>Registered membership fees</h4>

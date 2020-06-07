@@ -18,7 +18,6 @@ from koseki.db.types import Group, Person, PersonGroup
 from koseki.mail import Mailer
 from koseki.plugins.cas import CASPlugin
 from koseki.plugins.ldap import LDAPPlugin
-from koseki.plugins.mail import MailPlugin
 from koseki.plugins.salto import SaltoPlugin
 from koseki.update import Updater
 from koseki.views.add import AddView
@@ -26,7 +25,9 @@ from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
 from koseki.views.index import IndexView
 from koseki.views.list import ListView
+from koseki.views.mail import MailView
 from koseki.views.membership import MembershipView
+from koseki.views.print import PrintView
 from koseki.views.session import SessionView
 from koseki.views.user import UserView
 
@@ -58,7 +59,6 @@ def register_plugins():
     cas = CASPlugin(app, core, storage)
     cas.register()
     LDAPPlugin(app, core, storage).register()
-    MailPlugin(app, core, storage).register()
     SaltoPlugin(app, core, storage).register()
     core.alternate_login(cas.cas_login)
 
@@ -77,7 +77,9 @@ def register_views():
     views.append(FeesView(app, core, storage, mailer))
     views.append(IndexView(app, core, storage))
     views.append(ListView(app, core, storage))
+    views.append(MailView(app, core, storage))
     views.append(MembershipView(app, core, storage))
+    views.append(PrintView(app, core, storage))
     views.append(SessionView(app, core, storage))
     views.append(UserView(app, core, storage))
     for v in views:

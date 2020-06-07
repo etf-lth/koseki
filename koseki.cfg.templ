@@ -1,12 +1,12 @@
 DEBUG=True
 
 # Must be base64
-SECRET_KEY=''
+SECRET_KEY='cGFzc3dvcmQ='
 
-DB_HOST='localhost'
-DB_USER='koseki'
+DB_HOST='127.0.0.1'
+DB_USER='root'
 DB_DATABASE='koseki'
-DB_PASSWORD=''
+DB_PASSWORD='password'
 
 SMTP_SERVER='localhost'
 EMAIL_FROM='ACME Member management <member@acme.nu>'
@@ -20,4 +20,9 @@ URL_BASE='http://localhost:5000'
 # Ending of '/cas' will be applied automatically
 CAS_SERVER='https://ldpv3.acme.nu/idp/profile'
 
-FOOTER = 'koseki &copy; MMXIX'
+UPLOAD_FOLDER = './data'
+
+FOOTER = 'koseki &copy; MMXX'
+
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True

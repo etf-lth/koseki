@@ -30,7 +30,7 @@ class MembershipView:
             self.core.require_session(self.membership_edit),
             methods=["GET", "POST"],
         )
-        self.core.nav("/membership", "user", "My membership", 10)
+        self.core.nav("/membership", "user", "My membership", 100)
 
     def membership_general(self):
         person = (

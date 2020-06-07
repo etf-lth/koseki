@@ -60,9 +60,9 @@ class KosekiCore:
 
     def calc_nav(self):
         nav = []
-        for n in navigation:
+        for n in self.navigation:
             if n["groups"] is None or sum(
-                1 for group in n["groups"] if member_of(group)
+                1 for group in n["groups"] if self.member_of(group)
             ):
                 nav.append(n)
         session["nav"] = sorted(nav, key=lambda x: x["weight"])

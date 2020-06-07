@@ -15,7 +15,7 @@
         </tr>
         {% for grp in groups %}
         <tr>
-            <td><input type="checkbox" name="{{ grp.gid }}" {{ ' checked' if member_of(grp, person)}}
+            <td class="pt-2 pb-0"><input type="checkbox" name="{{ grp.gid }}" {{ ' checked' if member_of(grp, person)}}
                     {{ 'disabled' if grp.name == 'admin' and not member_of('admin') }}></td>
             <td>{{ group(grp.name) }}</td>
             <td>{{ grp.descr }}</td>

@@ -11,14 +11,14 @@
         <h3 class="card-header">User data</h3>
         <div class="card-body">
             <div class="row">
-                <div class="col-3">
+                <div class="col-6 col-md-3">
                     {{ render_field(form.fname, autofocus=true) }}
                 </div>
-                <div class="col-3">
+                <div class="col-6 col-md-3">
                     {{ render_field(form.lname) }}
                 </div>
-                <div class="col-6"></div>
-                <div class="col-3">
+                <div class="col-6 d-none d-md-block"></div>
+                <div class="col-6 col-md-3">
                     {{ render_field(form.email) }}
                 </div>
             </div>
@@ -26,7 +26,7 @@
         <h3 class="card-header">Ancillary information</h3>
         <div class="card-body">
             <div class="row">
-                <div class="col-3">
+                <div class="col-6 col-md-3">
                     {{ render_field(form.stil) }}
                 </div>
             </div>

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field, fee_tabs %}
+{% block title %}Print Document{% endblock %}
+{% block content %}
+
+<h1>Print document</h1>
+
+<form action="" method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    {{ render_field(form.file, autofocus=true) }}
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-plus-circle mr-1"></i> Print
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}
