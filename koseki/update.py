@@ -8,9 +8,10 @@ from koseki.mail import Mailer
 
 
 class Updater:
-    def __init__(self, app, storage):
+    def __init__(self, app, storage, mailer):
         self.app = app
         self.storage = storage
+        self.mailer = mailer
         self.sched = BackgroundScheduler()
 
     def start(self):
@@ -45,10 +46,10 @@ class Updater:
                     self.storage.commit()
 
                     # Send mail to member and board
-                    self.app.mailer.send_mail(
+                    self.mailer.send_mail(
                         member, "member_expired.mail", member=member
                     )
-                    self.app.mailer.send_mail(
+                    self.mailer.send_mail(
                         self.app.config["BOARD_EMAIL"],
                         "board_member_expired.mail",
                         member=member,
@@ -69,7 +70,7 @@ class Updater:
                             "Member %s %s has %d days left, sending reminder"
                             % (member.fname, member.lname, days_left)
                         )
-                        self.app.mailer.send_mail(
+                        self.mailer.send_mail(
                             member,
                             "member_reminder.mail",
                             member=member,

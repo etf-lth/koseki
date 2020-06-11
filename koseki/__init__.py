@@ -50,8 +50,8 @@ storage = Storage(
 babel = Babel(app)
 boostrap = Bootstrap(app)
 
-updater = Updater(app, storage)
 mailer = Mailer(app)
+updater = Updater(app, storage, mailer)
 core = KosekiCore(app, storage, babel)
 
 
