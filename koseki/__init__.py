@@ -17,7 +17,6 @@ from koseki.db.storage import Storage
 from koseki.db.types import Group, Person, PersonGroup
 from koseki.mail import Mailer
 from koseki.plugins.cas import CASPlugin
-from koseki.plugins.ldap import LDAPPlugin
 from koseki.plugins.salto import SaltoPlugin
 from koseki.update import Updater
 from koseki.views.add import AddView
@@ -58,7 +57,6 @@ core = KosekiCore(app, storage, babel)
 def register_plugins():
     cas = CASPlugin(app, core, storage)
     cas.register()
-    LDAPPlugin(app, core, storage).register()
     SaltoPlugin(app, core, storage).register()
     core.alternate_login(cas.cas_login)
 
