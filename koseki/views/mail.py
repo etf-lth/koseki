@@ -18,7 +18,7 @@ class MailView:
             ),
         )
         self.core.nav(
-            "/mail", "envelope", "Mail", 4, ["admin", "board", "pr", "m3", "krangare"]
+            "/mail", "envelope", "Mail", 5, ["admin", "board", "pr", "m3", "krangare"]
         )
 
     def mail(self):

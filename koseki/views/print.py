@@ -30,7 +30,7 @@ class PrintView:
             self.core.require_session(self.print),
             methods=["GET", "POST"],
         )
-        self.core.nav("/print", "print", "Print", 5)
+        self.core.nav("/print", "print", "Print", 6)
 
     def allowed_file(self, filename):
         return '.' in filename and \

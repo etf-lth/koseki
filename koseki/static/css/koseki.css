@@ -52,6 +52,7 @@
     }
 }
 
+.footer-register>div>div>.form-group,
 .footer-register-fee>div>div>.form-group,
 .footer-register-payment>div>div>.form-group {
     margin-bottom: 0;

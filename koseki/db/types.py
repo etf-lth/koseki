@@ -47,6 +47,14 @@ class Payment(Base):
     method = Column(Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress"), default="swish")
     reason = Column(VARCHAR(length=255))
 
+class Product(Base):
+    __tablename__ = "product"
+
+    pid = Column(Integer, primary_key=True)
+    name = Column(VARCHAR(length=255))
+    img_url = Column(VARCHAR(length=510))
+    price = Column(Integer)
+    order = Column(Integer)
 
 class Person(Base):
     __tablename__ = "person"

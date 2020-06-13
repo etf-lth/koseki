@@ -109,6 +109,18 @@
     <hr />
 {%- endmacro %}
 
+{% macro store_tabs(current) -%}
+    <br />
+    <ul class="pagination">
+    {% for uri,name in (('products','Products'),('kiosk_mode','Kiosk mode')) %}
+        <li class="page-item {{ ' active' if current == uri }}">
+            <a class="page-link" href="{{ url_for(uri) }}">{{ name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    <hr />
+{%- endmacro %}
+
 {% macro membership_tabs(current) -%}
     <br />
     <ul class="pagination">

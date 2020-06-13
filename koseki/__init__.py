@@ -29,6 +29,7 @@ from koseki.views.membership import MembershipView
 if os.name != 'nt':
     from koseki.views.print import PrintView
 from koseki.views.session import SessionView
+from koseki.views.store import StoreView
 from koseki.views.user import UserView
 
 from . import reverse
@@ -81,6 +82,7 @@ def register_views():
     if os.name != 'nt':
         views.append(PrintView(app, core, storage))
     views.append(SessionView(app, core, storage))
+    views.append(StoreView(app, core, storage))
     views.append(UserView(app, core, storage))
     for v in views:
         v.register()

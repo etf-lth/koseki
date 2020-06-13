@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from flask import escape, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
-from wtforms import DateField, DecimalField, SelectField, TextField, SubmitField
+from wtforms import DateField, IntegerField, SelectField, TextField, SubmitField
 from wtforms.validators import DataRequired, Email, Optional
 
 from koseki.db.types import Fee, Person, Payment
@@ -13,7 +13,7 @@ from koseki.db.types import Fee, Person, Payment
 class FeeForm(FlaskForm):
 
     uid = TextField("Member ID", validators=[DataRequired()])
-    amount = DecimalField("Amount (SEK)")
+    amount = IntegerField("Amount (SEK)")
     method = SelectField(
         "Payment Method",
         choices=[
@@ -29,7 +29,7 @@ class FeeForm(FlaskForm):
 class PaymentForm(FlaskForm):
 
     uid = TextField("Member ID", validators=[DataRequired()])
-    amount = DecimalField("Amount (SEK)")
+    amount = IntegerField("Amount (SEK)")
     method = SelectField(
         "Payment Method",
         choices=[
