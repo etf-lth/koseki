@@ -26,7 +26,8 @@ from koseki.views.index import IndexView
 from koseki.views.list import ListView
 from koseki.views.mail import MailView
 from koseki.views.membership import MembershipView
-from koseki.views.print import PrintView
+if os.name != 'nt':
+    from koseki.views.print import PrintView
 from koseki.views.session import SessionView
 from koseki.views.user import UserView
 
@@ -77,7 +78,8 @@ def register_views():
     views.append(ListView(app, core, storage))
     views.append(MailView(app, core, storage))
     views.append(MembershipView(app, core, storage))
-    views.append(PrintView(app, core, storage))
+    if os.name != 'nt':
+        views.append(PrintView(app, core, storage))
     views.append(SessionView(app, core, storage))
     views.append(UserView(app, core, storage))
     for v in views:
@@ -92,8 +94,18 @@ def create_app():
                     uid=1,
                     fname="Test",
                     lname="Testsson",
-                    email="test@example.com",
+                    email="admin@example.com",
                     stil="admin",
+                    password="5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
+                )
+            )  # pass: password
+            storage.add(
+                Person(
+                    uid=1,
+                    fname="Test",
+                    lname="Testsson",
+                    email="user@example.com",
+                    stil="user",
                     password="5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
                 )
             )  # pass: password
