@@ -4,20 +4,24 @@ from datetime import datetime, timedelta
 
 from flask import escape, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, TextField, SubmitField
+from wtforms import IntegerField, SelectField, TextField, SubmitField, HiddenField
 from wtforms.validators import DataRequired, Email, Optional
 
 from koseki.db.types import Fee, Person, Payment, Product
 
 
-class StoreForm(FlaskForm):
+class ProductAddForm(FlaskForm):
 
     name = TextField("Product name", validators=[DataRequired()])
     img_url = TextField("Image URL", validators=[DataRequired()])
     price = IntegerField("Price (SEK)")
     order = IntegerField("Order")
-    submit = SubmitField("Add product")
+    submitAdd = SubmitField("Add product")
 
+class ProductRemoveForm(FlaskForm):
+
+    pid = HiddenField("")
+    submitRemove = SubmitField("X")
 
 class StoreView:
     def __init__(self, app, core, storage):
@@ -46,39 +50,38 @@ class StoreView:
         )
 
     def products(self):
-        form = StoreForm()
+        productAddForm = ProductAddForm()
+        productRemoveForm = ProductRemoveForm()
 
         alerts = []
 
-        if form.validate_on_submit():
+        if productAddForm.submitAdd.data and productAddForm.validate_on_submit():
             # Store product
             product = Product(
-                name=form.name.data,
-                img_url=form.img_url.data,
-                price=form.price.data,
-                order=form.order.data,
+                name=productAddForm.name.data,
+                img_url=productAddForm.img_url.data,
+                price=productAddForm.price.data,
+                order=productAddForm.order.data,
             )
             self.storage.add(product)
             self.storage.commit()
 
-            logging.info(
-                "Registered product %s #%d"
-                % (form.name.data, product.pid)
-            )
+            logging.info("Registered product %s #%d" % (productAddForm.name.data, product.pid))
 
             alerts.append(
                 {
                     "class": "alert-success",
                     "title": "Success",
                     "message": "Registered product %s #%d"
-                    % (form.name.data, product.pid),
+                    % (productAddForm.name.data, product.pid),
                 }
             )
-            form = StoreForm(None)
+            productAddForm = ProductAddForm(None)
 
         return render_template(
             "products.html",
-            form=form,
+            addForm=productAddForm,
+            removeForm=productRemoveForm,
             alerts=alerts,
             products=self.storage.session.query(Product)
             .order_by(Product.pid.desc())

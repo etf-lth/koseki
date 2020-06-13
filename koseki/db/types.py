@@ -1,10 +1,20 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, Unicode, VARCHAR, func
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    Unicode,
+    VARCHAR,
+    func,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 
 Base = declarative_base()
+
 
 class PersonGroup(Base):
     __tablename__ = "person_group"
@@ -44,8 +54,12 @@ class Payment(Base):
     registered_by = Column(Integer, ForeignKey("person.uid"))
     amount = Column(Integer)
     registered = Column(DateTime, default=datetime.now)
-    method = Column(Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress"), default="swish")
+    method = Column(
+        Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress"),
+        default="swish",
+    )
     reason = Column(VARCHAR(length=255))
+
 
 class Product(Base):
     __tablename__ = "product"
@@ -55,6 +69,7 @@ class Product(Base):
     img_url = Column(VARCHAR(length=510))
     price = Column(Integer)
     order = Column(Integer)
+
 
 class Person(Base):
     __tablename__ = "person"
