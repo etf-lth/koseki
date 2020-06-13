@@ -14,6 +14,27 @@ CREATE DATABASE IF NOT EXISTS koseki;
 USE koseki;
 
 --
+-- Table structure for table `paymehnt`
+--
+
+DROP TABLE IF EXISTS `payment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `payment` (
+  `pid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) DEFAULT NULL,
+  `registered_by` int(11) DEFAULT NULL,
+  `amount` int(11) DEFAULT NULL,
+  `registered` datetime DEFAULT NULL,
+  `method` enum('swish','cash','bankgiro','creditcard', 'kiosk', 'wordpress') COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`pid`),
+  KEY `uid` (`uid`),
+  KEY `registered_by` (`registered_by`)
+) ENGINE=MyISAM AUTO_INCREMENT=94 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `fee`
 --
 

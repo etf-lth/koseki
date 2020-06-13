@@ -18,5 +18,14 @@ $(document).ready(function(){
             }
         });
     });
+    $('.payment_registered_filter').change(function(e){
+        $('#payments_list tr').each(function(i){
+            if (Number($(this).data('registered').split('-')[0]) === new Date().getFullYear()) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
 })
 })(jQuery);

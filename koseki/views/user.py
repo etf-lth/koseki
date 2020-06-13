@@ -39,6 +39,11 @@ class UserView:
             self.core.require_session(self.member_fees, ["admin", "board"]),
         )
         self.app.add_url_rule(
+            "/user/<int:uid>/payments",
+            None,
+            self.core.require_session(self.member_payments, ["admin", "board"]),
+        )
+        self.app.add_url_rule(
             "/user/<int:uid>/admin",
             None,
             self.core.require_session(self.member_admin, ["admin"]),
@@ -120,6 +125,13 @@ class UserView:
             raise abort(404)
 
         return render_template("member_fees.html", person=person)
+
+    def member_payments(self, uid):
+        person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+        if not person:
+            raise abort(404)
+
+        return render_template("member_payments.html", person=person)
 
     def member_admin(self, uid):
         person = self.storage.session.query(Person).filter_by(uid=uid).scalar()

@@ -51,3 +51,14 @@
         border-left: 1px solid #B9B9B9;
     }
 }
+
+.footer-register-fee>div>div>.form-group,
+.footer-register-payment>div>div>.form-group {
+    margin-bottom: 0;
+}
+.footer-register-fee {
+    border-top: 5px solid #52c41a;
+}
+.footer-register-payment {
+    border-top: 5px solid #faad14;
+}

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, Unicode
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, Unicode, VARCHAR
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 
@@ -25,13 +25,9 @@ class Person(Base):
     fees = relationship(
         "Fee", primaryjoin="Fee.uid==Person.uid", order_by="desc(Fee.fid)"
     )
-
-    # def __init__(self, uid, fname, lname, email):
-    #    self.uid = uid
-    #    self.fname = fname
-    #    self.lname = lname
-    #    self.email = email
-
+    payments = relationship(
+        "Payment", primaryjoin="Payment.uid==Person.uid", order_by="desc(Payment.pid)"
+    )
 
 class PersonGroup(Base):
     __tablename__ = "person_group"
@@ -61,3 +57,15 @@ class Fee(Base):
     start = Column(DateTime)
     end = Column(DateTime)
     method = Column(Enum("swish", "cash", "bankgiro", "creditcard"), default="swish")
+
+
+class Payment(Base):
+    __tablename__ = "payment"
+
+    pid = Column(Integer, primary_key=True)
+    uid = Column(Integer, ForeignKey("person.uid"))
+    registered_by = Column(Integer, ForeignKey("person.uid"))
+    amount = Column(Integer)
+    registered = Column(DateTime, default=datetime.now)
+    method = Column(Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress"), default="swish")
+    reason = Column(VARCHAR(length=255))

@@ -51,6 +51,16 @@
 {% endif %}
 {%- endmacro %}
 
+{% macro payment_id(pid, amount) -%}
+{% if amount > 0 : %}
+    <h5 class="d-inline"><span class="badge badge-success">{{ pid }}</span></h5>
+{% elif 0 > amount : %}
+    <h5 class="d-inline"><span class="badge badge-danger">{{ pid }}</span></h5>
+{% else : %}
+    <h5 class="d-inline"><span class="badge badge-warning">{{ pid }}</span></h5>
+{% endif %}
+{%- endmacro %}
+
 {% macro person_header(person, current, grav) -%}
     <div class="row mb-3">
         <div class="col-3 col-md-1">
@@ -64,7 +74,7 @@
     </div>
     <br />
     <ul class="pagination">
-    {% set tabs = (('','General'),('groups','Groups'),('fees','Fees'),('admin','Power Tools')) %}
+    {% set tabs = (('','General'),('groups','Groups'),('fees','Fees'),('payments','Payments'),('admin','Power Tools')) %}
     {% for uri,name in tabs %}
         <li class="page-item {{ ' active' if current == uri }}">
             <a class="page-link" href="{{ config['URL_BASE'] }}/user/{{ person.uid }}{{ '/'+uri if uri != '' }}">{{ name }}</a>
@@ -77,7 +87,7 @@
 {% macro fee_tabs(current) -%}
     <br />
     <ul class="pagination">
-    {% for uri,name in (('list_fees','List'),('register_fee','Register')) %}
+    {% for uri,name in (('list_fees','Fees'),('list_payments','Payments'),('register_fee','Register')) %}
         <li class="page-item {{ ' active' if current == uri }}">
             <a class="page-link" href="{{ url_for(uri) }}">{{ name }}</a>
         </li>

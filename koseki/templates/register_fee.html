@@ -23,31 +23,68 @@
 <h1>Register fee</h1>
 {{ fee_tabs('register_fee') }}
 
+<h3>Membership fee</h3>
 <form action="" method="post">
-    {{ form.hidden_tag() }}
+    {{ feeForm.hidden_tag() }}
     <div class="card mb-3">
         <div class="card-body">
             <div class="row">
                 <div class="col-12 col-md-3">
-                    {{ render_field(form.uid, class='autocomplete_member', autofocus=true) }}
+                    {{ render_field(feeForm.uid, class='autocomplete_member', autofocus=true) }}
                 </div>
                 <div class="col-12 col-md-3">
-                    {{ render_field(form.amount) }}
+                    {{ render_field(feeForm.amount) }}
                 </div>
                 <div class="col-12 col-md-3">
-                    {{ render_field(form.method) }}
+                    {{ render_field(feeForm.method) }}
                 </div>
                 <div class="col-12 col-md-3">
                     {% if member_of('admin') %}
-                    {{ render_field(form.retro) }}
+                    {{ render_field(feeForm.retro) }}
                     {% endif %}
                 </div>
             </div>
         </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">
-                <i class="fa fa-plus-circle mr-1"></i> Register
-            </button>
+        <div class="card-footer footer-register-fee">
+            <div class="row">
+                <div class="col-12 col-md-2 submit-form-group-no-margin">
+                    {{ render_field(feeForm.submitFee, class="btn btn-primary") }}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<br />
+<hr>
+<br />
+
+<h3>Payment or debt</h3>
+<form action="" method="post">
+    {{ paymentForm.hidden_tag() }}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    {{ render_field(paymentForm.uid, class='autocomplete_member', autofocus=true) }}
+                </div>
+                <div class="col-12 col-md-3">
+                    {{ render_field(paymentForm.amount) }}
+                </div>
+                <div class="col-12 col-md-3">
+                    {{ render_field(paymentForm.method) }}
+                </div>
+                <div class="col-12 col-md-3">
+                    {{ render_field(paymentForm.reason) }}
+                </div>
+            </div>
+        </div>
+        <div class="card-footer footer-register-payment">
+            <div class="row">
+                <div class="col-12 col-md-2 submit-form-group-no-margin">
+                    {{ render_field(paymentForm.submitPayment, class="btn btn-primary") }}
+                </div>
+            </div>
         </div>
     </div>
 </form>
