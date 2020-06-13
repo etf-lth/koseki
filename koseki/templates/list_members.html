@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import status, group %}
+{% from "macros.html" import status, group, payment_balance %}
 {% block title %}List members{% endblock %}
 {% block content %}
 <h1>List members</h1>
@@ -43,6 +43,7 @@
                         </ul>
                     </div>
                 </th>
+                <th>Balance</th>
                 <th>Groups</th>
             </tr>
         </thead>
@@ -55,6 +56,7 @@
                 <td><a href="{{ url_for('member_general', uid=item.uid) }}">{{ item.lname }}</a></td>
                 <td><a href="mailto:{{ item.email }}">{{ item.email }}</a></td>
                 <td>{{ status(item.state) }}</td>
+                <td>{{ payment_balance(item.balance) }}</td>
                 <td>
                     {% for grp in item.groups %}
                     {{ group(grp.group.name) }}

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_method, fee_id, payment_id %}
+{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_method, fee_id, payment_id, payment_balance %}
 {% block title %}My membership{% endblock %}
 {% block content %}
 
@@ -60,6 +60,8 @@
     <div class="col-8 col-md-10">{{ person.enrolled|date }}</div>
     <div class="col-4 col-md-2 font-weight-bold text-right">Enrolled by</div>
     <div class="col-8 col-md-10">{{ uid_to_name(person.enrolled_by) }}</div>
+    <div class="col-4 col-md-2 font-weight-bold text-right">Balance</div>
+    <div class="col-8 col-md-10">{{ payment_balance(person.balance) }}</div>
 </div>
 <br />
 <h4>Registered membership fees</h4>

@@ -61,6 +61,19 @@
 {% endif %}
 {%- endmacro %}
 
+{% macro payment_balance(amount) -%}
+{% if amount > 0 : %}
+    <span class="text-success">{{ amount }} kr</span>
+{% elif -500 > amount : %}
+    <span class="text-danger font-weight-bold">{{ amount }} kr</span>
+{% elif 0 > amount : %}
+    <span class="text-danger">{{ amount }} kr</span>
+{% else : %}
+    <span>{{ amount }} kr</span>
+{% endif %}
+{%- endmacro %}
+
+
 {% macro person_header(person, current, grav) -%}
     <div class="row mb-3">
         <div class="col-3 col-md-1">
