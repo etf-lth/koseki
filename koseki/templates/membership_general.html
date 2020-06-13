@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_method, fee_id %}
+{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_method, fee_id, payment_id %}
 {% block title %}My membership{% endblock %}
 {% block content %}
 
@@ -83,6 +83,36 @@
         <td>{{ fee.amount }}</td>
         <td>{{ fee_method(fee.method) }}</td>
         <td>{{ uid_to_name(fee.registered_by) }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+        <td colspan="5">
+            <i>No fees registered so far.</i>
+        </td>
+    </tr>
+    {% endif %}
+</table>
+<br />
+<h4>Payments</h4>
+<table class="table table-striped table-sm">
+    <tr>
+        <th style="width: 24px">#</th>
+        <th>Registered</th>
+        <th>Amount</th>
+        <th>Method</th>
+        <th>Registered by</th>
+        <th>Reason</th>
+    </tr>
+    {% if person.payments %}
+    {% for payment in person.payments %}
+    <tr>
+        <td>{{ payment_id(payment.pid, payment.amount) }}</td>
+        <td>{{ payment.registered|date }}</td>
+        <td>{{ payment.amount }}</td>
+        <td>{{ fee_method(payment.method) }}</td>
+        <td>{{ uid_to_name(payment.registered_by) }}</td>
+        <td>{{ payment.reason }}</td>
     </tr>
     {% endfor %}
     {% else %}
