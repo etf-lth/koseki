@@ -7,28 +7,28 @@
 {{ store_tabs('products') }}
 
 <form action="" method="post">
-    {{ addForm.hidden_tag() }}
+    {{ form.hidden_tag() }}
     <div class="card mb-3">
         <div class="card-body">
             <div class="row">
                 <div class="col-12 col-md-4">
-                    {{ render_field(addForm.name) }}
+                    {{ render_field(form.name) }}
                 </div>
                 <div class="col-12 col-md-4">
-                    {{ render_field(addForm.img_url) }}
+                    {{ render_field(form.img_url) }}
                 </div>
                 <div class="col-12 col-md-2">
-                    {{ render_field(addForm.price) }}
+                    {{ render_field(form.price) }}
                 </div>
                 <div class="col-12 col-md-2">
-                    {{ render_field(addForm.order) }}
+                    {{ render_field(form.order) }}
                 </div>
             </div>
         </div>
         <div class="card-footer">
             <div class="row">
                 <div class="col-12 col-md-2 submit-form-group-no-margin">
-                    {{ render_field(addForm.submitAdd, class="btn btn-primary") }}
+                    {{ render_field(form.submitAdd, class="btn btn-primary") }}
                 </div>
             </div>
         </div>
@@ -57,15 +57,9 @@
                 <td>{{ product.price }}</td>
                 <td>{{ product.order }}</td>
                 <td>
-                    <form action="" method="post">
-                        {{ removeForm.hidden_tag() }}
-                        <div class="d-none">
-                            {{ render_field(removeForm.pid, value="product.pid") }}
-                        </div>
-                        <div class="submit-form-group-no-margin">
-                            {{ render_field(removeForm.submitRemove, class="btn btn-danger") }}
-                        </div>
-                    </form>
+                    <a href="{{ url_for('manage_product', pid=product.pid) }}" type="submit" class="btn btn-primary">
+                        Manage product
+                    </a>
                 </td>
             </tr>
             {% endfor %}

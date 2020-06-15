@@ -52,6 +52,10 @@
     }
 }
 
+.base-kiosk {
+    background-color: #dadada;
+}
+
 .submit-form-group-no-margin>.form-group,
 .footer-register-fee>div>div>.form-group,
 .footer-register-payment>div>div>.form-group {

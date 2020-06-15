@@ -1,0 +1,32 @@
+<!-- -->
+{% extends "base_kiosk.html" %}
+{% from "macros.html" import render_field %}
+<!-- -->
+{% block title %}Kiosk{% endblock %}
+<!-- -->
+{% block scripts %}
+<script>
+    /* Continuously focus on card field. */
+    $(function () {
+        setInterval(() => {
+            $('#cardId').focus();
+        }, 1000);
+    });
+</script>
+{% endblock %}
+{% block content %}
+<h1 class="text-center display-1 font-weight-bold">Scan LU card</h1>
+
+<h1 class="py-5 text-center display-1 font-weight-bold text-primary">
+    <i class="fa fa-id-card" aria-hidden="true"></i>
+</h1>
+
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="row" style="max-height: 0px; overflow: hidden;">
+        <div class="col-12">
+            {{ render_field(form.cardId, autofocus=true) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

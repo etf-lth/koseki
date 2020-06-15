@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/bootstrap-4.4.1.lumen.min.css" />
+    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/fontawesome-5-all.css" />
+    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/koseki.css" />
+
+    <script src="{{ config['URL_BASE']|safe }}/static/js/jquery-3.4.1.min.js"></script>
+    <script src="{{ config['URL_BASE']|safe }}/static/js/popper.min.js"></script>
+    <script src="{{ config['URL_BASE']|safe }}/static/js/bootstrap.min.js"></script>
+    <script src="{{ config['URL_BASE']|safe }}/static/js/koseki.js"></script>
+
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block scripts %}{% endblock %}
+</head>
+
+<body class="base-kiosk">
+    <div class="container">
+        {% for alert in alerts %}
+        <div class="alert {{ alert.class }}">
+            <h4>{{ alert.title }}</h4>
+            {{ alert.message }}
+        </div>
+        {% endfor %}
+        {% if alerts|length == 0: %}
+        <div class="mb-5"></div>
+        {% endif %}
+
+        {% block content %} {% endblock %}
+        <footer class="mb-5 mx-5">
+            <hr>
+            <span class="text-muted">{{ config['FOOTER']|safe }}</span>
+        </footer>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<!-- -->
+{% extends "base_kiosk.html" %}
+{% from "macros.html" import render_field %}
+<!-- -->
+{% block title %}Kiosk{% endblock %}
+<!-- -->
+{% block content %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col-12">
+            {{ render_field(form.password, autofocus=true) }}
+        </div>
+        <div class="col-12">
+            {{ render_field(form.submitLogin, class="btn btn-primary") }}
+        </div>
+    </div>
+</div>
+{% endblock %}

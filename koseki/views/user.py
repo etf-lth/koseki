@@ -1,4 +1,4 @@
-from flask import abort, escape, redirect, render_template, request, session, url_for
+from flask import abort, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, TextField
 from wtforms.validators import DataRequired, Email

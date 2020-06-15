@@ -23,6 +23,7 @@ from koseki.views.add import AddView
 from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
 from koseki.views.index import IndexView
+from koseki.views.kiosk import KioskView
 from koseki.views.list import ListView
 from koseki.views.mail import MailView
 from koseki.views.membership import MembershipView
@@ -76,6 +77,7 @@ def register_views():
     views.append(ErrorView(app))
     views.append(FeesView(app, core, storage, mailer))
     views.append(IndexView(app, core, storage))
+    views.append(KioskView(app, core, storage))
     views.append(ListView(app, core, storage))
     views.append(MailView(app, core, storage))
     views.append(MembershipView(app, core, storage))

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_field, store_tabs, fee_method, fee_id %}
+{% block title %}Manage products{% endblock %}
+{% block content %}
+
+<h1>Manage products</h1>
+{{ store_tabs('products') }}
+
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    {{ render_field(form.name) }}
+                </div>
+                <div class="col-12 col-md-4">
+                    {{ render_field(form.img_url) }}
+                </div>
+                <div class="col-12 col-md-2">
+                    {{ render_field(form.price) }}
+                </div>
+                <div class="col-12 col-md-2">
+                    {{ render_field(form.order) }}
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-12 col-md-2 submit-form-group-no-margin">
+                    {{ render_field(form.submitUpdate, class="btn btn-primary") }}
+                </div>
+                <div class="col-12 col-md-2 submit-form-group-no-margin">
+                    {{ render_field(form.submitDelete, class="btn btn-danger") }}
+                </div>
+                <div class="col-12 col-md-2">
+                    <a href="{{ url_for('products') }}" type="submit" class="btn btn-secondary">
+                        Go Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
