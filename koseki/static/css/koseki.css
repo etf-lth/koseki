@@ -51,9 +51,6 @@
 .base-kiosk {
     background-color: #dadada;
 }
-.base-kiosk > .container{
-    min-height: 80vh;
-}
 
 .submit-form-group-no-margin>.form-group,
 .footer-register-fee>div>div>.form-group,

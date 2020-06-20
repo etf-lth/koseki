@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import render_field, status, group, person_header, fee_method, payment_id %}
+{% from "macros.html" import render_field, status, group, person_header, fee_method %}
 {% block title %}{{ person.fname }} {{ person.lname }}{% endblock %}
 {% block content %}
 
@@ -17,7 +17,7 @@
     {% if person.payments %}
     {% for payment in person.payments %}
     <tr>
-        <td>{{ payment_id(payment.pid, payment.amount) }}</td>
+        <td><h5 class="d-inline"><span class="badge badge-primary">{{ payment.pid }}</span></h5></td>
         <td>{{ payment.registered|date }}</td>
         <td>{{ payment.amount }}</td>
         <td>{{ fee_method(payment.method) }}</td>

@@ -6,19 +6,21 @@
 <!-- -->
 {% block scripts %}
 <script>
-    /* Continuously focus on card field. */
-    $(function () {
-        setInterval(() => {
-            $('#cardId').focus();
-        }, 1000);
-    });
+    function buyProduct(pid) {
+        $('#product_id').val(pid);
+        $('#product_id').parent().submit();
+    }
 </script>
 {% endblock %}
 {% block content %}
 <h1 class="text-center display-5 font-weight-bold pb-5">
-    Logged in as Max Faxälv
+    Logged in as {{ person.fname}} {{ person.lname}}
     <a href="{{ url_for('kiosk_card') }}" class="btn btn-warning btn-lg ml-3">Logout</a>
 </h1>
+
+<form action="" method="post" class="d-none">
+    {{ form.hidden_tag() }}
+</form>
 
 <div class="container">
 <div class="row">
@@ -33,7 +35,7 @@
                         <p class="font-weight-bold text-primary display-4">{{ product.price }} kr</p>
                     </div>
                     <div class="col-6">
-                        <a href="#" class="btn btn-primary btn-lg float-right mt-3">BUY NOW</a>
+                        <a href="javascript:buyProduct({{ product.pid }})" class="btn btn-primary btn-lg float-right mt-3">BUY NOW</a>
                     </div>
                 </div>
             </div>

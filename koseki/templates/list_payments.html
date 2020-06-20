@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import fee_tabs, fee_method, payment_id %}
+{% from "macros.html" import fee_tabs, fee_method %}
 {% block title %}List payments{% endblock %}
 {% block content %}
 
@@ -37,7 +37,7 @@
             {% if payments %}
             {% for payment in payments %}
             <tr data-registered="{{ payment.registered|date }}">
-                <td>{{ payment_id(payment.pid, payment.amount) }}</td>
+                <td><h5 class="d-inline"><span class="badge badge-primary">{{ payment.pid }}</span></h5></td>
                 <td><a href="{{ url_for('member_general', uid=payment.uid) }}">{{ uid_to_name(payment.uid) }}</a></td>
                 <td>{{ payment.registered|date }}</td>
                 <td>{{ payment.amount }}</td>

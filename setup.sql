@@ -113,8 +113,8 @@ CREATE TABLE `person` (
   `email` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `stil` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `card_id` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `enrolled` datetime DEFAULT NULL,
-  `lchange` datetime DEFAULT NULL,
   `enrolled_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`uid`),
   KEY `enrolled_by` (`enrolled_by`)

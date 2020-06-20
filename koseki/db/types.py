@@ -81,8 +81,8 @@ class Person(Base):
     email = Column(Unicode(64))
     stil = Column(Unicode(64))
     password = Column(Unicode(64))
+    card_id = Column(Unicode(64))
     enrolled = Column(DateTime, default=datetime.now)
-    lchange = Column(DateTime, default=datetime.now)
     enrolled_by = Column(Integer, ForeignKey("person.uid"))
 
     groups = relationship("PersonGroup", backref="person")

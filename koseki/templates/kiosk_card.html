@@ -9,15 +9,16 @@
     /* Continuously focus on card field. */
     $(function () {
         setInterval(() => {
-            $('#cardId').focus();
+            $('#card_id').focus();
         }, 1000);
     });
 </script>
 {% endblock %}
 {% block content %}
-<h1 class="text-center display-1 font-weight-bold">Scan LU card</h1>
+<h1 class="text-center display-1 font-weight-bold">ETF Kiosk</h1>
+<h1 class="text-center display-4">Please scan your LU student card</h1>
 
-<h1 class="py-5 text-center display-1 font-weight-bold text-primary">
+<h1 class="py-5 text-center display-1 font-weight-bold text-warning">
     <i class="fa fa-id-card" aria-hidden="true"></i>
 </h1>
 
@@ -25,7 +26,7 @@
     {{ form.hidden_tag() }}
     <div class="row" style="max-height: 0px; overflow: hidden;">
         <div class="col-12">
-            {{ render_field(form.cardId, autofocus=true) }}
+            {{ render_field(form.card_id, autofocus=true) }}
         </div>
     </div>
 </div>

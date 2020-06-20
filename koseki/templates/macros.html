@@ -51,16 +51,6 @@
 {% endif %}
 {%- endmacro %}
 
-{% macro payment_id(pid, amount) -%}
-{% if amount > 0 : %}
-    <h5 class="d-inline"><span class="badge badge-success">{{ pid }}</span></h5>
-{% elif 0 > amount : %}
-    <h5 class="d-inline"><span class="badge badge-danger">{{ pid }}</span></h5>
-{% else : %}
-    <h5 class="d-inline"><span class="badge badge-warning">{{ pid }}</span></h5>
-{% endif %}
-{%- endmacro %}
-
 {% macro payment_balance(amount) -%}
 {% if amount > 0 : %}
     <span class="text-success">{{ amount }} kr</span>

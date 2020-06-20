@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_method, fee_id, payment_id, payment_balance %}
+{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_method, fee_id, payment_balance %}
 {% block title %}My membership{% endblock %}
 {% block content %}
 
@@ -109,7 +109,7 @@
     {% if person.payments %}
     {% for payment in person.payments %}
     <tr>
-        <td>{{ payment_id(payment.pid, payment.amount) }}</td>
+        <td><h5 class="d-inline"><span class="badge badge-primary">{{ payment.pid }}</span></h5></td>
         <td>{{ payment.registered|date }}</td>
         <td>{{ payment.amount }}</td>
         <td>{{ fee_method(payment.method) }}</td>

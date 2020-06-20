@@ -1,0 +1,37 @@
+<!-- -->
+{% extends "base_kiosk.html" %}
+{% from "macros.html" import render_field %}
+<!-- -->
+{% block title %}Kiosk{% endblock %}
+<!-- -->
+{% block scripts %}
+<meta http-equiv="refresh" content="10; URL={{ url_for('kiosk_card')}}" />
+{% endblock %}
+{% block content %}
+
+<audio controls autoplay hidden="">
+    <source src="{{ config['URL_BASE']|safe }}/static/payment.mp3" type="audio/mpeg">
+</audio>
+
+<h1 class="py-4 text-center display-1 font-weight-bold text-success">
+    <i class="fa fa-check-square" aria-hidden="true"></i>
+</h1>
+
+<h1 class="text-center display-1 font-weight-bold">Purchase complete</h1>
+
+<br>
+<br>
+
+<h3 class="text-center display-4">Balance: &nbsp; {{ person.balance }} kr</h3>
+
+<br>
+<br>
+
+<h3 class="text-center display-4">You are now logged out. Redirecting...</h3>
+
+<br>
+<br>
+<br>
+<br>
+
+{% endblock %}
