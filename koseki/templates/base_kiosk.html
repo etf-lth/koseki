@@ -20,9 +20,12 @@
 
 <body class="base-kiosk">
     <div class="container">
+        {% if alerts|length > 0: %}
+        <div class="mb-4"></div>
+        {% endif %}
         {% for alert in alerts %}
         <div class="alert {{ alert.class }}">
-            <h4>{{ alert.title }}</h4>
+            <h4 style="font-weight-bold">{{ alert.title }}</h4>
             {{ alert.message }}
         </div>
         {% endfor %}
@@ -36,6 +39,7 @@
             <span class="text-muted">{{ config['FOOTER']|safe }}</span>
         </footer>
     </div>
+    <a href="/kiosk/card">/kiosk/card</a>
 </body>
 
 </html>

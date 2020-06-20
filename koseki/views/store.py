@@ -76,7 +76,7 @@ class StoreView:
             form=productForm,
             alerts=alerts,
             products=self.storage.session.query(Product)
-            .order_by(Product.order.desc())
+            .order_by(Product.order.asc())
             .all(),
         )
     
@@ -116,7 +116,4 @@ class StoreView:
             "product_manage.html",
             form=productForm,
             alerts=alerts,
-            products=self.storage.session.query(Product)
-            .order_by(Product.pid.desc())
-            .all(),
         )

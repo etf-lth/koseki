@@ -130,11 +130,11 @@ class KosekiCore:
 
         wrap.__name__ = f.__name__
         return wrap
+    
+    def fetch_alerts(self):
+        alerts = session.pop("alerts", [])
+        session["alerts"] = []
+        return alerts
 
-
-#    @app.route('/api/ac/members')
-#    @require_session(['admin','accounter','board'])
-#    def api_ac_members(self):
-#        term = request.args.get('term','')
-#        members = self.storage.session.query(Person).filter(or_(Person.fname.like(term+'%%'), Person.lname.like(term+'%%'))).all()
-#        return jsonify(data=[{'label':'%s %s' % (p.fname, p.lname), 'value': p.uid} for p in members])
+    def set_alerts(self, alerts):
+        session["alerts"] = alerts

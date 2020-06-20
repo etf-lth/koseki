@@ -53,7 +53,10 @@
             <tr>
                 <td>{{ product.pid }}</td>
                 <td>{{ product.name }}</td>
-                <td>{{ product.img_url }}</td>
+                <td>
+                    <img src="{{ product.img_url }}" width="30px" height="30px" class="mr-2">
+                    <a target="_blank" href="{{ product.img_url }}">{{ product.img_url }}</a>
+                </td>
                 <td>{{ product.price }}</td>
                 <td>{{ product.order }}</td>
                 <td>

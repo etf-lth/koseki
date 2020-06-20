@@ -15,10 +15,6 @@
     background-color: #2D3E81 !important;
 }
 
-.bg-custom-black {
-    background-color: #000000 !important;
-}
-
 .bg-custom-grey {
     background-color: #535C50 !important;
 }
@@ -55,15 +51,22 @@
 .base-kiosk {
     background-color: #dadada;
 }
+.base-kiosk > .container{
+    min-height: 80vh;
+}
 
 .submit-form-group-no-margin>.form-group,
 .footer-register-fee>div>div>.form-group,
 .footer-register-payment>div>div>.form-group {
     margin-bottom: 0;
 }
-.footer-register-fee {
+.border-top-green {
     border-top: 5px solid #52c41a;
 }
-.footer-register-payment {
+.border-top-gold {
     border-top: 5px solid #faad14;
+}
+
+.border-bottom-blue {
+    border-bottom: 5px solid #1890ff;
 }

@@ -32,13 +32,45 @@ class KioskView:
             "/kiosk", None, self.kiosk_login, methods=["GET", "POST"],
         )
         self.app.add_url_rule(
+            "/kiosk/logout", None, self.kiosk_logout, methods=["GET", "POST"],
+        )
+        self.app.add_url_rule(
             "/kiosk/card", None, self.kiosk_card, methods=["GET", "POST"],
+        )
+        self.app.add_url_rule(
+            "/kiosk/products", None, self.kiosk_products, methods=["GET", "POST"],
         )
 
     def kiosk_card(self):
-        cardForm = KioskCardForm()
+        if "kiosk_unlocked" not in session or session["kiosk_unlocked"] != True:
+            return redirect(url_for("kiosk_login"))
 
-        alerts = []
+        # Remove old user if they came here via "Logout" button
+        if "kiosk_uid" in session:
+            session.pop("kiosk_uid")
+
+        cardForm = KioskCardForm()
+        alerts = self.core.fetch_alerts()
+
+        if cardForm.validate_on_submit():
+            alerts.append(
+                {
+                    "class": "alert-success",
+                    "title": "Success",
+                    "message": "dt %s" % (cardForm.cardId.data),
+                }
+            )
+            self.core.set_alerts(alerts)
+            return redirect(url_for("kiosk_products"))
+
+        return render_template("kiosk_card.html", form=cardForm, alerts=alerts,)
+
+    def kiosk_products(self):
+        if "kiosk_unlocked" not in session or session["kiosk_unlocked"] != True:
+            return redirect(url_for("kiosk_login"))
+
+        cardForm = KioskCardForm()
+        alerts = self.core.fetch_alerts()
 
         if cardForm.validate_on_submit():
             alerts.append(
@@ -49,16 +81,23 @@ class KioskView:
                 }
             )
 
-        return render_template("kiosk_card.html", form=cardForm, alerts=alerts,)
+        return render_template(
+            "kiosk_products.html",
+            form=cardForm,
+            alerts=alerts,
+            products=self.storage.session.query(Product)
+            .order_by(Product.order.asc())
+            .all(),
+        )
 
     def kiosk_login(self):
         loginForm = KioskLoginForm()
 
-        alerts = []
+        alerts = self.core.fetch_alerts()
 
         if loginForm.submitLogin.data and loginForm.validate_on_submit():
             if loginForm.password.data == self.app.config["KIOSK_KEY"]:
-                session["kiosk_unlock"] = True
+                session["kiosk_unlocked"] = True
                 return redirect(url_for("kiosk_card"))
             else:
                 alerts.append(
@@ -70,3 +109,7 @@ class KioskView:
                 )
 
         return render_template("kiosk_login.html", form=loginForm, alerts=alerts,)
+
+    def kiosk_logout(self):
+        session["kiosk_unlocked"] = False
+        return redirect(url_for("kiosk_login"))
