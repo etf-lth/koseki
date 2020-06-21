@@ -1,0 +1,83 @@
+<!-- -->
+{% extends "base_kiosk.html" %}
+{% from "macros.html" import render_field %}
+<!-- -->
+{% block title %}Kiosk{% endblock %}
+<!-- -->
+{% block scripts %}
+<script>
+function kioskRegisterButton(val) {
+    var input = $("#kioskRegisterInput");
+    var inputValue = input.text().trim();
+    switch (val) {
+        case "OK":
+            alert(inputValue);
+            inputValue = "";
+            break;
+        case "DEL":
+            inputValue = inputValue.substr(0, inputValue.length - 1);
+            break;
+        default:
+            inputValue += val.toLowerCase();
+            break;
+    }
+    if (inputValue.length == 0) {
+        inputValue = "&nbsp;";
+    }
+    input.html(inputValue);
+}
+
+</script>
+{% endblock %}
+{% block content %}
+<h1 class="text-center display-1 font-weight-bold">
+    Verify card
+    <a href="{{ url_for('kiosk_card') }}" class="btn btn-warning btn-lg ml-3">Logout</a>
+</h1>
+<h1 class="text-center display-4">Please enter your student ID to activate card:</h1>
+
+<div id="kioskRegisterInput" class="bg-white my-5 p-1 display-1 font-weight-bold text-center text-warning">
+&nbsp;
+</div>
+
+<div class="row">
+    {% for letter in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'] %}
+    <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-warning text-white btn-lg col m-1 p-3">{{ letter }}</a>
+    {% endfor %}
+</div>
+<div class="row">
+    {% for letter in ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'] %}
+    <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-warning text-white btn-lg col m-1 p-3">{{ letter }}</a>
+    {% endfor %}
+</div>
+<div class="row">
+    {% for letter in ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'DEL'] %}
+        {% if letter == 'DEL' %}
+        <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-danger text-white btn-lg col m-1 p-3">
+            <i class="fa fa-eraser" aria-hidden="true"></i>
+        </a>
+        {% else %}
+        <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-warning text-white btn-lg col m-1 p-3">{{ letter }}</a>
+        {% endif %}
+    {% endfor %}
+</div>
+<div class="row">
+    {% for letter in ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '-', '_', 'OK'] %}
+        {% if letter == 'OK' %}
+        <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-success text-white btn-lg col m-1 p-3">
+            <i class="fa fa-check" aria-hidden="true"></i>
+        </a>
+        {% elif letter == '-' %}
+        <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-warning text-white btn-lg col m-1 p-3">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+        </a>
+        {% else %}
+        <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-warning text-white btn-lg col m-1 p-3">{{ letter }}</a>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+</div>
+{% endblock %}

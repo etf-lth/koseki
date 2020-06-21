@@ -43,6 +43,9 @@ class KioskView:
             "/kiosk/card", None, self.kiosk_card, methods=["GET", "POST"],
         )
         self.app.add_url_rule(
+            "/kiosk/register", None, self.kiosk_register, methods=["GET", "POST"],
+        )
+        self.app.add_url_rule(
             "/kiosk/products", None, self.kiosk_products, methods=["GET", "POST"],
         )
         self.app.add_url_rule(
@@ -56,6 +59,8 @@ class KioskView:
         # Remove old user if they came here via "Logout" button
         if "kiosk_uid" in session:
             session.pop("kiosk_uid")
+        if "kiosk_card" in session:
+            session.pop("kiosk_card")
 
         alerts = self.core.fetch_alerts()
         form = KioskCardForm()
@@ -72,13 +77,41 @@ class KioskView:
             else:
                 alerts.append(
                     {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": "dt %s" % (form.card_id.data),
+                        "class": "alert-warning",
+                        "title": "Card not verified",
+                        "message": "This is the first time you are using ETF Kiosk. Please verify by entering your student StiL/LUCAT.",
                     }
                 )
+                self.core.set_alerts(alerts)
+                session["kiosk_card"] = form.card_id.data
+                return redirect(url_for("kiosk_register"))
 
         return render_template("kiosk_card.html", form=form, alerts=alerts,)
+
+    def kiosk_register(self):
+        if "kiosk_unlocked" not in session or session["kiosk_unlocked"] != True:
+            return redirect(url_for("kiosk_login"))
+
+        # Remove old user if they came here via "Logout" button
+        if "kiosk_card" not in session:
+            return redirect(url_for("kiosk_card"))
+
+        alerts = self.core.fetch_alerts()
+        form = KioskCardForm()
+
+        if form.validate_on_submit():
+            person = (
+                self.storage.session.query(Person)
+                .filter_by(card_id=form.card_id.data)
+                .scalar()
+            )
+            if person:
+                session["kiosk_uid"] = person.uid
+                return redirect(url_for("kiosk_products"))
+            else:
+                return redirect(url_for("kiosk_register"))
+
+        return render_template("kiosk_register.html", form=form, alerts=alerts,)
 
     def kiosk_products(self):
         if "kiosk_unlocked" not in session or session["kiosk_unlocked"] != True:
