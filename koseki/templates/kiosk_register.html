@@ -11,7 +11,8 @@ function kioskRegisterButton(val) {
     var inputValue = input.text().trim();
     switch (val) {
         case "OK":
-            alert(inputValue);
+            $('#student_id').val(inputValue);
+            $('#student_id').parent().submit();
             inputValue = "";
             break;
         case "DEL":

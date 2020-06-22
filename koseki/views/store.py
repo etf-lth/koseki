@@ -20,6 +20,7 @@ class ProductForm(FlaskForm):
     submitUpdate = SubmitField("Update product")
     submitDelete = SubmitField("Delete product")
 
+
 class StoreView:
     def __init__(self, app, core, storage):
         self.app = app
@@ -36,7 +37,9 @@ class StoreView:
         self.app.add_url_rule(
             "/store/product/<int:pid>",
             None,
-            self.core.require_session(self.manage_product, ["admin", "board", "krangare"]),
+            self.core.require_session(
+                self.manage_product, ["admin", "board", "krangare"]
+            ),
             methods=["GET", "POST"],
         )
         self.core.nav(
@@ -59,7 +62,9 @@ class StoreView:
             self.storage.add(product)
             self.storage.commit()
 
-            logging.info("Registered product %s #%d" % (productForm.name.data, product.pid))
+            logging.info(
+                "Registered product %s #%d" % (productForm.name.data, product.pid)
+            )
 
             alerts.append(
                 {
@@ -79,7 +84,7 @@ class StoreView:
             .order_by(Product.order.asc())
             .all(),
         )
-    
+
     def manage_product(self, pid):
         productForm = ProductForm()
         product = self.storage.session.query(Product).filter_by(pid=pid).scalar()
@@ -93,9 +98,11 @@ class StoreView:
             self.storage.delete(product)
             self.storage.commit()
 
-            logging.info("Deleted product %s #%d" % (productForm.name.data, product.pid))
+            logging.info(
+                "Deleted product %s #%d" % (productForm.name.data, product.pid)
+            )
             return redirect("/store")
-        
+
         if productForm.submitUpdate.data and productForm.validate_on_submit():
             # Update product
             product.name = productForm.name.data
@@ -104,7 +111,9 @@ class StoreView:
             product.order = productForm.order.data
             self.storage.commit()
 
-            logging.info("Updated product %s #%d" % (productForm.name.data, product.pid))
+            logging.info(
+                "Updated product %s #%d" % (productForm.name.data, product.pid)
+            )
             return redirect("/store")
 
         productForm.name.data = product.name
@@ -112,8 +121,4 @@ class StoreView:
         productForm.price.data = product.price
         productForm.order.data = product.order
 
-        return render_template(
-            "product_manage.html",
-            form=productForm,
-            alerts=alerts,
-        )
+        return render_template("product_manage.html", form=productForm, alerts=alerts,)

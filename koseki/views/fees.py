@@ -26,6 +26,7 @@ class FeeForm(FlaskForm):
     retro = DateField("Retroactive fee (Date)", validators=[Optional()])
     submitFee = SubmitField("Register")
 
+
 class PaymentForm(FlaskForm):
 
     uid = TextField("Member ID", validators=[DataRequired()])
@@ -43,6 +44,7 @@ class PaymentForm(FlaskForm):
     )
     reason = TextField("Reason", validators=[DataRequired()])
     submitPayment = SubmitField("Register")
+
 
 class FeesView:
     def __init__(self, app, core, storage, mailer):
@@ -84,7 +86,9 @@ class FeesView:
     def list_payments(self):
         return render_template(
             "list_payments.html",
-            payments=self.storage.session.query(Payment).order_by(Payment.pid.desc()).all(),
+            payments=self.storage.session.query(Payment)
+            .order_by(Payment.pid.desc())
+            .all(),
         )
 
     def export_csv(self):
@@ -101,7 +105,9 @@ class FeesView:
 
         if feeForm.submitFee.data and feeForm.validate_on_submit():
             person = (
-                self.storage.session.query(Person).filter_by(uid=feeForm.uid.data).scalar()
+                self.storage.session.query(Person)
+                .filter_by(uid=feeForm.uid.data)
+                .scalar()
             )
 
             if person is None:
@@ -150,8 +156,7 @@ class FeesView:
             self.storage.commit()
 
             logging.info(
-                "Registered fee %d SEK for %d"
-                % (feeForm.amount.data, person.pid)
+                "Registered fee %d SEK for %d" % (feeForm.amount.data, person.pid)
             )
 
             # Check for user state changes
@@ -185,10 +190,11 @@ class FeesView:
             )
             feeForm = FeeForm(None)
 
-
         elif paymentForm.submitPayment.data and paymentForm.validate_on_submit():
             person = (
-                self.storage.session.query(Person).filter_by(uid=feeForm.uid.data).scalar()
+                self.storage.session.query(Person)
+                .filter_by(uid=feeForm.uid.data)
+                .scalar()
             )
 
             if person is None:
@@ -200,7 +206,9 @@ class FeesView:
                         % paymentForm.uid.data,
                     }
                 )
-                return render_template("register_fee.html", form=paymentForm, alerts=alerts)
+                return render_template(
+                    "register_fee.html", form=paymentForm, alerts=alerts
+                )
 
             # Store payment
             payment = Payment(
@@ -214,8 +222,7 @@ class FeesView:
             self.storage.commit()
 
             logging.info(
-                "Registered payment %d SEK for %d"
-                % (feeForm.amount.data, person.pid)
+                "Registered payment %d SEK for %d" % (feeForm.amount.data, person.pid)
             )
 
             alerts.append(
@@ -228,4 +235,7 @@ class FeesView:
             )
             paymentForm = PaymentForm(None)
 
-        return render_template("register_fee.html", feeForm=feeForm, paymentForm=paymentForm, alerts=alerts)
+        return render_template(
+            "register_fee.html", feeForm=feeForm, paymentForm=paymentForm, alerts=alerts
+        )
+

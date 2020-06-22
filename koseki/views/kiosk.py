@@ -21,6 +21,11 @@ class KioskCardForm(FlaskForm):
     card_id = PasswordField("Student Card ID", validators=[DataRequired()])
 
 
+class KioskRegisterForm(FlaskForm):
+
+    student_id = HiddenField("Student ID", validators=[DataRequired()])
+
+
 class KioskProductForm(FlaskForm):
 
     product_id = HiddenField("Product ID", validators=[DataRequired()])
@@ -97,19 +102,36 @@ class KioskView:
             return redirect(url_for("kiosk_card"))
 
         alerts = self.core.fetch_alerts()
-        form = KioskCardForm()
+        form = KioskRegisterForm()
 
         if form.validate_on_submit():
             person = (
                 self.storage.session.query(Person)
-                .filter_by(card_id=form.card_id.data)
+                .filter_by(stil=form.student_id.data)
                 .scalar()
             )
             if person:
-                session["kiosk_uid"] = person.uid
-                return redirect(url_for("kiosk_products"))
+                person.card_id = session.pop("kiosk_card")
+                self.storage.commit()
+
+                alerts.append(
+                    {
+                        "class": "alert-success",
+                        "title": "Card verified successfully",
+                        "message": "You can now use your student card in the Kiosk.",
+                    }
+                )
+                self.core.set_alerts(alerts)
+                return redirect(url_for("kiosk_card"))
             else:
-                return redirect(url_for("kiosk_register"))
+                alerts.append(
+                    {
+                        "class": "alert-danger",
+                        "title": "Missing user account",
+                        "message": "Could not find user %s. Please contact an ETF board member."
+                        % (session["kiosk_uid"]),
+                    }
+                )
 
         return render_template("kiosk_register.html", form=form, alerts=alerts,)
 
