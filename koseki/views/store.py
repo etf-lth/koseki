@@ -101,7 +101,7 @@ class StoreView:
             logging.info(
                 "Deleted product %s #%d" % (productForm.name.data, product.pid)
             )
-            return redirect("/store")
+            return redirect(self.app.config['URL_BASE'] + url_for("products"))
 
         if productForm.submitUpdate.data and productForm.validate_on_submit():
             # Update product
@@ -114,7 +114,7 @@ class StoreView:
             logging.info(
                 "Updated product %s #%d" % (productForm.name.data, product.pid)
             )
-            return redirect("/store")
+            return redirect(self.app.config['URL_BASE'] + url_for("products"))
 
         productForm.name.data = product.name
         productForm.img_url.data = product.img_url
