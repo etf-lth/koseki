@@ -6,6 +6,7 @@ from sqlalchemy import (
     Enum,
     ForeignKey,
     Integer,
+    DECIMAL,
     Unicode,
     VARCHAR,
     func,
@@ -52,7 +53,7 @@ class Payment(Base):
     pid = Column(Integer, primary_key=True)
     uid = Column(Integer, ForeignKey("person.uid"))
     registered_by = Column(Integer, ForeignKey("person.uid"))
-    amount = Column(Integer)
+    amount = Column(DECIMAL(10,2))
     registered = Column(DateTime, default=datetime.now)
     method = Column(
         Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress"),
@@ -67,7 +68,7 @@ class Product(Base):
     pid = Column(Integer, primary_key=True)
     name = Column(VARCHAR(length=255))
     img_url = Column(VARCHAR(length=510))
-    price = Column(Integer)
+    price = Column(DECIMAL(10,2))
     order = Column(Integer)
 
 

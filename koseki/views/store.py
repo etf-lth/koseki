@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from flask import abort, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, TextField, SubmitField, HiddenField
+from wtforms import IntegerField, DecimalField, SelectField, TextField, SubmitField, HiddenField
 from wtforms.validators import DataRequired, Email, Optional
 
 from koseki.db.types import Fee, Person, Payment, Product
@@ -14,7 +14,7 @@ class ProductForm(FlaskForm):
 
     name = TextField("Product name", validators=[DataRequired()])
     img_url = TextField("Image URL", validators=[DataRequired()])
-    price = IntegerField("Price (SEK)")
+    price = DecimalField("Price (SEK)")
     order = IntegerField("Order")
     submitAdd = SubmitField("Add product")
     submitUpdate = SubmitField("Update product")

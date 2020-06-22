@@ -58,12 +58,16 @@
     margin-bottom: 0;
 }
 .border-top-green {
-    border-top: 5px solid #52c41a;
+    border-top: 5px solid #23a127;
 }
 .border-top-gold {
-    border-top: 5px solid #faad14;
+    border-top: 5px solid #ff7702;
 }
 
 .border-bottom-blue {
-    border-bottom: 5px solid #1890ff;
+    border-bottom: 5px solid #158CBA;
+}
+
+.border-bottom-green {
+    border-bottom: 5px solid #23a127;
 }

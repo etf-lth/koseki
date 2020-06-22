@@ -24,7 +24,7 @@ CREATE TABLE `product` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `img_url` varchar(510) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `price` int(11) NOT NULL DEFAULT 0,
+  `price` DECIMAL(10,2) NOT NULL DEFAULT 0,
   `order` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`pid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -41,7 +41,7 @@ CREATE TABLE `payment` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) DEFAULT NULL,
   `registered_by` int(11) DEFAULT NULL,
-  `amount` int(11) DEFAULT NULL,
+  `amount` DECIMAL(10,2) DEFAULT NULL,
   `registered` datetime DEFAULT NULL,
   `method` enum('swish','cash','bankgiro','creditcard', 'kiosk', 'wordpress') COLLATE utf8_unicode_ci DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,

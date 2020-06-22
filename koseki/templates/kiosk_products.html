@@ -22,27 +22,29 @@
     {{ form.hidden_tag() }}
 </form>
 
-<div class="container">
 <div class="row">
 {% for product in products %}
     <div class="col-4 pb-3">
         <div class="card border-primary h-100">
-            <img class="card-img-top border-bottom-blue p-3" src="{{ product.img_url }}" alt="Product image" style="max-height: 250px">
-            <div class="card-body pb-0">
-                <h3 class="card-title font-weight-bold">{{ product.name }}</h3>
-                <div class="row">
-                    <div class="col-6">
-                        <p class="font-weight-bold text-primary display-4">{{ product.price }} kr</p>
+            <img class="card-img-top border-bottom-blue p-3" src="{{ product.img_url }}" alt="Product image" style="height:250px">
+            <div class="card-body p-0">
+                <div class="row mx-0">
+                    <div class="col-7 pt-2 pb-2">
+                        <h4 class="card-title font-weight-bold pt-2 mb-0">{{ product.name }}</h4>
                     </div>
-                    <div class="col-6">
-                        <a href="javascript:buyProduct({{ product.pid }})" class="btn btn-primary btn-lg float-right mt-3">BUY NOW</a>
+                    <div class="col-5 pt-2 pb-2 bg-custom-grey-comp2 h-100">
+                        <center>
+                            <h1 class="font-weight-bold text-primary mb-0">{{ product.price|replace('.00', '') }} kr</h1>
+                        </center>
                     </div>
                 </div>
             </div>
+            <a href="javascript:buyProduct({{ product.pid }})" class="btn btn-primary btn-lg btn-block py-3 rounded-0">
+                BUY NOW
+            </a>
         </div>
     </div>
 {% endfor %}
-</div>
 </div>
 
 
