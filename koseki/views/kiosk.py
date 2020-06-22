@@ -12,7 +12,7 @@ from koseki.db.types import Fee, Person, Payment, Product
 
 class KioskLoginForm(FlaskForm):
 
-    password = PasswordField("Kiosk Password", validators=[DataRequired()])
+    password = PasswordField("[SYSTEM] Kiosk Password Required", validators=[DataRequired()])
     submit_login = SubmitField("Unlock Kiosk")
 
 
@@ -58,7 +58,7 @@ class KioskView:
         )
 
     def kiosk_card(self):
-        if "kiosk_unlocked" not in session or session["kiosk_unlocked"] != True:
+        if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
             return redirect(url_for("kiosk_login"))
 
         # Remove old user if they came here via "Logout" button
@@ -94,7 +94,7 @@ class KioskView:
         return render_template("kiosk_card.html", form=form, alerts=alerts,)
 
     def kiosk_register(self):
-        if "kiosk_unlocked" not in session or session["kiosk_unlocked"] != True:
+        if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
             return redirect(url_for("kiosk_login"))
 
         # Remove old user if they came here via "Logout" button
@@ -128,15 +128,15 @@ class KioskView:
                     {
                         "class": "alert-danger",
                         "title": "Missing user account",
-                        "message": "Could not find user %s. Please contact an ETF board member."
-                        % (session["kiosk_uid"]),
+                        "message": "Could not find user '%s'. Please contact an ETF board member."
+                        % (form.student_id.data),
                     }
                 )
 
         return render_template("kiosk_register.html", form=form, alerts=alerts,)
 
     def kiosk_products(self):
-        if "kiosk_unlocked" not in session or session["kiosk_unlocked"] != True:
+        if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
             return redirect(url_for("kiosk_login"))
 
         if "kiosk_uid" not in session:
@@ -213,7 +213,7 @@ class KioskView:
         )
 
     def kiosk_success(self):
-        if "kiosk_unlocked" not in session or session["kiosk_unlocked"] != True:
+        if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
             return redirect(url_for("kiosk_login"))
 
         if "kiosk_uid" not in session:
@@ -248,7 +248,7 @@ class KioskView:
 
         if loginForm.submit_login.data and loginForm.validate_on_submit():
             if loginForm.password.data == self.app.config["KIOSK_KEY"]:
-                session["kiosk_unlocked"] = True
+                session["kiosk_password"] = self.app.config["KIOSK_KEY"]
                 return redirect(url_for("kiosk_card"))
             else:
                 alerts.append(
@@ -262,6 +262,6 @@ class KioskView:
         return render_template("kiosk_login.html", form=loginForm, alerts=alerts,)
 
     def kiosk_logout(self):
-        if "kiosk_unlocked" in session:
-            session.pop("kiosk_unlocked")
+        if "kiosk_password" in session:
+            session.pop("kiosk_password")
         return redirect(url_for("kiosk_login"))
