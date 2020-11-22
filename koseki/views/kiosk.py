@@ -59,7 +59,7 @@ class KioskView:
 
     def kiosk_card(self):
         if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_login"))
+            return redirect(url_for("kiosk_login"))
 
         # Remove old user if they came here via "Logout" button
         if "kiosk_uid" in session:
@@ -78,7 +78,7 @@ class KioskView:
             )
             if person:
                 session["kiosk_uid"] = person.uid
-                return redirect(self.app.config['URL_BASE'] + url_for("kiosk_products"))
+                return redirect(url_for("kiosk_products"))
             else:
                 alerts.append(
                     {
@@ -89,17 +89,17 @@ class KioskView:
                 )
                 self.core.set_alerts(alerts)
                 session["kiosk_card"] = form.card_id.data
-                return redirect(self.app.config['URL_BASE'] + url_for("kiosk_register"))
+                return redirect(url_for("kiosk_register"))
 
         return render_template("kiosk_card.html", form=form, alerts=alerts,)
 
     def kiosk_register(self):
         if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_login"))
+            return redirect(url_for("kiosk_login"))
 
         # Remove old user if they came here via "Logout" button
         if "kiosk_card" not in session:
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_card"))
+            return redirect(url_for("kiosk_card"))
 
         alerts = self.core.fetch_alerts()
         form = KioskRegisterForm()
@@ -122,7 +122,7 @@ class KioskView:
                     }
                 )
                 self.core.set_alerts(alerts)
-                return redirect(self.app.config['URL_BASE'] + url_for("kiosk_card"))
+                return redirect(url_for("kiosk_card"))
             else:
                 alerts.append(
                     {
@@ -137,10 +137,10 @@ class KioskView:
 
     def kiosk_products(self):
         if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_login"))
+            return redirect(url_for("kiosk_login"))
 
         if "kiosk_uid" not in session:
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_card"))
+            return redirect(url_for("kiosk_card"))
 
         alerts = self.core.fetch_alerts()
 
@@ -158,7 +158,7 @@ class KioskView:
                 }
             )
             self.core.set_alerts(alerts)
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_card"))
+            return redirect(url_for("kiosk_card"))
 
         form = KioskProductForm()
 
@@ -192,7 +192,7 @@ class KioskView:
                     }
                 )
                 self.core.set_alerts(alerts)
-                return redirect(self.app.config['URL_BASE'] + url_for("kiosk_success"))
+                return redirect(url_for("kiosk_success"))
             else:
                 alerts.append(
                     {
@@ -214,10 +214,10 @@ class KioskView:
 
     def kiosk_success(self):
         if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_login"))
+            return redirect(url_for("kiosk_login"))
 
         if "kiosk_uid" not in session:
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_card"))
+            return redirect(url_for("kiosk_card"))
 
         alerts = self.core.fetch_alerts()
 
@@ -235,7 +235,7 @@ class KioskView:
                 }
             )
             self.core.set_alerts(alerts)
-            return redirect(self.app.config['URL_BASE'] + url_for("kiosk_card"))
+            return redirect(url_for("kiosk_card"))
 
         if "kiosk_uid" in session:
             session.pop("kiosk_uid")
@@ -249,7 +249,7 @@ class KioskView:
         if loginForm.submit_login.data and loginForm.validate_on_submit():
             if loginForm.password.data == self.app.config["KIOSK_KEY"]:
                 session["kiosk_password"] = self.app.config["KIOSK_KEY"]
-                return redirect(self.app.config["URL_BASE"] + url_for("kiosk_card"))
+                return redirect(url_for("kiosk_card"))
             else:
                 alerts.append(
                     {
@@ -264,4 +264,4 @@ class KioskView:
     def kiosk_logout(self):
         if "kiosk_password" in session:
             session.pop("kiosk_password")
-        return redirect(self.app.config['URL_BASE'] + url_for("kiosk_login"))
+        return redirect(url_for("kiosk_login"))
