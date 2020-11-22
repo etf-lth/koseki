@@ -101,6 +101,8 @@ class KosekiCore:
 
     def start_session(self, uid):
         session["uid"] = int(uid)
+        session.permanent = True
+        session.modified = True
         self.calc_nav()
 
     def destroy_session(self):
