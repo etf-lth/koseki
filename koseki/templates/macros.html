@@ -92,7 +92,7 @@
     <ul class="pagination">
     {% for uri,name in (('list_fees','Fees'),('list_payments','Payments'),('register_fee','Register')) %}
         <li class="page-item {{ ' active' if current == uri }}">
-            <a class="page-link" href="{{ url_for(uri) }}">{{ name }}</a>
+	    <a class="page-link" href="{{ url_for(uri) }}">{{ name }}</a>
         </li>
     {% endfor %}
     </ul>

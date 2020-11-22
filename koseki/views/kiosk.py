@@ -249,7 +249,7 @@ class KioskView:
         if loginForm.submit_login.data and loginForm.validate_on_submit():
             if loginForm.password.data == self.app.config["KIOSK_KEY"]:
                 session["kiosk_password"] = self.app.config["KIOSK_KEY"]
-                return redirect(self.app.config['URL_BASE'] + url_for("kiosk_card"))
+                return redirect(self.app.config["URL_BASE"] + url_for("kiosk_card"))
             else:
                 alerts.append(
                     {

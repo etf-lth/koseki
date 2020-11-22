@@ -156,7 +156,7 @@ class FeesView:
             self.storage.commit()
 
             logging.info(
-                "Registered fee %d SEK for %d" % (feeForm.amount.data, person.pid)
+                "Registered fee %d SEK for %d" % (feeForm.amount.data, person.uid)
             )
 
             # Check for user state changes
