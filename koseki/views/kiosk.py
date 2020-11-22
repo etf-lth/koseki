@@ -242,6 +242,9 @@ class KioskView:
         return render_template("kiosk_success.html", person=person, alerts=alerts,)
 
     def kiosk_login(self):
+        if "kiosk_password" in session and session["kiosk_password"] == self.app.config["KIOSK_KEY"]:
+            return redirect(url_for("kiosk_card"))
+
         loginForm = KioskLoginForm()
 
         alerts = self.core.fetch_alerts()
