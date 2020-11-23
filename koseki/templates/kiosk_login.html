@@ -4,16 +4,8 @@
 <!-- -->
 {% block title %}Kiosk{% endblock %}
 <!-- -->
+{% block scripts %}
+<meta http-equiv="refresh" content="6; URL={{ url_for('index')}}" />
+{% endblock %}
 {% block content %}
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <div class="row">
-        <div class="col-12">
-            {{ render_field(form.password, autofocus=true) }}
-        </div>
-        <div class="col-12">
-            {{ render_field(form.submit_login, class="btn btn-primary") }}
-        </div>
-    </div>
-</form>
 {% endblock %}

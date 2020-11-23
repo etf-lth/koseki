@@ -2,18 +2,12 @@ import logging
 import re
 from datetime import datetime, timedelta
 
-from flask import abort, redirect, render_template, session, url_for
+from flask import abort, redirect, render_template, session, request, url_for
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, TextField, SubmitField, PasswordField, HiddenField
 from wtforms.validators import DataRequired, Email, Optional
 
 from koseki.db.types import Fee, Person, Payment, Product
-
-
-class KioskLoginForm(FlaskForm):
-
-    password = PasswordField("[SYSTEM] Kiosk Password Required", validators=[DataRequired()])
-    submit_login = SubmitField("Unlock Kiosk")
 
 
 class KioskCardForm(FlaskForm):
@@ -58,7 +52,10 @@ class KioskView:
         )
 
     def kiosk_card(self):
-        if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
+        if (
+            "kiosk_password" not in session
+            or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
+        ):
             return redirect(url_for("kiosk_login"))
 
         # Remove old user if they came here via "Logout" button
@@ -94,7 +91,10 @@ class KioskView:
         return render_template("kiosk_card.html", form=form, alerts=alerts,)
 
     def kiosk_register(self):
-        if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
+        if (
+            "kiosk_password" not in session
+            or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
+        ):
             return redirect(url_for("kiosk_login"))
 
         # Remove old user if they came here via "Logout" button
@@ -136,7 +136,10 @@ class KioskView:
         return render_template("kiosk_register.html", form=form, alerts=alerts,)
 
     def kiosk_products(self):
-        if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
+        if (
+            "kiosk_password" not in session
+            or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
+        ):
             return redirect(url_for("kiosk_login"))
 
         if "kiosk_uid" not in session:
@@ -213,7 +216,10 @@ class KioskView:
         )
 
     def kiosk_success(self):
-        if "kiosk_password" not in session or session["kiosk_password"] != self.app.config["KIOSK_KEY"]:
+        if (
+            "kiosk_password" not in session
+            or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
+        ):
             return redirect(url_for("kiosk_login"))
 
         if "kiosk_uid" not in session:
@@ -242,15 +248,22 @@ class KioskView:
         return render_template("kiosk_success.html", person=person, alerts=alerts,)
 
     def kiosk_login(self):
-        if "kiosk_password" in session and session["kiosk_password"] == self.app.config["KIOSK_KEY"]:
+        if (
+            "kiosk_password" in session
+            and session["kiosk_password"] == self.app.config["KIOSK_KEY"]
+        ):
             return redirect(url_for("kiosk_card"))
-
-        loginForm = KioskLoginForm()
 
         alerts = self.core.fetch_alerts()
 
-        if loginForm.submit_login.data and loginForm.validate_on_submit():
-            if loginForm.password.data == self.app.config["KIOSK_KEY"]:
+        print()
+
+        if "User-Agent" in request.headers and request.headers.get(
+            "User-Agent"
+        ).startswith("Kiosk"):
+            if ("Key=" + self.app.config["KIOSK_KEY"]) in request.headers.get(
+                "User-Agent"
+            ).split(" "):
                 session["kiosk_password"] = self.app.config["KIOSK_KEY"]
                 return redirect(url_for("kiosk_card"))
             else:
@@ -261,8 +274,16 @@ class KioskView:
                         "message": "Invalid password. Login attempt has been logged.",
                     }
                 )
+        else:
+            alerts.append(
+                {
+                    "class": "alert-danger",
+                    "title": "Error",
+                    "message": "Invalid client. Access attempt has been logged.",
+                }
+            )
 
-        return render_template("kiosk_login.html", form=loginForm, alerts=alerts,)
+        return render_template("kiosk_login.html", alerts=alerts,)
 
     def kiosk_logout(self):
         if "kiosk_password" in session:
