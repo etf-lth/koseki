@@ -22,7 +22,7 @@ class KioskRegisterForm(FlaskForm):
 
 class KioskProductForm(FlaskForm):
 
-    product_id = HiddenField("Product ID", validators=[DataRequired()])
+    products_field = HiddenField("Products", validators=[DataRequired()])
 
 
 class KioskView:
@@ -166,44 +166,74 @@ class KioskView:
         form = KioskProductForm()
 
         if form.validate_on_submit():
-            product = (
-                self.storage.session.query(Product)
-                .filter_by(pid=form.product_id.data)
-                .scalar()
-            )
-            if product:
-                # Store payment
-                payment = Payment(
-                    uid=person.uid,
-                    registered_by=person.uid,
-                    amount=-product.price,
-                    method="kiosk",
-                    reason="Bought %s for %d kr" % (product.name, product.price),
-                )
-                self.storage.add(payment)
-                self.storage.commit()
+            # Process form input
+            productsInput = form.products_field.data.split(",")
+            products = []
+            productAmounts = []
+            errorProcessing = False
+            # Loop through each of the received products and its respective quantity
+            for p in productsInput:
+                productId = float(p.split(":")[0])
+                productQty = int(p.split(":")[1])
+                # Check if QTY is valid
+                if productQty < 1 or productQty > 100:
+                    alerts.append(
+                        {
+                            "class": "alert-danger",
+                            "title": "Error",
+                            "message": "Invalid Quantity %s" % (productId),
+                        }
+                    )
+                    errorProcessing = True
 
-                logging.info(
-                    "Person %d bought %d for %d kr"
-                    % (person.uid, product.pid, product.price)
+                # Fetch product and add if valid
+                product = (
+                    self.storage.session.query(Product)
+                    .filter_by(pid=productId)
+                    .scalar()
                 )
-                alerts.append(
-                    {
-                        "class": "alert-success",
-                        "title": "Successfully bought %s" % (product.name),
-                        "message": "",
-                    }
-                )
+                if product:
+                    products.append(product)
+                    productAmounts.append(productQty)
+                else:
+                    alerts.append(
+                        {
+                            "class": "alert-danger",
+                            "title": "Error",
+                            "message": "Invalid product %s" % (productId),
+                        }
+                    )
+                    errorProcessing = True
+                    break
+
+            if errorProcessing is not True:
+                # Store payment
+                for i in range(len(products)):
+                    product = products[i]
+                    for i in range(productAmounts[i]):
+                        payment = Payment(
+                            uid=person.uid,
+                            registered_by=person.uid,
+                            amount=-product.price,
+                            method="kiosk",
+                            reason="Bought %s for %d kr" % (product.name, product.price),
+                        )
+                        self.storage.add(payment)
+                        self.storage.commit()
+
+                        logging.info(
+                            "Person %d bought %d for %d kr"
+                            % (person.uid, product.pid, product.price)
+                        )
+                        alerts.append(
+                            {
+                                "class": "alert-success",
+                                "title": "Successfully bought %s" % (product.name),
+                                "message": "",
+                            }
+                        )
                 self.core.set_alerts(alerts)
                 return redirect(url_for("kiosk_success"))
-            else:
-                alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": "Invalid product %s" % (form.product_id.data),
-                    }
-                )
 
         return render_template(
             "kiosk_products.html",
@@ -255,8 +285,6 @@ class KioskView:
             return redirect(url_for("kiosk_card"))
 
         alerts = self.core.fetch_alerts()
-
-        print()
 
         if "User-Agent" in request.headers and request.headers.get(
             "User-Agent"

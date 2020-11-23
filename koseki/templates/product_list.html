@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_main.html" %}
 {% from "macros.html" import render_field, store_tabs, fee_method, fee_id %}
 {% block title %}Manage products{% endblock %}
 {% block content %}
@@ -24,6 +24,7 @@
                     {{ render_field(form.order) }}
                 </div>
             </div>
+            <b>Image must be 350px x 250px!</b>
         </div>
         <div class="card-footer">
             <div class="row">

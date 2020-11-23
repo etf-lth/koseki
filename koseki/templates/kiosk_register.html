@@ -63,7 +63,7 @@ function kioskRegisterButton(val) {
     {% endfor %}
 </div>
 <div class="row">
-    {% for letter in ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '-', '_', 'OK'] %}
+    {% for letter in ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '-', '+', 'OK'] %}
         {% if letter == 'OK' %}
         <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-success text-white btn-lg col m-1 p-3">
             <i class="fa fa-check" aria-hidden="true"></i>
@@ -71,6 +71,10 @@ function kioskRegisterButton(val) {
         {% elif letter == '-' %}
         <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-warning text-white btn-lg col m-1 p-3">
             <i class="fa fa-minus" aria-hidden="true"></i>
+        </a>
+        {% elif letter == '+' %}
+        <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-warning text-white btn-lg col m-1 p-3">
+            <i class="fa fa-plus" aria-hidden="true"></i>
         </a>
         {% else %}
         <a href="javascript:kioskRegisterButton('{{ letter }}')" class="btn btn-warning text-white btn-lg col m-1 p-3">{{ letter }}</a>

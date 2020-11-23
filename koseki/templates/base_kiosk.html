@@ -1,58 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- -->
+{% extends "base.html" %}
+<!-- -->
+{% block body_class %}base-kiosk{% endblock %}
+{% block base_scripts %}
+<script>
+    $(function () {
+        setTimeout(() => {
+            $(".alert").alert('close');
+        }, 5000);
+    });
+</script>
+{% endblock %}
+<!-- -->
+{% block body_content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col{% if self.content_rside() | trim %}-9 kiosk-content-overflow{% else %}{% endif %}">
+            <div class="container{{ kiosk_body_container_fluid }}">
+                {% if alerts|length > 0: %}
+                <div class="mb-4"></div>
+                {% endif %}
+                {% for alert in alerts %}
+                <div class="alert {{ alert.class }} show fade">
+                    <h1 class="mb-0"><b>{{ alert.title }}</b></h1>
+                    <h3 class="mb-0">{{ alert.message }}</h3>
+                </div>
+                {% endfor %}
+                {% if alerts|length == 0: %}
+                <div class="mb-{{ nonalert_margin|default(5) }}"></div>
+                {% endif %}
 
-<head>
-    <meta charset="utf-8">
-
-    <!-- Koseki Kiosk: must revalidate cache -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/bootstrap-4.4.1.lumen.min.css" />
-    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/fontawesome-5-all.css" />
-    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/koseki.css" />
-
-    <script src="{{ config['URL_BASE']|safe }}/static/js/jquery-3.4.1.min.js"></script>
-    <script src="{{ config['URL_BASE']|safe }}/static/js/popper.min.js"></script>
-    <script src="{{ config['URL_BASE']|safe }}/static/js/bootstrap.min.js"></script>
-    <script src="{{ config['URL_BASE']|safe }}/static/js/koseki.js"></script>
-
-    <title>{% block title %}{% endblock %}</title>
-
-    {% block scripts %}{% endblock %}
-    <script>
-        $(function () {
-            setTimeout(() => {
-                $(".alert").alert('close');
-            }, 5000);
-        });
-    </script>
-</head>
-
-<body class="base-kiosk">
-    <div class="container">
-        {% if alerts|length > 0: %}
-        <div class="mb-4"></div>
-        {% endif %}
-        {% for alert in alerts %}
-        <div class="alert {{ alert.class }} show fade">
-            <h1 class="mb-0"><b>{{ alert.title }}</b></h1>
-            <h3 class="mb-0">{{ alert.message }}</h3>
+                {% block content %} {% endblock %}
+                <br>
+                <footer class="mb-5">
+                    <hr>
+                    <span class="text-muted">{{ config['FOOTER']|safe }}</span>
+                </footer>
+            </div>
         </div>
-        {% endfor %}
-        {% if alerts|length == 0: %}
-        <div class="mb-5"></div>
+        {% if self.content_rside() | trim %}
+        <div class="col-3 bg-white" style="min-height: 100vh;">
+            {% block content_rside %}{% endblock %}
+        </div>
         {% endif %}
-
-        {% block content %} {% endblock %}
-        <br>
-        <footer class="mb-5">
-            <hr>
-            <span class="text-muted">{{ config['FOOTER']|safe }}</span>
-        </footer>
     </div>
-</body>
+</div>
 
-</html>
+{% endblock %}

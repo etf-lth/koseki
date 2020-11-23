@@ -1,50 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/bootstrap-4.4.1.lumen.min.css" />
-    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/fontawesome-5-all.css" />
-    <link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/koseki.css" />
-
-    <script src="{{ config['URL_BASE']|safe }}/static/js/jquery-3.4.1.min.js"></script>
-    <script src="{{ config['URL_BASE']|safe }}/static/js/popper.min.js"></script>
-    <script src="{{ config['URL_BASE']|safe }}/static/js/bootstrap.min.js"></script>
-    <script src="{{ config['URL_BASE']|safe }}/static/js/koseki.js"></script>
-
-    <title>{% block title %}{% endblock %}</title>
-
-    {% block scripts %}{% endblock %}
-</head>
-
-<body class="base-modal">
-    <div class="container-fluid mt-5 pt-5">
-        <div class="row">
-            <div class="col-sm-2 col-lg-3 col-xl-4">
-            </div>
-            <div class="col-sm-8 col-lg-6 col-xl-4">
-                <div class="card mb-3">
-                    <h3 class="card-header"></h3>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-3 p-1 bg-custom-grey"></div>
-                            <div class="col-3 p-1 bg-custom-grey-comp1"></div>
-                            <div class="col-3 p-1 bg-custom-blue"></div>
-                            <div class="col-3 p-1 bg-custom-grey-comp2"></div>
-                        </div>
+<!-- -->
+{% extends "base.html" %}
+<!-- -->
+{% block body_class %}base-modal{% endblock %}
+<!-- -->
+{% block body_content %}
+<div class="container-fluid mt-5 pt-5">
+    <div class="row">
+        <div class="col-sm-2 col-lg-3 col-xl-4">
+        </div>
+        <div class="col-sm-8 col-lg-6 col-xl-4">
+            <div class="card mb-3">
+                <h3 class="card-header"></h3>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-3 p-1 bg-custom-grey"></div>
+                        <div class="col-3 p-1 bg-custom-grey-comp1"></div>
+                        <div class="col-3 p-1 bg-custom-blue"></div>
+                        <div class="col-3 p-1 bg-custom-grey-comp2"></div>
                     </div>
-                    <div class="card-body">
-                        {% block content %} {% endblock %}
-                    </div>
-                    <div class="card-footer text-muted">
-                        {% block footer %}
-                        <small class="text-muted">{{ config['FOOTER']|safe }}</small> {% endblock %}
-                    </div>
+                </div>
+                <div class="card-body">
+                    {% block content %} {% endblock %}
+                </div>
+                <div class="card-footer text-muted">
+                    {% block footer %}
+                    <small class="text-muted">{{ config['FOOTER']|safe }}</small> {% endblock %}
                 </div>
             </div>
         </div>
     </div>
-</body>
-
-</html>
+</div>
+{% endblock %}

@@ -15,50 +15,12 @@
 
     <title>{% block title %}{% endblock %}</title>
 
+    {% block base_scripts %}{% endblock %}
     {% block scripts %}{% endblock %}
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
-        <div class="container">
-            <a class="navbar-brand d-block d-lg-none text-white font-weight-bold"
-                href="#">{{ config['ORG_NAME']|safe }}</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav">
-                    {% for item in make_nav() %}
-                    <li class="nav-item px-0 px-lg-3 p">
-                        <a class="nav-link text-white font-weight-bold" href="{{ config['URL_BASE'] }}{{ item.uri }}">
-                            <i class="fa fa-{{ item.icon }} mr-1"></i> {{ item.title }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        {% for alert in alerts %}
-        <div class="alert {{ alert.class }}">
-            <h4>{{ alert.title }}</h4>
-            {{ alert.message }}
-        </div>
-        {% endfor %}
-        {% if alerts|length == 0: %}
-        <div class="mb-5"></div>
-        {% endif %}
-
-        {% block content %} {% endblock %}
-        <footer class="mb-5">
-            <hr>
-            <span class="text-muted">{{ config['FOOTER']|safe }}</span>
-        </footer>
-    </div>
+<body class="{% block body_class %}{% endblock %}">
+    {% block body_content %}{% endblock %}
 </body>
 
 </html>
