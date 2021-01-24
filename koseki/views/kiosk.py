@@ -67,7 +67,7 @@ class KioskView:
         alerts = self.core.fetch_alerts()
         form = KioskCardForm()
 
-        if form.validate_on_submit():
+        if form.validate_on_submit() and len(form.card_id.data) == 10:
             person = (
                 self.storage.session.query(Person)
                 .filter_by(card_id=form.card_id.data)

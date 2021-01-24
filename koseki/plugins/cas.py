@@ -19,13 +19,13 @@ class CASPlugin:
 
     def cas_login(self):
         return {
-            "text": "Please sign in using CAS "
+            "text": "Please sign in using LU "
             + "if you are a student or employee at Lund University.",
             "url": self.app.config["CAS_SERVER"]
             + "/cas/login?service="
             + self.app.config["URL_BASE"]
             + "/cas&renew=false",
-            "button": "Sign in using CAS",
+            "button": "Sign in with LU",
         }
 
     def cas_ticket(self):
