@@ -1,14 +1,8 @@
 import base64
-from flask_bootstrap import Bootstrap
-from flask_babel import Babel
-from flask import Flask, g
-from koseki.db.types import Person, Group, PersonGroup
-from koseki.db.storage import Storage
-from . import reverse
 import logging
 import os
 
-from flask import Flask
+from flask import Flask, g
 from flask_babel import Babel
 from flask_bootstrap import Bootstrap
 
@@ -18,9 +12,10 @@ from koseki.db.types import Group, Person, PersonGroup
 from koseki.mail import Mailer
 from koseki.plugins.cas import CASPlugin
 from koseki.plugins.salto import SaltoPlugin
+from koseki.reverse import ReverseProxied
 from koseki.update import Updater
-from koseki.views.api import APIView
 from koseki.views.add import AddView
+from koseki.views.api import APIView
 from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
 from koseki.views.index import IndexView
@@ -31,11 +26,10 @@ from koseki.views.membership import MembershipView
 
 if os.name != "nt":
     from koseki.views.print import PrintView
+
 from koseki.views.session import SessionView
 from koseki.views.store import StoreView
 from koseki.views.user import UserView
-
-from . import reverse
 
 logging.basicConfig(
     format="%(asctime)s %(message)s", level=logging.DEBUG, filename="koseki.log"
@@ -124,7 +118,7 @@ def create_app():
         register_views()
         app.secret_key = base64.b64decode(app.config["SECRET_KEY"])
         app.debug = app.config["DEBUG"]
-        app.wsgi_app = reverse.ReverseProxied(app.wsgi_app)
+        app.wsgi_app = ReverseProxied(app.wsgi_app)
     return app
 
 
