@@ -19,6 +19,7 @@ from koseki.mail import Mailer
 from koseki.plugins.cas import CASPlugin
 from koseki.plugins.salto import SaltoPlugin
 from koseki.update import Updater
+from koseki.views.api import APIView
 from koseki.views.add import AddView
 from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
@@ -27,7 +28,8 @@ from koseki.views.kiosk import KioskView
 from koseki.views.list import ListView
 from koseki.views.mail import MailView
 from koseki.views.membership import MembershipView
-if os.name != 'nt':
+
+if os.name != "nt":
     from koseki.views.print import PrintView
 from koseki.views.session import SessionView
 from koseki.views.store import StoreView
@@ -67,12 +69,14 @@ def register_plugins():
 ## Return connections to db pool after closure
 @app.teardown_appcontext
 def close_db(error):
-    db = g.pop('db', None)
+    db = g.pop("db", None)
     if db is not None:
         db.close()
 
+
 def register_views():
     views = []
+    views.append(APIView(app, core, storage))
     views.append(AddView(app, core, storage, mailer))
     views.append(ErrorView(app))
     views.append(FeesView(app, core, storage, mailer))
@@ -81,7 +85,7 @@ def register_views():
     views.append(ListView(app, core, storage))
     views.append(MailView(app, core, storage))
     views.append(MembershipView(app, core, storage))
-    if os.name != 'nt':
+    if os.name != "nt":
         views.append(PrintView(app, core, storage))
     views.append(SessionView(app, core, storage))
     views.append(StoreView(app, core, storage))
@@ -96,7 +100,7 @@ def create_app():
             storage.add(
                 Person(
                     uid=1,
-                    fname="Test",
+                    fname="Admin",
                     lname="Testsson",
                     email="admin@example.com",
                     stil="admin",
@@ -106,7 +110,7 @@ def create_app():
             storage.add(
                 Person(
                     uid=1,
-                    fname="Test",
+                    fname="User",
                     lname="Testsson",
                     email="user@example.com",
                     stil="user",

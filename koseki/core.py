@@ -1,21 +1,16 @@
 import datetime
 import hashlib
 import logging
-import re
 import time
 
 from flask import (
     abort,
-    escape,
-    jsonify,
     redirect,
-    render_template,
     request,
     session,
     url_for,
 )
 from flask_babel import format_datetime
-from sqlalchemy import or_
 
 from koseki.db.types import Group, Person
 
@@ -132,7 +127,7 @@ class KosekiCore:
 
         wrap.__name__ = f.__name__
         return wrap
-    
+
     def fetch_alerts(self):
         alerts = session.pop("alerts", [])
         session["alerts"] = []
