@@ -6,9 +6,10 @@ from flask import Flask, g
 from flask_babel import Babel
 from flask_bootstrap import Bootstrap
 
+from koseki.config import KosekiConfig
 from koseki.core import KosekiCore
 from koseki.db.storage import Storage
-from koseki.db.types import Group, Person, PersonGroup
+from koseki.db.types import Person, PersonGroup
 from koseki.mail import Mailer
 from koseki.plugins.cas import CASPlugin
 from koseki.plugins.salto import SaltoPlugin
@@ -35,6 +36,7 @@ logging.basicConfig(
     format="%(asctime)s %(message)s", level=logging.DEBUG, filename="koseki.log"
 )
 app = Flask(__name__)
+app.config.from_object(KosekiConfig())
 app.config.from_pyfile("../koseki.cfg")
 storage = Storage(
     "mysql://%s:%s@%s/%s"
@@ -116,8 +118,6 @@ def create_app():
         updater.start()
         register_plugins()
         register_views()
-        app.secret_key = base64.b64decode(app.config["SECRET_KEY"])
-        app.debug = app.config["DEBUG"]
         app.wsgi_app = ReverseProxied(app.wsgi_app)
     return app
 

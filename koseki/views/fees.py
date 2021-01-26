@@ -174,7 +174,7 @@ class FeesView:
                 self.storage.commit()
                 logging.info("%s %s is now active" % (person.fname, person.lname))
                 self.mailer.send_mail(
-                    self.app.config["BOARD_EMAIL"],
+                    self.app.config["ORG_EMAIL"],
                     "board_member_active.mail",
                     member=person,
                 )

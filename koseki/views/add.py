@@ -75,7 +75,7 @@ class AddView:
 
                 self.mailer.send_mail(person, "member_enrolled.mail", member=person)
                 self.mailer.send_mail(
-                    self.app.config["BOARD_EMAIL"],
+                    self.app.config["ORG_EMAIL"],
                     "board_member_enrolled.mail",
                     member=person,
                 )

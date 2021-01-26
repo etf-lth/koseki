@@ -51,7 +51,7 @@ class Updater:
                     # Send mail to member and board
                     self.mailer.send_mail(member, "member_expired.mail", member=member)
                     self.mailer.send_mail(
-                        self.app.config["BOARD_EMAIL"],
+                        self.app.config["ORG_EMAIL"],
                         "board_member_expired.mail",
                         member=member,
                     )
