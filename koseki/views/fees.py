@@ -222,7 +222,7 @@ class FeesView:
             self.storage.commit()
 
             logging.info(
-                "Registered payment %d SEK for %d" % (feeForm.amount.data, person.pid)
+                "Registered payment %d SEK for %d" % (feeForm.amount.data, person.uid)
             )
 
             alerts.append(

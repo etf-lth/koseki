@@ -1,15 +1,11 @@
+import base64
 import datetime
 import hashlib
 import logging
 import time
+import requests
 
-from flask import (
-    abort,
-    redirect,
-    request,
-    session,
-    url_for,
-)
+from flask import abort, redirect, request, session, url_for
 from flask_babel import format_datetime
 
 from koseki.db.types import Group, Person
@@ -29,6 +25,7 @@ class KosekiCore:
         app.add_template_filter(self.format_date, "date")
         app.context_processor(self.uid_to_name)
         app.context_processor(self.member_of_processor)
+        app.context_processor(self.swish_qrcode_processor)
 
     def make_nav_processor(self):
         def make_nav():
@@ -135,3 +132,30 @@ class KosekiCore:
 
     def set_alerts(self, alerts):
         session["alerts"] = alerts
+
+    def swish_qrcode_processor(self):
+        def swish_qrcode(member):
+            if member.balance >= 0:
+                return ""
+            data = dict(
+                format="png",
+                size=350,
+                message={"value": member.stil, "editable": False},
+                amount={"value": -float(member.balance), "editable": False},
+                payee={"value": "123 019 24 76", "editable": False},
+            )
+            headers = {"Content-type": "application/json"}
+            response = requests.post(
+                "https://mpc.getswish.net/qrg-swish/api/v1/prefilled",
+                headers=headers,
+                json=data,
+            )
+            return (
+                "data:"
+                + response.headers["Content-Type"]
+                + ";"
+                + "base64,"
+                + str(base64.b64encode(response.content), "utf-8")
+            )
+
+        return dict(swish_qrcode=swish_qrcode)

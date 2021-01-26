@@ -9,7 +9,6 @@ from sqlalchemy import (
     DECIMAL,
     Unicode,
     VARCHAR,
-    func,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
@@ -97,3 +96,29 @@ class Person(Base):
     @property
     def balance(self):
         return sum([p.amount for p in self.payments])
+
+    @property
+    def unpaid_payments(self):
+        unpaids = []
+        remainder = 0
+        # person.fees sorts in descending ID-order, therefore the list is reversed to be chronological
+        for payment in reversed(self.payments):
+            if payment.amount == 0:
+                continue
+            if payment.amount < 0:
+                # Add unpaid entry to list
+                unpaids.append(payment)
+                continue
+            if payment.amount > 0:
+                remainder += payment.amount
+                # Check how many unpaids can be removed with this payment
+                now_paids = []
+                for unpaid in unpaids:
+                    # Check if member has any leftover cash to remove this unpaid too
+                    if remainder > -unpaid.amount:
+                        remainder += unpaid.amount # Amount is negative
+                        now_paids.append(unpaid)
+                # Post-remove everything in batch in order to not mess up looping
+                for paid in now_paids:
+                    unpaids.remove(paid)
+        return unpaids

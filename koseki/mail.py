@@ -1,10 +1,11 @@
 import logging
 import smtplib
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from flask import render_template
 
-from koseki.db.types import Fee, Person
+from koseki.db.types import Person
 
 
 class Mailer:
@@ -12,15 +13,23 @@ class Mailer:
         self.app = app
 
     def send_mail(self, to, template, **kwargs):
-        logging.info("send_mail to=%s, template=%s, args=%s" % (to, template, kwargs))
         try:
             from_mail = self.app.config["EMAIL_FROM"]
 
             if type(to) is Person:
                 to = "%s %s <%s>" % (to.fname, to.lname, to.email)
-                # logging.info('fulade fram mejladress "%s"' % to)
 
-            msg = MIMEText(render_template(template, **kwargs), _charset="utf8")
+            logging.info(
+                "send_mail to=%s, template=%s, args=%s" % (to, template, kwargs)
+            )
+
+            mimeType = "plain"
+            if template.endswith("html"):
+                mimeType = "html"
+
+            msg = MIMEText(
+                render_template(template, **kwargs), mimeType, _charset="utf8"
+            )
             msg["To"] = to
             msg["From"] = from_mail
             msg["Subject"] = self.app.config["EMAIL_SUBJECT"]

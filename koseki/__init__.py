@@ -70,8 +70,8 @@ def close_db(error):
 
 def register_views():
     views = []
-    views.append(APIView(app, core, storage))
     views.append(AddView(app, core, storage, mailer))
+    views.append(APIView(app, core, storage))
     views.append(ErrorView(app))
     views.append(FeesView(app, core, storage, mailer))
     views.append(IndexView(app, core, storage))
@@ -124,6 +124,5 @@ def create_app():
 
 def run_koseki():
     create_app().run()
-
 
 __all__ = ["run_koseki"]

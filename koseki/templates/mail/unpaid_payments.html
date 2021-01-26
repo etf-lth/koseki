@@ -1,0 +1,74 @@
+{% extends "mail/base_mail.html" %}
+{% block title %}Payment of remaining membership debt {% endblock %}
+
+{% block content %}
+
+<b>Dear {{ member.fname }} {{ member.lname }},</b>
+
+<br /><br />
+
+This is a periodic email to remind you that you have outstanding debt in your membership account.
+Debt is usually for past purchase of soft drinks, sweets or pastries bought in the refrigerator system.
+
+<br /><br />
+
+<b>Your total credit is: {{ member.balance }} kr.</b>
+
+<br /><br />
+
+<img src="{{ swish_qrcode(member) }}" alt="Swish QR Code" width="250" border="0" />
+
+<br /><br />
+
+Alternative payment instructions are at the end of the email. Below you can see a summary of unpaid debts, as well as a
+total amount at the end.
+Please note the total does not always match the list if you have previously paid your debt in installments.
+
+<br /><br />
+
+<table role="presentation" border="0" cellpadding="10px" cellspacing="0" width="100%">
+    <thead style="background: #0050b3; color: #ffffff">
+        <tr>
+            <th style="width: 40px"></th>
+            <th>Registered</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    {% for payment in member.unpaid_payments %}
+    {% if loop.index0 % 2 == 0 %}
+    <tr style="background: #e6f7ff">
+        {% else %}
+    <tr>
+        {% endif %}
+        <td align="center">{{ mail_badge(payment.pid) }}</td>
+        <td>{{ payment.registered|date }}</td>
+        <td>{{ payment.amount }} kr</td>
+        <td align="center">{{ mail_badge(payment.method) }}</td>
+        <td>{{ payment.reason }}</td>
+    </tr>
+    {% endfor %}
+    <thead style="background: #0050b3; color: #ffffff">
+        <tr>
+            <th></th>
+            <th>Total credit:</th>
+            <th><u>{{ member.balance }} kr</u></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+<br /><br />
+
+Payment can be done either in cash, through bank transfer with BankGiro, or Swish.
+ETF's Swish number is 123 019 24 76, BankGiro is 281-1362. Cash payment can be made to any Board member.
+
+<br /><br />
+
+Remember to always check the <a href="{{ config['ORG_NAME']|safe }}" target="_blank">membership system</a> for the
+latest information. <b>Please contact a board member if you
+    have any questions.</b>
+
+{% endblock %}

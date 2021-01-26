@@ -9,3 +9,7 @@ services:
       - "127.0.0.1:3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "password"
+  mail:
+    image: bytemark/smtp
+    ports:
+      - "127.0.0.1:25:25"

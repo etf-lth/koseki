@@ -15,8 +15,12 @@ class Updater:
         self.sched = BackgroundScheduler()
 
     def start(self):
+        self.send_debt_mail()
         self.sched.start()
-        self.sched.add_job(self.update_members, "cron", hour=7, minute=0, second=0)
+        self.sched.add_job(self.update_members, "cron", hour=4, minute=0, second=0)
+        self.sched.add_job(
+            self.send_debt_mail, "cron", month="*/3", day=28, hour=5, minute=0, second=0
+        )
 
     def update_members(self):
         with self.app.app_context():
@@ -46,9 +50,7 @@ class Updater:
                     self.storage.commit()
 
                     # Send mail to member and board
-                    self.mailer.send_mail(
-                        member, "member_expired.mail", member=member
-                    )
+                    self.mailer.send_mail(member, "member_expired.mail", member=member)
                     self.mailer.send_mail(
                         self.app.config["BOARD_EMAIL"],
                         "board_member_expired.mail",
@@ -76,3 +78,23 @@ class Updater:
                             member=member,
                             days_left=days_left,
                         )
+
+    def send_debt_mail(self):
+        with self.app.app_context():
+            logging.info("Checking debt and sending emails")
+            # This could probably be made more efficient with a .filter() on balance, but
+            # difficult right now to implement as SQLAlchy wouldn't know how to structure
+            # the SQL query due to .balance being a @property.
+            members = self.storage.session.query(Person).all()
+
+            for member in members:
+                if member.balance >= 0:
+                    continue
+
+                logging.info(
+                    "Member %s %s has %d unpaid payments, sending reminder"
+                    % (member.fname, member.lname, len(member.unpaid_payments))
+                )
+                self.mailer.send_mail(
+                    member, "mail/unpaid_payments.html", member=member
+                )
