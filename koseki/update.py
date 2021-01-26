@@ -15,7 +15,6 @@ class Updater:
         self.sched = BackgroundScheduler()
 
     def start(self):
-        self.send_debt_mail()
         self.sched.start()
         self.sched.add_job(self.update_members, "cron", hour=4, minute=0, second=0)
         self.sched.add_job(
