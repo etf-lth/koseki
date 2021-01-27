@@ -1,13 +1,11 @@
 import logging
-import re
-from datetime import datetime, timedelta
 
-from flask import abort, redirect, render_template, session, request, url_for
+from flask import redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, TextField, SubmitField, PasswordField, HiddenField
-from wtforms.validators import DataRequired, Email, Optional
-
-from koseki.db.types import Fee, Person, Payment, Product
+from koseki.db.types import Payment, Person, Product
+from koseki.plugin import KosekiPlugin
+from wtforms import HiddenField, PasswordField
+from wtforms.validators import DataRequired
 
 
 class KioskCardForm(FlaskForm):
@@ -25,13 +23,13 @@ class KioskProductForm(FlaskForm):
     products_field = HiddenField("Products", validators=[DataRequired()])
 
 
-class KioskView:
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
+class KioskPlugin(KosekiPlugin):
+    def config(self) -> dict:
+        return {
+            "KIOSK_KEY": "123456",
+        }
 
-    def register(self):
+    def register(self) -> None:
         self.app.add_url_rule(
             "/kiosk", None, self.kiosk_login, methods=["GET", "POST"],
         )
@@ -216,7 +214,8 @@ class KioskView:
                             registered_by=person.uid,
                             amount=-product.price,
                             method="kiosk",
-                            reason="Bought %s for %d kr" % (product.name, product.price),
+                            reason="Bought %s for %d kr"
+                            % (product.name, product.price),
                         )
                         self.storage.add(payment)
                         self.storage.commit()
@@ -317,3 +316,4 @@ class KioskView:
         if "kiosk_password" in session:
             session.pop("kiosk_password")
         return redirect(url_for("kiosk_login"))
+

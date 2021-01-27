@@ -4,29 +4,44 @@ import secrets
 class KosekiConfig(object):
     DEBUG = False
 
+    #
+    # Koseki config
+    #
+    KOSEKI_VERSION = "MMXXI"
+
     @property
-    def SECRET_KEY(self):
+    def FOOTER(self) -> str:
+        return "koseki &copy; " + self.KOSEKI_VERSION
+
+    #
+    # Hosting config
+    #
+    URL_BASE = "http://localhost:5000"
+    UPLOAD_FOLDER = "./data"
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE = True
+
+    @property
+    def SECRET_KEY(self) -> str:
         return secrets.token_urlsafe(16)
 
-    # Password used for Kiosk unlock
-    KIOSK_KEY = "123456"
-
+    #
+    # Database config
+    #
     DB_HOST = "127.0.0.1"
     DB_USER = "root"
     DB_DATABASE = "koseki"
     DB_PASSWORD = "password"
 
+    #
+    # Email config
+    #
     SMTP_SERVER = "127.0.0.1"
     EMAIL_FROM = "Koseki Member management <member@acme.nu>"
     EMAIL_SUBJECT = "Koseki Member management"
 
+    #
+    # Organisation config
+    #
     ORG_NAME = "Koseki"
     ORG_EMAIL = "contact@acme.nu"
-
-    URL_BASE = "http://localhost:5000"
-
-    UPLOAD_FOLDER = "./data"
-
-    FOOTER = "koseki &copy; MMXXI"
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SECURE = True

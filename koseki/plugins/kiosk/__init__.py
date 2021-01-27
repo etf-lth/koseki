@@ -1,0 +1,1 @@
+from .kiosk import KioskPlugin

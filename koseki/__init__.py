@@ -1,6 +1,6 @@
-import base64
 import logging
 import os
+import importlib
 
 from flask import Flask, g
 from flask_babel import Babel
@@ -11,8 +11,7 @@ from koseki.core import KosekiCore
 from koseki.db.storage import Storage
 from koseki.db.types import Person, PersonGroup
 from koseki.mail import Mailer
-from koseki.plugins.cas import CASPlugin
-from koseki.plugins.salto import SaltoPlugin
+from koseki.plugin import KosekiPlugin
 from koseki.reverse import ReverseProxied
 from koseki.update import Updater
 from koseki.views.add import AddView
@@ -20,7 +19,6 @@ from koseki.views.api import APIView
 from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
 from koseki.views.index import IndexView
-from koseki.views.kiosk import KioskView
 from koseki.views.list import ListView
 from koseki.views.mail import MailView
 from koseki.views.membership import MembershipView
@@ -49,17 +47,26 @@ storage = Storage(
 )
 babel = Babel(app)
 boostrap = Bootstrap(app)
-
 mailer = Mailer(app)
 updater = Updater(app, storage, mailer)
 core = KosekiCore(app, storage, babel)
 
 
 def register_plugins():
-    cas = CASPlugin(app, core, storage)
-    cas.register()
-    SaltoPlugin(app, core, storage).register()
-    core.alternate_login(cas.cas_login)
+    plugins = ["CAS", "Salto", "Kiosk"]
+    plugin: KosekiPlugin
+    for plugin_name in plugins:
+        plugin_module: any = importlib.import_module("koseki.plugins." + plugin_name.lower())
+        plugin_type: type = getattr(plugin_module, plugin_name + "Plugin")
+
+        logging.info("Registering plugin: %s" % (plugin_name))
+
+        # Instantiate plugin
+        plugin = plugin_type(app, core, storage)
+        # Register config vars
+        app.config.from_object(plugin.config())
+        # Register URL handlers
+        plugin.register()
 
 
 ## Return connections to db pool after closure
@@ -77,7 +84,6 @@ def register_views():
     views.append(ErrorView(app))
     views.append(FeesView(app, core, storage, mailer))
     views.append(IndexView(app, core, storage))
-    views.append(KioskView(app, core, storage))
     views.append(ListView(app, core, storage))
     views.append(MailView(app, core, storage))
     views.append(MembershipView(app, core, storage))
@@ -124,5 +130,6 @@ def create_app():
 
 def run_koseki():
     create_app().run()
+
 
 __all__ = ["run_koseki"]

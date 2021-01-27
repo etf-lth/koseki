@@ -1,0 +1,1 @@
+from .salto import SaltoPlugin

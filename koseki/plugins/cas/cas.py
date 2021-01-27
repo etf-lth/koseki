@@ -3,24 +3,24 @@ import urllib.parse
 import urllib.request
 from xml.etree import ElementTree as ET
 
-from flask import escape, redirect, render_template, request, session, url_for
-
+from flask import redirect, render_template, request, url_for
 from koseki.db.types import Person
+from koseki.plugin import KosekiPlugin
 
 
-class CASPlugin:
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
-    def register(self):
-        self.app.add_url_rule("/cas", None, self.cas_ticket)
-
-    def cas_login(self):
+class CASPlugin(KosekiPlugin):
+    def config(self) -> dict:
         return {
-            "text": "Please sign in using LU "
-            + "if you are a student or employee at Lund University.",
+            "CAS_SERVER": "https://ldpv3.acme.nu/idp/profile",
+        }
+
+    def register(self) -> None:
+        self.app.add_url_rule("/cas", None, self.cas_ticket)
+        self.core.alternate_login(self.cas_login)
+
+    def cas_login(self) -> dict:
+        return {
+            "text": "If you are a student or employee at Lund University, please sign in with your LU account.",
             "url": self.app.config["CAS_SERVER"]
             + "/cas/login?service="
             + self.app.config["URL_BASE"]
@@ -28,7 +28,7 @@ class CASPlugin:
             "button": "Sign in with LU",
         }
 
-    def cas_ticket(self):
+    def cas_ticket(self) -> str:
         if "ticket" not in request.args:
             # just pretend it failed
             return render_template("cas.html", error="cas-failed")
