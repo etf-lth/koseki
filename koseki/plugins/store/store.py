@@ -1,37 +1,38 @@
 import logging
-import re
-from datetime import datetime, timedelta
 
-from flask import abort, redirect, render_template, request, session, url_for
+from flask import Blueprint, abort, redirect, render_template, url_for
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, DecimalField, SelectField, TextField, SubmitField, HiddenField
-from wtforms.validators import DataRequired, Email, Optional
-
-from koseki.db.types import Fee, Person, Payment, Product
+from koseki.db.types import Product
+from koseki.plugin import KosekiPlugin
+from wtforms import DecimalField, IntegerField, SubmitField, TextField
+from wtforms.validators import DataRequired
 
 
 class ProductForm(FlaskForm):
 
     name = TextField("Product name", validators=[DataRequired()])
     img_url = TextField("Image URL", validators=[DataRequired()])
-    price = DecimalField("Price (SEK)")
+    price = DecimalField("Price")
     order = IntegerField("Order")
     submitAdd = SubmitField("Add product")
     submitUpdate = SubmitField("Update product")
     submitDelete = SubmitField("Delete product")
 
 
-class StoreView:
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
-    def register(self):
+class StorePlugin(KosekiPlugin):
+    def create_blueprint(self) -> Blueprint:
+        self.core.nav(
+            "/store", "shopping-basket", "Store", 4, ["admin", "board", "krangare"]
+        )
+        blueprint: Blueprint = Blueprint(
+            "store", __name__, template_folder="./templates"
+        )
         self.app.add_url_rule(
             "/store",
             None,
-            self.core.require_session(self.products, ["admin", "board", "krangare"]),
+            self.core.require_session(
+                self.list_products, ["admin", "board", "krangare"]
+            ),
             methods=["GET", "POST"],
         )
         self.app.add_url_rule(
@@ -42,11 +43,9 @@ class StoreView:
             ),
             methods=["GET", "POST"],
         )
-        self.core.nav(
-            "/store", "shopping-basket", "Store", 4, ["admin", "board", "krangare"]
-        )
+        return blueprint
 
-    def products(self):
+    def list_products(self):
         productForm = ProductForm()
 
         alerts = []
@@ -77,7 +76,7 @@ class StoreView:
             productForm = ProductForm(None)
 
         return render_template(
-            "product_list.html",
+            "store_list_products.html",
             form=productForm,
             alerts=alerts,
             products=self.storage.session.query(Product)
@@ -101,7 +100,7 @@ class StoreView:
             logging.info(
                 "Deleted product %s #%d" % (productForm.name.data, product.pid)
             )
-            return redirect(url_for("products"))
+            return redirect(url_for(self.list_products.__name__))
 
         if productForm.submitUpdate.data and productForm.validate_on_submit():
             # Update product
@@ -114,11 +113,13 @@ class StoreView:
             logging.info(
                 "Updated product %s #%d" % (productForm.name.data, product.pid)
             )
-            return redirect(url_for("products"))
+            return redirect(url_for(self.list_products.__name__))
 
         productForm.name.data = product.name
         productForm.img_url.data = product.img_url
         productForm.price.data = product.price
         productForm.order.data = product.order
 
-        return render_template("product_manage.html", form=productForm, alerts=alerts,)
+        return render_template(
+            "store_manage_product.html", form=productForm, alerts=alerts,
+        )
