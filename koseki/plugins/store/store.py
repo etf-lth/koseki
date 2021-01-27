@@ -9,7 +9,6 @@ from wtforms.validators import DataRequired
 
 
 class ProductForm(FlaskForm):
-
     name = TextField("Product name", validators=[DataRequired()])
     img_url = TextField("Image URL", validators=[DataRequired()])
     price = DecimalField("Price")

@@ -10,5 +10,11 @@ class KosekiPlugin:
     def config(self) -> dict:
         return {}
 
+    def plugin_enable(self) -> None:
+        pass
+
+    def plugin_disable(self) -> None:
+        pass
+
     def create_blueprint(self) -> Blueprint:
         pass

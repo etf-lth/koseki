@@ -3,39 +3,47 @@ import os
 import time
 
 import cups
-from flask import escape, redirect, render_template, request, session, url_for
+from flask import Blueprint, render_template, request
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
+from koseki.plugin import KosekiPlugin
 from werkzeug.utils import secure_filename
-
-from koseki.db.types import Fee, Person
 
 
 class PrintForm(FlaskForm):
     file = FileField("Select Document", validators=[FileRequired()])
 
 
-class PrintView:
+class PrintPlugin(KosekiPlugin):
     def __init__(self, app, core, storage):
         self.app = app
         self.core = core
         self.storage = storage
-        self.cupsConn = cups.Connection()
-        self.ALLOWED_EXTENSIONS = {"pdf"}
 
-    def register(self):
+    def config(self) -> dict:
+        return {"ALLOWED_EXTENSIONS": ("pdf")}
+
+    def plugin_enable(self) -> None:
+        self.cupsConn = cups.Connection()
+
+    def create_blueprint(self) -> Blueprint:
+        self.core.nav("/print", "print", "Print", 6)
+        blueprint: Blueprint = Blueprint(
+            "store", __name__, template_folder="./templates"
+        )
         self.app.add_url_rule(
             "/print",
             None,
             self.core.require_session(self.print),
             methods=["GET", "POST"],
         )
-        self.core.nav("/print", "print", "Print", 6)
+        return blueprint
 
     def allowed_file(self, filename):
         return (
             "." in filename
-            and filename.rsplit(".", 1)[1].lower() in self.ALLOWED_EXTENSIONS
+            and filename.rsplit(".", 1)[1].lower()
+            in self.app.config["ALLOWED_EXTENSIONS"]
         )
 
     def print(self):

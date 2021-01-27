@@ -1,8 +1,8 @@
+import importlib
 import logging
 import os
-import importlib
 
-from flask import Flask, g, Blueprint
+from flask import Blueprint, Flask, g
 from flask_babel import Babel
 from flask_bootstrap import Bootstrap
 
@@ -22,10 +22,6 @@ from koseki.views.index import IndexView
 from koseki.views.list import ListView
 from koseki.views.mail import MailView
 from koseki.views.membership import MembershipView
-
-if os.name != "nt":
-    from koseki.views.print import PrintView
-
 from koseki.views.session import SessionView
 from koseki.views.user import UserView
 
@@ -85,8 +81,6 @@ def register_views():
     views.append(ListView(app, core, storage))
     views.append(MailView(app, core, storage))
     views.append(MembershipView(app, core, storage))
-    if os.name != "nt":
-        views.append(PrintView(app, core, storage))
     views.append(SessionView(app, core, storage))
     views.append(UserView(app, core, storage))
     for v in views:

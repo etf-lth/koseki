@@ -54,5 +54,6 @@ class KosekiConfig(object):
     #   Salto - Integration with Lund University card system
     #   Kiosk - Touch interface store solution
     #   Store - Handles product registration
+    #   Print - Allows sending documents to CUPS for printing (Linux-only!)
     #
     PLUGINS = ["CAS", "Salto", "Kiosk", "Store"]
