@@ -1,7 +1,6 @@
 import hashlib
 
-from flask import escape, redirect, render_template, request, session, url_for
-
+from flask import redirect, render_template, request, url_for
 from koseki.db.types import Person
 
 

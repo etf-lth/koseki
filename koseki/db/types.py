@@ -1,23 +1,23 @@
 from datetime import datetime
 
 from sqlalchemy import (
+    DECIMAL,
     Column,
     DateTime,
     Enum,
     ForeignKey,
     Integer,
-    DECIMAL,
     Unicode,
-    VARCHAR,
 )
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy.ext.declarative.api import DeclarativeMeta
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+Base: DeclarativeMeta = declarative_base()
 
 
 class PersonGroup(Base):
-    __tablename__ = "person_group"
+    __tablename__: str = "person_group"
 
     uid = Column(Integer, ForeignKey("person.uid"), primary_key=True)
     gid = Column(Integer, ForeignKey("group.gid"), primary_key=True)
@@ -26,17 +26,17 @@ class PersonGroup(Base):
 
 
 class Group(Base):
-    __tablename__ = "group"
+    __tablename__: str = "group"
 
-    gid = Column(Integer, primary_key=True)
-    name = Column(Unicode(32))
+    gid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    name = Column(Unicode(32), unique=True)
     descr = Column(Unicode(64))
 
 
 class Fee(Base):
-    __tablename__ = "fee"
+    __tablename__: str = "fee"
 
-    fid = Column(Integer, primary_key=True)
+    fid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     uid = Column(Integer, ForeignKey("person.uid"))
     registered_by = Column(Integer, ForeignKey("person.uid"))
     amount = Column(Integer)
@@ -47,43 +47,50 @@ class Fee(Base):
 
 
 class Payment(Base):
-    __tablename__ = "payment"
+    __tablename__: str = "payment"
 
-    pid = Column(Integer, primary_key=True)
+    pid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     uid = Column(Integer, ForeignKey("person.uid"))
     registered_by = Column(Integer, ForeignKey("person.uid"))
-    amount = Column(DECIMAL(10,2))
+    amount = Column(DECIMAL(10, 2))
     registered = Column(DateTime, default=datetime.now)
     method = Column(
         Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress"),
         default="swish",
     )
-    reason = Column(VARCHAR(length=255))
+    reason = Column(Unicode(length=255))
 
 
 class Product(Base):
-    __tablename__ = "product"
+    __tablename__: str = "product"
 
-    pid = Column(Integer, primary_key=True)
-    name = Column(VARCHAR(length=255))
-    img_url = Column(VARCHAR(length=510))
-    price = Column(DECIMAL(10,2))
-    order = Column(Integer)
+    pid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    name = Column(Unicode(length=255))
+    img_url = Column(Unicode(length=510))
+    price = Column(DECIMAL(10, 2))
+    order = Column(Integer, default=0, nullable=False)
 
 
 class Person(Base):
-    __tablename__ = "person"
+    __tablename__: str = "person"
 
-    uid = Column(Integer, primary_key=True)
+    uid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     state = Column(Enum("pending", "active", "expired"), default="pending")
     fname = Column(Unicode(64))
     lname = Column(Unicode(64))
     email = Column(Unicode(64))
-    stil = Column(Unicode(64))
+    stil = Column(Unicode(64))  # Plugin: Salto
     password = Column(Unicode(64))
-    card_id = Column(Unicode(64))
     enrolled = Column(DateTime, default=datetime.now)
     enrolled_by = Column(Integer, ForeignKey("person.uid"))
+    card_id = Column(Unicode(64))  # Plugin: Kiosk
+    address_line1 = Column(Unicode(64))
+    address_line2 = Column(Unicode(64))
+    city = Column(Unicode(64))
+    postcode = Column(Unicode(64))
+    region = Column(Unicode(64))
+    country = Column(Unicode(64))
+    phone_number = Column(Unicode(64))
 
     groups = relationship("PersonGroup", backref="person")
     fees = relationship(
@@ -116,7 +123,7 @@ class Person(Base):
                 for unpaid in unpaids:
                     # Check if member has any leftover cash to remove this unpaid too
                     if remainder > -unpaid.amount:
-                        remainder += unpaid.amount # Amount is negative
+                        remainder += unpaid.amount  # Amount is negative
                         now_paids.append(unpaid)
                 # Post-remove everything in batch in order to not mess up looping
                 for paid in now_paids:

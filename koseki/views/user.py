@@ -1,13 +1,11 @@
-from flask import abort, redirect, render_template, request, session, url_for
+from flask import abort, render_template, request
 from flask_wtf import FlaskForm
-from wtforms import SelectMultipleField, TextField
-from wtforms.validators import DataRequired, Email
-
 from koseki.db.types import Group, Person, PersonGroup
+from wtforms import TextField
+from wtforms.validators import DataRequired, Email
 
 
 class GeneralForm(FlaskForm):
-
     fname = TextField("First name", validators=[DataRequired()])
     lname = TextField("Last name", validators=[DataRequired()])
     email = TextField("Email", validators=[Email()])

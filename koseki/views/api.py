@@ -1,7 +1,6 @@
-from flask import request, jsonify
-from sqlalchemy import or_
-
+from flask import jsonify, request
 from koseki.db.types import Person
+from sqlalchemy import or_
 
 
 class APIView:

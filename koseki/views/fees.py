@@ -1,17 +1,14 @@
 import logging
-import re
 from datetime import datetime, timedelta
 
-from flask import escape, redirect, render_template, request, session, url_for
+from flask import render_template
 from flask_wtf import FlaskForm
-from wtforms import DateField, IntegerField, SelectField, TextField, SubmitField
-from wtforms.validators import DataRequired, Email, Optional
-
-from koseki.db.types import Fee, Person, Payment
+from koseki.db.types import Fee, Payment, Person
+from wtforms import DateField, IntegerField, SelectField, SubmitField, TextField
+from wtforms.validators import DataRequired, Optional
 
 
 class FeeForm(FlaskForm):
-
     uid = TextField("Member ID", validators=[DataRequired()])
     amount = IntegerField("Amount (SEK)")
     method = SelectField(

@@ -1,11 +1,10 @@
 import logging
 
-from flask import escape, redirect, render_template, request, session, url_for
+from flask import render_template
 from flask_wtf import FlaskForm
+from koseki.db.types import Person
 from wtforms import TextField
 from wtforms.validators import DataRequired, Email
-
-from koseki.db.types import Person
 
 
 class EnrollForm(FlaskForm):

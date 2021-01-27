@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from flask import escape, redirect, render_template, request, session, url_for
-
-from koseki.db.types import Person, PersonGroup
+from flask import render_template
+from koseki.db.types import Person
 
 
 class IndexView:

@@ -1,6 +1,4 @@
-from flask import escape, redirect, render_template, request, session, url_for
-
-from koseki.db.types import Person
+from flask import render_template
 
 
 class ErrorView:

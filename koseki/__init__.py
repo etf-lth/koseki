@@ -1,8 +1,7 @@
 import importlib
 import logging
-import os
 
-from flask import Blueprint, Flask, g
+from flask import Flask, g
 from flask_babel import Babel
 from flask_bootstrap import Bootstrap
 

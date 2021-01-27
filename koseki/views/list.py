@@ -1,5 +1,4 @@
-from flask import escape, redirect, render_template, request, session, url_for
-
+from flask import render_template
 from koseki.db.types import Person
 
 
