@@ -8,7 +8,7 @@ class KosekiPlugin:
         self.storage = storage
 
     def config(self) -> dict:
-        pass
+        return {}
 
     def create_blueprint(self) -> Blueprint:
         pass

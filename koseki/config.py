@@ -45,3 +45,14 @@ class KosekiConfig(object):
     #
     ORG_NAME = "Koseki"
     ORG_EMAIL = "contact@acme.nu"
+
+    #
+    # Plugins - Must be correctly capitalized!!!
+    #
+    # Default:
+    #   CAS - Integration with Lund University login system (Central Authentication System)
+    #   Salto - Integration with Lund University card system
+    #   Kiosk - Touch interface store solution
+    #   Store - Handles product registration
+    #
+    PLUGINS = ["CAS", "Salto", "Kiosk", "Store"]

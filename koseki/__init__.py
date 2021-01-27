@@ -52,9 +52,8 @@ core = KosekiCore(app, storage, babel)
 
 
 def register_plugins():
-    plugins = ["CAS", "Salto", "Kiosk"]
     plugin: KosekiPlugin
-    for plugin_name in plugins:
+    for plugin_name in app.config["PLUGINS"]:
         plugin_module: any = importlib.import_module("koseki.plugins." + plugin_name.lower())
         plugin_type: type = getattr(plugin_module, plugin_name + "Plugin")
 
