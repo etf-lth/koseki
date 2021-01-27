@@ -3,7 +3,7 @@ import urllib.parse
 import urllib.request
 from xml.etree import ElementTree as ET
 
-from flask import redirect, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for
 from koseki.db.types import Person
 from koseki.plugin import KosekiPlugin
 
@@ -14,9 +14,11 @@ class CASPlugin(KosekiPlugin):
             "CAS_SERVER": "https://ldpv3.acme.nu/idp/profile",
         }
 
-    def register(self) -> None:
-        self.app.add_url_rule("/cas", None, self.cas_ticket)
+    def create_blueprint(self) -> Blueprint:
         self.core.alternate_login(self.cas_login)
+        blueprint: Blueprint = Blueprint("cas", __name__)
+        blueprint.add_url_rule("/cas", None, self.cas_ticket)
+        return blueprint
 
     def cas_login(self) -> dict:
         return {

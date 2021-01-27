@@ -1,3 +1,6 @@
+from flask.blueprints import Blueprint
+
+
 class KosekiPlugin:
     def __init__(self, app, core, storage):
         self.app = app
@@ -7,5 +10,5 @@ class KosekiPlugin:
     def config(self) -> dict:
         pass
 
-    def register(self) -> None:
+    def create_blueprint(self) -> Blueprint:
         pass

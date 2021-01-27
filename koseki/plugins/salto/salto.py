@@ -1,4 +1,4 @@
-from flask import abort, request
+from flask import Blueprint, abort, request
 from koseki.db.types import Person
 from koseki.plugin import KosekiPlugin
 
@@ -9,10 +9,12 @@ class SaltoPlugin(KosekiPlugin):
             "SALTO_ALLOWED_IPS": ("130.235.20.201", "130.235.20.67", "194.47.250.246"),
         }
 
-    def register(self) -> None:
-        self.app.add_url_rule("/salto/all", None, self.salto_all)
-        self.app.add_url_rule("/salto/sales", None, self.salto_sales)
-        self.app.add_url_rule("/salto/mek", None, self.salto_mek)
+    def create_blueprint(self) -> Blueprint:
+        blueprint: Blueprint = Blueprint("salto", __name__)
+        blueprint.add_url_rule("/salto/all", None, self.salto_all)
+        blueprint.add_url_rule("/salto/sales", None, self.salto_sales)
+        blueprint.add_url_rule("/salto/mek", None, self.salto_mek)
+        return blueprint
 
     def salto_all(self) -> str:
         # if "X-Real-IP" in request.headers and (

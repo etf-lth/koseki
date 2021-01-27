@@ -1,6 +1,6 @@
 import logging
 
-from flask import redirect, render_template, request, session, url_for
+from flask import Blueprint, redirect, render_template, request, session, url_for
 from flask_wtf import FlaskForm
 from koseki.db.types import Payment, Person, Product
 from koseki.plugin import KosekiPlugin
@@ -29,25 +29,29 @@ class KioskPlugin(KosekiPlugin):
             "KIOSK_KEY": "123456",
         }
 
-    def register(self) -> None:
-        self.app.add_url_rule(
+    def create_blueprint(self) -> Blueprint:
+        blueprint: Blueprint = Blueprint(
+            "kiosk", __name__, template_folder="./templates"
+        )
+        blueprint.add_url_rule(
             "/kiosk", None, self.kiosk_login, methods=["GET", "POST"],
         )
-        self.app.add_url_rule(
+        blueprint.add_url_rule(
             "/kiosk/logout", None, self.kiosk_logout, methods=["GET", "POST"],
         )
-        self.app.add_url_rule(
+        blueprint.add_url_rule(
             "/kiosk/card", None, self.kiosk_card, methods=["GET", "POST"],
         )
-        self.app.add_url_rule(
+        blueprint.add_url_rule(
             "/kiosk/register", None, self.kiosk_register, methods=["GET", "POST"],
         )
-        self.app.add_url_rule(
+        blueprint.add_url_rule(
             "/kiosk/products", None, self.kiosk_products, methods=["GET", "POST"],
         )
-        self.app.add_url_rule(
+        blueprint.add_url_rule(
             "/kiosk/success", None, self.kiosk_success, methods=["GET", "POST"],
         )
+        return blueprint
 
     def kiosk_card(self):
         if (

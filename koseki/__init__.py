@@ -2,7 +2,7 @@ import logging
 import os
 import importlib
 
-from flask import Flask, g
+from flask import Flask, g, Blueprint
 from flask_babel import Babel
 from flask_bootstrap import Bootstrap
 
@@ -63,10 +63,10 @@ def register_plugins():
 
         # Instantiate plugin
         plugin = plugin_type(app, core, storage)
-        # Register config vars
+        # Register config variables
         app.config.from_object(plugin.config())
         # Register URL handlers
-        plugin.register()
+        app.register_blueprint(plugin.create_blueprint())
 
 
 ## Return connections to db pool after closure
