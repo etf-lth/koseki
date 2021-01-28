@@ -56,7 +56,7 @@ class KioskPlugin(KosekiPlugin):
             "kiosk_password" not in session
             or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
         ):
-            return redirect(url_for("kiosk_login"))
+            return redirect(url_for("kiosk.kiosk_login"))
 
         # Remove old user if they came here via "Logout" button
         if "kiosk_uid" in session:
@@ -75,7 +75,7 @@ class KioskPlugin(KosekiPlugin):
             )
             if person:
                 session["kiosk_uid"] = person.uid
-                return redirect(url_for("kiosk_products"))
+                return redirect(url_for("kiosk.kiosk_products"))
             else:
                 alerts.append(
                     KosekiAlert(
@@ -86,7 +86,7 @@ class KioskPlugin(KosekiPlugin):
                 )
                 self.util.set_alerts(alerts)
                 session["kiosk_card"] = form.card_id.data
-                return redirect(url_for("kiosk_register"))
+                return redirect(url_for("kiosk.kiosk_register"))
 
         return render_template("kiosk_card.html", form=form, alerts=alerts,)
 
@@ -95,11 +95,11 @@ class KioskPlugin(KosekiPlugin):
             "kiosk_password" not in session
             or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
         ):
-            return redirect(url_for("kiosk_login"))
+            return redirect(url_for("kiosk.kiosk_login"))
 
         # Remove old user if they came here via "Logout" button
         if "kiosk_card" not in session:
-            return redirect(url_for("kiosk_card"))
+            return redirect(url_for("kiosk.kiosk_card"))
 
         alerts = self.util.fetch_alerts()
         form = KioskRegisterForm()
@@ -122,7 +122,7 @@ class KioskPlugin(KosekiPlugin):
                     )
                 )
                 self.util.set_alerts(alerts)
-                return redirect(url_for("kiosk_card"))
+                return redirect(url_for("kiosk.kiosk_card"))
             else:
                 alerts.append(
                     KosekiAlert(
@@ -140,10 +140,10 @@ class KioskPlugin(KosekiPlugin):
             "kiosk_password" not in session
             or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
         ):
-            return redirect(url_for("kiosk_login"))
+            return redirect(url_for("kiosk.kiosk_login"))
 
         if "kiosk_uid" not in session:
-            return redirect(url_for("kiosk_card"))
+            return redirect(url_for("kiosk.kiosk_card"))
 
         alerts = self.util.fetch_alerts()
 
@@ -161,7 +161,7 @@ class KioskPlugin(KosekiPlugin):
                 )
             )
             self.util.set_alerts(alerts)
-            return redirect(url_for("kiosk_card"))
+            return redirect(url_for("kiosk.kiosk_card"))
 
         form = KioskProductForm()
         product: Product
@@ -235,7 +235,7 @@ class KioskPlugin(KosekiPlugin):
                             )
                         )
                 self.util.set_alerts(alerts)
-                return redirect(url_for("kiosk_success"))
+                return redirect(url_for("kiosk.kiosk_success"))
 
         return render_template(
             "kiosk_products.html",
@@ -252,10 +252,10 @@ class KioskPlugin(KosekiPlugin):
             "kiosk_password" not in session
             or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
         ):
-            return redirect(url_for("kiosk_login"))
+            return redirect(url_for("kiosk.kiosk_login"))
 
         if "kiosk_uid" not in session:
-            return redirect(url_for("kiosk_card"))
+            return redirect(url_for("kiosk.kiosk_card"))
 
         alerts = self.util.fetch_alerts()
 
@@ -273,7 +273,7 @@ class KioskPlugin(KosekiPlugin):
                 )
             )
             self.util.set_alerts(alerts)
-            return redirect(url_for("kiosk_card"))
+            return redirect(url_for("kiosk.kiosk_card"))
 
         if "kiosk_uid" in session:
             session.pop("kiosk_uid")
@@ -284,7 +284,7 @@ class KioskPlugin(KosekiPlugin):
             "kiosk_password" in session
             and session["kiosk_password"] == self.app.config["KIOSK_KEY"]
         ):
-            return redirect(url_for("kiosk_card"))
+            return redirect(url_for("kiosk.kiosk_card"))
 
         alerts = self.util.fetch_alerts()
 
@@ -297,7 +297,7 @@ class KioskPlugin(KosekiPlugin):
                 " "
             ):
                 session["kiosk_password"] = self.app.config["KIOSK_KEY"]
-                return redirect(url_for("kiosk_card"))
+                return redirect(url_for("kiosk.kiosk_card"))
             else:
                 alerts.append(
                     KosekiAlert(
@@ -320,5 +320,5 @@ class KioskPlugin(KosekiPlugin):
     def kiosk_logout(self):
         if "kiosk_password" in session:
             session.pop("kiosk_password")
-        return redirect(url_for("kiosk_login"))
+        return redirect(url_for("kiosk.kiosk_login"))
 
