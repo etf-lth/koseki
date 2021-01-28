@@ -26,7 +26,7 @@ class PrintPlugin(KosekiPlugin):
     def create_blueprint(self) -> Blueprint:
         self.util.nav("/print", "print", "Print", 6)
         blueprint: Blueprint = Blueprint(
-            "store", __name__, template_folder="./templates"
+            "print", __name__, template_folder="./templates"
         )
         blueprint.add_url_rule(
             "/print",

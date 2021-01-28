@@ -6,7 +6,7 @@ from koseki.plugin import KosekiPlugin
 class SaltoPlugin(KosekiPlugin):
     def config(self) -> dict:
         return {
-            "SALTO_ALLOWED_IPS": ("130.235.20.201", "130.235.20.67", "194.47.250.246"),
+            "SALTO_ALLOWED_IPS": ["130.235.20.201", "130.235.20.67", "194.47.250.246"],
         }
 
     def create_blueprint(self) -> Blueprint:
@@ -31,10 +31,10 @@ class SaltoPlugin(KosekiPlugin):
         return out
 
     def salto_sales(self) -> str:
-        if "X-Real-IP" in request.headers and (
-            not request.headers["X-Real-IP"] in self.app.config["SALTO_ALLOWED_IPS"]
-        ):
-            abort(403)
+        #if "X-Real-IP" in request.headers and (
+        #    not request.headers["X-Real-IP"] in self.app.config["SALTO_ALLOWED_IPS"]
+        #):
+        #    abort(403)
         out: str = ""
         member: Person
         for member in (
@@ -47,10 +47,10 @@ class SaltoPlugin(KosekiPlugin):
         return out
 
     def salto_mek(self) -> str:
-        if "X-Real-IP" in request.headers and (
-            not request.headers["X-Real-IP"] in self.app.config["SALTO_ALLOWED_IPS"]
-        ):
-            abort(403)
+        #if "X-Real-IP" in request.headers and (
+        #    not request.headers["X-Real-IP"] in self.app.config["SALTO_ALLOWED_IPS"]
+        #):
+        #    abort(403)
         out: str = ""
         for member in (
             self.storage.session.query(Person).filter_by(state="active").all()

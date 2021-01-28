@@ -40,7 +40,7 @@ class KosekiUtil:
                 1 for group in n.groups if self.member_of(group)
             ) > 0:
                 nav.append(n)
-        session["nav"] = sorted(nav, key=lambda x: x.weight)
+        session["nav"] = list(map(lambda x: vars(x), sorted(nav, key=lambda x: x.weight)))
 
     def start_session(self, uid):
         session["uid"] = int(uid)
