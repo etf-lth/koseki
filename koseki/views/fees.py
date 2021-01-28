@@ -1,12 +1,15 @@
 import logging
 from datetime import datetime, timedelta
+from typing import List
 
 from flask import render_template
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Fee, Payment, Person
+from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
-from wtforms import DateField, IntegerField, SelectField, SubmitField, TextField  # type: ignore
-from wtforms.validators import DataRequired, Optional # type: ignore
+from wtforms import SelectField  # type: ignore
+from wtforms import DateField, IntegerField, SubmitField, TextField
+from wtforms.validators import DataRequired, Optional  # type: ignore
 
 
 class FeeForm(FlaskForm):
@@ -92,7 +95,7 @@ class FeesView(KosekiView):
         feeForm = FeeForm()
         paymentForm = PaymentForm()
 
-        alerts = []
+        alerts: List[KosekiAlert] = []
 
         if feeForm.submitFee.data and feeForm.validate_on_submit():
             person = (
@@ -103,12 +106,12 @@ class FeesView(KosekiView):
 
             if person is None:
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": 'No such member "%s". Did you try the auto-complete feature?'
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Error",
+                        'No such member "%s". Did you try the auto-complete feature?'
                         % feeForm.uid.data,
-                    }
+                    )
                 )
                 return render_template("register_fee.html", form=feeForm, alerts=alerts)
 
@@ -172,12 +175,12 @@ class FeesView(KosekiView):
                 self.mail.send_mail(person, "member_active.mail", member=person)
 
             alerts.append(
-                {
-                    "class": "alert-success",
-                    "title": "Success",
-                    "message": "Registered fee %d SEK for %s %s"
+                KosekiAlert(
+                    KosekiAlertType.SUCCESS,
+                    "Success",
+                    "Registered fee %d SEK for %s %s"
                     % (feeForm.amount.data, person.fname, person.lname),
-                }
+                )
             )
             feeForm = FeeForm(None)
 
@@ -190,12 +193,12 @@ class FeesView(KosekiView):
 
             if person is None:
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": 'No such member "%s". Did you try the auto-complete feature?'
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Error",
+                        'No such member "%s". Did you try the auto-complete feature?'
                         % paymentForm.uid.data,
-                    }
+                    )
                 )
                 return render_template(
                     "register_fee.html", form=paymentForm, alerts=alerts
@@ -217,12 +220,12 @@ class FeesView(KosekiView):
             )
 
             alerts.append(
-                {
-                    "class": "alert-success",
-                    "title": "Success",
-                    "message": "Registered payment %d SEK for %s %s"
+                KosekiAlert(
+                    KosekiAlertType.SUCCESS,
+                    "Success",
+                    "Registered payment %d SEK for %s %s"
                     % (feeForm.amount.data, person.fname, person.lname),
-                }
+                )
             )
             paymentForm = PaymentForm(None)
 

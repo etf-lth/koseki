@@ -1,6 +1,9 @@
+from typing import List
+
 from flask import render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Fee, Person
+from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
 from wtforms import TextField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
@@ -50,22 +53,22 @@ class MembershipView(KosekiView):
         )
         form = EditForm(obj=person)
 
-        alerts = []
+        alerts: List[KosekiAlert] = []
         alerts.append(
-            {
-                "class": "alert-warning",
-                "title": "Note",
-                "message": "Profile editing is currently disabled",
-            }
+            KosekiAlert(
+                KosekiAlertType.WARNING,
+                "Note",
+                "Profile editing is currently disabled",
+            )
         )
 
         if request.method == "POST":
             alerts.append(
-                {
-                    "class": "alert-danger",
-                    "title": "Error",
-                    "message": "Profile editing is currently disabled",
-                }
+                KosekiAlert(
+                    KosekiAlertType.DANGER,
+                    "Error",
+                    "Profile editing is currently disabled",
+                )
             )
 
         return render_template(

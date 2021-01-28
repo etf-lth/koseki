@@ -4,6 +4,7 @@ from flask import Blueprint, redirect, render_template, request, session, url_fo
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Payment, Person, Product
 from koseki.plugin import KosekiPlugin
+from koseki.util import KosekiAlert, KosekiAlertType
 from wtforms import HiddenField, PasswordField  # type: ignore
 from wtforms.validators import DataRequired  # type: ignore
 
@@ -77,11 +78,11 @@ class KioskPlugin(KosekiPlugin):
                 return redirect(url_for("kiosk_products"))
             else:
                 alerts.append(
-                    {
-                        "class": "alert-warning",
-                        "title": "Card not verified",
-                        "message": "This is the first time you are using ETF Kiosk. Please verify by entering your student StiL/LUCAT.",
-                    }
+                    KosekiAlert(
+                        KosekiAlertType.WARNING,
+                        "Card not verified",
+                        "This is the first time you are using ETF Kiosk. Please verify by entering your student StiL/LUCAT.",
+                    )
                 )
                 self.util.set_alerts(alerts)
                 session["kiosk_card"] = form.card_id.data
@@ -114,22 +115,22 @@ class KioskPlugin(KosekiPlugin):
                 self.storage.commit()
 
                 alerts.append(
-                    {
-                        "class": "alert-success",
-                        "title": "Card verified successfully",
-                        "message": "You can now use your student card in the Kiosk.",
-                    }
+                    KosekiAlert(
+                        KosekiAlertType.SUCCESS,
+                        "Card verified successfully",
+                        "You can now use your student card in the Kiosk.",
+                    )
                 )
                 self.util.set_alerts(alerts)
                 return redirect(url_for("kiosk_card"))
             else:
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Missing user account",
-                        "message": "Could not find user '%s'. Please contact an ETF board member."
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Missing user account",
+                        "Could not find user '%s'. Please contact an ETF board member."
                         % (form.student_id.data),
-                    }
+                    )
                 )
 
         return render_template("kiosk_register.html", form=form, alerts=alerts,)
@@ -153,11 +154,11 @@ class KioskPlugin(KosekiPlugin):
         )
         if not person:
             alerts.append(
-                {
-                    "class": "alert-danger",
-                    "title": "Error",
-                    "message": "Missing user %s" % (session["kiosk_uid"]),
-                }
+                KosekiAlert(
+                    KosekiAlertType.DANGER,
+                    "Error",
+                    "Missing user %s" % (session["kiosk_uid"]),
+                )
             )
             self.util.set_alerts(alerts)
             return redirect(url_for("kiosk_card"))
@@ -178,11 +179,11 @@ class KioskPlugin(KosekiPlugin):
                 # Check if QTY is valid
                 if productQty < 1 or productQty > 100:
                     alerts.append(
-                        {
-                            "class": "alert-danger",
-                            "title": "Error",
-                            "message": "Invalid Quantity %s" % (productId),
-                        }
+                        KosekiAlert(
+                            KosekiAlertType.DANGER,
+                            "Error",
+                            "Invalid Quantity %s" % (productId),
+                        )
                     )
                     errorProcessing = True
 
@@ -197,11 +198,11 @@ class KioskPlugin(KosekiPlugin):
                     productAmounts.append(productQty)
                 else:
                     alerts.append(
-                        {
-                            "class": "alert-danger",
-                            "title": "Error",
-                            "message": "Invalid product %s" % (productId),
-                        }
+                        KosekiAlert(
+                            KosekiAlertType.DANGER,
+                            "Error",
+                            "Invalid product %s" % (productId),
+                        )
                     )
                     errorProcessing = True
                     break
@@ -227,11 +228,11 @@ class KioskPlugin(KosekiPlugin):
                             % (person.uid, product.pid, product.price)  # type: ignore
                         )
                         alerts.append(
-                            {
-                                "class": "alert-success",
-                                "title": "Successfully bought %s" % (product.name),
-                                "message": "",
-                            }
+                            KosekiAlert(
+                                KosekiAlertType.SUCCESS,
+                                "Successfully bought %s" % (product.name),
+                                "",
+                            )
                         )
                 self.util.set_alerts(alerts)
                 return redirect(url_for("kiosk_success"))
@@ -265,11 +266,11 @@ class KioskPlugin(KosekiPlugin):
         )
         if not person:
             alerts.append(
-                {
-                    "class": "alert-danger",
-                    "title": "Error",
-                    "message": "Missing user %s" % (session["kiosk_uid"]),
-                }
+                KosekiAlert(
+                    KosekiAlertType.DANGER,
+                    "Error",
+                    "Missing user %s" % (session["kiosk_uid"]),
+                )
             )
             self.util.set_alerts(alerts)
             return redirect(url_for("kiosk_card"))
@@ -299,19 +300,19 @@ class KioskPlugin(KosekiPlugin):
                 return redirect(url_for("kiosk_card"))
             else:
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": "Invalid password. Login attempt has been logged.",
-                    }
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Error",
+                        "Invalid password. Login attempt has been logged.",
+                    )
                 )
         else:
             alerts.append(
-                {
-                    "class": "alert-danger",
-                    "title": "Error",
-                    "message": "Invalid client. Access attempt has been logged.",
-                }
+                KosekiAlert(
+                    KosekiAlertType.DANGER,
+                    "Error",
+                    "Invalid client. Access attempt has been logged.",
+                )
             )
 
         return render_template("kiosk_login.html", alerts=alerts,)

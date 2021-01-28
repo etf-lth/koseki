@@ -28,7 +28,7 @@
 
 <div class="container">
     {% for alert in alerts %}
-    <div class="alert {{ alert.class }}">
+    <div class="alert {{ alert.type }}">
         <h4>{{ alert.title }}</h4>
         {{ alert.message }}
     </div>
@@ -38,6 +38,7 @@
     {% endif %}
 
     {% block content %}{% endblock %}
+
     <footer class="mb-5">
         <hr>
         <span class="text-muted">{{ config['FOOTER']|safe }}</span>

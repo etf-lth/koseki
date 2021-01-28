@@ -1,6 +1,9 @@
+from typing import List
+
 from flask import abort, render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Group, Person, PersonGroup
+from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
 from wtforms import TextField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
@@ -49,7 +52,7 @@ class UserView(KosekiView):
         if not person:
             raise abort(404)
 
-        alerts = []
+        alerts: List[KosekiAlert] = []
         form = GeneralForm(obj=person)
 
         if form.validate_on_submit():
@@ -57,12 +60,12 @@ class UserView(KosekiView):
             self.storage.commit()
 
             alerts.append(
-                {
-                    "class": "alert-success",
-                    "title": "Success",
-                    "message": "%s %s was successfully updated"
+                KosekiAlert(
+                    KosekiAlertType.SUCCESS,
+                    "Success",
+                    "%s %s was successfully updated"
                     % (form.fname.data, form.lname.data),
-                }
+                )
             )
 
         return render_template(
@@ -75,7 +78,7 @@ class UserView(KosekiView):
         if not person:
             raise abort(404)
 
-        alerts = []
+        alerts: List[KosekiAlert] = []
 
         if request.method == "POST":
             for group in groups:
@@ -101,12 +104,12 @@ class UserView(KosekiView):
             self.storage.commit()
 
             alerts.append(
-                {
-                    "class": "alert-success",
-                    "title": "Success",
-                    "message": "Groups for %s %s was successfully updated"
+                KosekiAlert(
+                    KosekiAlertType.SUCCESS,
+                    "Success",
+                    "Groups for %s %s was successfully updated"
                     % (person.fname, person.lname),
-                }
+                )
             )
 
         return render_template(

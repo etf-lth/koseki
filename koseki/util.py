@@ -1,35 +1,46 @@
+from typing import List
 from koseki.db.storage import Storage
 from flask import session
 
 import logging
 from koseki.db.types import Group, Person
 
+class KosekiAlertType:
+    DANGER = "alert-danger"
+    SUCCESS = "alert-success"
+    WARNING = "alert-warning"
+
+class KosekiAlert:
+    def __init__(self, type: str, title: str, message: str):
+        self.type = type
+        self.title = title
+        self.message = message
+
+class KosekiNavigationEntry:
+    def __init__(self, uri: str, icon: str, title: str, weight: int, groups: List[str]):
+        self.uri = uri
+        self.icon = icon
+        self.title = title
+        self.weight = weight
+        self.groups = groups
 
 class KosekiUtil:
     def __init__(self, storage: Storage):
         self.storage = storage
-        self.navigation: list = [] # TODO make more detailed
+        self.navigation: List[KosekiNavigationEntry] = []
         self.alt_login = None
 
     def nav(self, uri, icon, title, weight=0, groups=None):
-        self.navigation.append(
-            {
-                "uri": uri,
-                "icon": icon,
-                "title": title,
-                "groups": groups,
-                "weight": weight,
-            }
-        )
+        self.navigation.append(KosekiNavigationEntry(uri, icon ,title, weight, groups))
 
     def calc_nav(self):
-        nav = []
+        nav: List[KosekiNavigationEntry] = []
         for n in self.navigation:
-            if n["groups"] is None or sum(
-                1 for group in n["groups"] if self.member_of(group)
+            if n.groups is None or sum(
+                1 for group in n.groups if self.member_of(group)
             ) > 0:
                 nav.append(n)
-        session["nav"] = sorted(nav, key=lambda x: x["weight"])
+        session["nav"] = sorted(nav, key=lambda x: x.weight)
 
     def start_session(self, uid):
         session["uid"] = int(uid)
@@ -58,12 +69,12 @@ class KosekiUtil:
     def current_user(self):
         return session["uid"]
 
-    def fetch_alerts(self):
-        alerts = session.pop("alerts", [])
+    def fetch_alerts(self) -> List[KosekiAlert]:
+        alerts: List[KosekiAlert] = session.pop("alerts", [])
         session["alerts"] = []
         return alerts
 
-    def set_alerts(self, alerts) -> None:
+    def set_alerts(self, alerts: List[KosekiAlert]) -> None:
         session["alerts"] = alerts
 
     def get_alternate_login(self):

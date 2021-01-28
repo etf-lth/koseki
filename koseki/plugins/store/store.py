@@ -1,10 +1,13 @@
 import logging
+from typing import List
 
 from flask import Blueprint, abort, redirect, render_template, url_for
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Product
 from koseki.plugin import KosekiPlugin
-from wtforms import DecimalField, IntegerField, SubmitField, TextField  # type: ignore
+from koseki.util import KosekiAlert, KosekiAlertType
+from wtforms import SubmitField  # type: ignore
+from wtforms import DecimalField, IntegerField, TextField
 from wtforms.validators import DataRequired  # type: ignore
 
 
@@ -47,7 +50,7 @@ class StorePlugin(KosekiPlugin):
     def list_products(self):
         productForm = ProductForm()
 
-        alerts = []
+        alerts: List[KosekiAlert] = []
 
         if productForm.submitAdd.data and productForm.validate_on_submit():
             # Store product
@@ -65,12 +68,11 @@ class StorePlugin(KosekiPlugin):
             )
 
             alerts.append(
-                {
-                    "class": "alert-success",
-                    "title": "Success",
-                    "message": "Registered product %s #%d"
-                    % (productForm.name.data, product.pid),
-                }
+                KosekiAlert(
+                    KosekiAlertType.SUCCESS,
+                    "Success",
+                    "Registered product %s #%d" % (productForm.name.data, product.pid),
+                )
             )
             productForm = ProductForm(None)
 
@@ -117,6 +119,4 @@ class StorePlugin(KosekiPlugin):
         productForm.price.data = product.price
         productForm.order.data = product.order
 
-        return render_template(
-            "store_manage_product.html", form=productForm,
-        )
+        return render_template("store_manage_product.html", form=productForm,)

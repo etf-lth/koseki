@@ -1,12 +1,14 @@
 import logging
 import os
 import time
+from typing import List
 
-import cups # type: ignore
+import cups  # type: ignore
 from flask import Blueprint, render_template, request
-from flask_wtf import FlaskForm # type: ignore
-from flask_wtf.file import FileField, FileRequired # type: ignore
+from flask_wtf import FlaskForm  # type: ignore
+from flask_wtf.file import FileField, FileRequired  # type: ignore
 from koseki.plugin import KosekiPlugin
+from koseki.util import KosekiAlert, KosekiAlertType
 from werkzeug.utils import secure_filename
 
 
@@ -43,17 +45,13 @@ class PrintPlugin(KosekiPlugin):
 
     def print(self):
         form = PrintForm()
-        alerts = []
+        alerts: List[KosekiAlert] = []
 
         if form.validate_on_submit():
             # check if the post request has the file part
             if "file" not in request.files:
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": "No file part",
-                    }
+                    KosekiAlert(KosekiAlertType.DANGER, "Error", "No file part",)
                 )
                 return render_template("print.html", form=form, alerts=alerts)
             file = request.files["file"]
@@ -61,21 +59,17 @@ class PrintPlugin(KosekiPlugin):
             # submit an empty part without filename
             if file.filename == "":
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": "No selected file",
-                    }
+                    KosekiAlert(KosekiAlertType.DANGER, "Error", "No selected file",)
                 )
                 return render_template("print.html", form=form, alerts=alerts)
             if not file or not self.allowed_file(file.filename):
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": "That type of file is not allowed. Please try again or with a different file. At the moment only PDF files are supported.",
-                    }
-                )
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Error",
+                        "That type of file is not allowed. Please try again or with a different file. At the moment only PDF files are supported.",
+                    )
+                )  # TODO: Don't hardcode PDF-only, make it use the env var instead
                 return render_template("print.html", form=form, alerts=alerts)
 
             # save file to harddrive
@@ -95,11 +89,11 @@ class PrintPlugin(KosekiPlugin):
 
             # show success message to user
             alerts.append(
-                {
-                    "class": "alert-success",
-                    "title": "Success",
-                    "message": "File has now been scheduled for printing." % (),
-                }
+                KosekiAlert(
+                    KosekiAlertType.SUCCESS,
+                    "Success",
+                    "File has now been scheduled for printing.",
+                )
             )
             form = PrintForm(None)
 

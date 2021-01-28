@@ -1,8 +1,10 @@
 import logging
+from typing import List
 
 from flask import render_template
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Person
+from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
 from wtforms import TextField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
@@ -29,7 +31,7 @@ class AddView(KosekiView):
 
     def enroll_member(self):
         form = EnrollForm()
-        alerts = []
+        alerts: List[KosekiAlert] = []
 
         if form.validate_on_submit():
             if (
@@ -38,12 +40,11 @@ class AddView(KosekiView):
                 .scalar()
             ):
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": "The specified email %s is already in use!"
-                        % form.email.data,
-                    }
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Error",
+                        "The specified email %s is already in use!" % form.email.data,
+                    )
                 )
             elif (
                 form.stil.data
@@ -52,12 +53,11 @@ class AddView(KosekiView):
                 .scalar()
             ):
                 alerts.append(
-                    {
-                        "class": "alert-danger",
-                        "title": "Error",
-                        "message": "The specified StiL %s is already in use!"
-                        % form.stil.data,
-                    }
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Error",
+                        "The specified StiL %s is already in use!" % form.stil.data,
+                    )
                 )
             else:
                 person = Person(enrolled_by=self.util.current_user())
@@ -74,14 +74,14 @@ class AddView(KosekiView):
                     member=person,
                 )
 
-                msg = [
-                    {
-                        "class": "alert-success",
-                        "title": "Success",
-                        "message": "%s %s was successfully enrolled"
+                alerts.append(
+                    KosekiAlert(
+                        KosekiAlertType.SUCCESS,
+                        "Success",
+                        "%s %s was successfully enrolled"
                         % (form.fname.data, form.lname.data),
-                    }
-                ]
-                return render_template("message.html", messages=msg)
+                    )
+                )
+                return render_template("message.html", alerts=alerts)
 
         return render_template("enroll_member.html", form=form, alerts=alerts)
