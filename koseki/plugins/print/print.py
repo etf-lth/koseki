@@ -18,7 +18,7 @@ class PrintForm(FlaskForm):
 
 class PrintPlugin(KosekiPlugin):
     def config(self) -> dict:
-        return {"ALLOWED_EXTENSIONS": ("pdf")}
+        return {"ALLOWED_EXTENSIONS": ["pdf"]}
 
     def plugin_enable(self) -> None:
         self.cupsConn = cups.Connection()
@@ -67,9 +67,10 @@ class PrintPlugin(KosekiPlugin):
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Error",
-                        "That type of file is not allowed. Please try again or with a different file. At the moment only PDF files are supported.",
+                        "That type of file is not allowed. Please try again or with a different file. Allowed files are: %s"
+                        % (", ".join(self.app.config["ALLOWED_EXTENSIONS"])),
                     )
-                )  # TODO: Don't hardcode PDF-only, make it use the env var instead
+                )
                 return render_template("print.html", form=form, alerts=alerts)
 
             # save file to harddrive
