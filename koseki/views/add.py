@@ -1,7 +1,9 @@
 import logging
 
-from flask import render_template
+from flask import Flask, render_template
 from flask_wtf import FlaskForm
+from koseki.core import KosekiCore
+from koseki.db.storage import Storage
 from koseki.db.types import Person
 from wtforms import TextField
 from wtforms.validators import DataRequired, Email
@@ -15,11 +17,10 @@ class EnrollForm(FlaskForm):
 
 
 class AddView:
-    def __init__(self, app, core, storage, mailer):
+    def __init__(self, app: Flask, core: KosekiCore, storage: Storage):
         self.app = app
         self.core = core
         self.storage = storage
-        self.mailer = mailer
 
     def register(self):
         self.app.add_url_rule(
@@ -72,8 +73,8 @@ class AddView:
 
                 logging.info("Enrolled %s %s" % (person.fname, person.lname))
 
-                self.mailer.send_mail(person, "member_enrolled.mail", member=person)
-                self.mailer.send_mail(
+                self.core.mail.send_mail(person, "member_enrolled.mail", member=person)
+                self.core.mail.send_mail(
                     self.app.config["ORG_EMAIL"],
                     "board_member_enrolled.mail",
                     member=person,

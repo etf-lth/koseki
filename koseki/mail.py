@@ -1,6 +1,5 @@
 import logging
 import smtplib
-from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from flask import render_template
@@ -8,14 +7,13 @@ from flask import render_template
 from koseki.db.types import Person
 
 
-class Mailer:
+class KosekiMailer:
     def __init__(self, app):
         self.app = app
 
     def send_mail(self, to, template, **kwargs):
         try:
             from_mail = self.app.config["EMAIL_FROM"]
-
             if type(to) is Person:
                 to = "%s %s <%s>" % (to.fname, to.lname, to.email)
 

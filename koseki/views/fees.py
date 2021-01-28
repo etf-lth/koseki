@@ -1,8 +1,10 @@
 import logging
 from datetime import datetime, timedelta
 
-from flask import render_template
+from flask import Flask, render_template
 from flask_wtf import FlaskForm
+from koseki.core import KosekiCore
+from koseki.db.storage import Storage
 from koseki.db.types import Fee, Payment, Person
 from wtforms import DateField, IntegerField, SelectField, SubmitField, TextField
 from wtforms.validators import DataRequired, Optional
@@ -25,7 +27,6 @@ class FeeForm(FlaskForm):
 
 
 class PaymentForm(FlaskForm):
-
     uid = TextField("Member ID", validators=[DataRequired()])
     amount = IntegerField("Amount (SEK)")
     method = SelectField(
@@ -44,11 +45,10 @@ class PaymentForm(FlaskForm):
 
 
 class FeesView:
-    def __init__(self, app, core, storage, mailer):
+    def __init__(self, app: Flask, core: KosekiCore, storage: Storage):
         self.app = app
         self.core = core
         self.storage = storage
-        self.mailer = mailer
 
     def register(self):
         self.app.add_url_rule(
@@ -170,12 +170,12 @@ class FeesView:
                 person.state = "active"
                 self.storage.commit()
                 logging.info("%s %s is now active" % (person.fname, person.lname))
-                self.mailer.send_mail(
+                self.core.mail.send_mail(
                     self.app.config["ORG_EMAIL"],
                     "board_member_active.mail",
                     member=person,
                 )
-                self.mailer.send_mail(person, "member_active.mail", member=person)
+                self.core.mail.send_mail(person, "member_active.mail", member=person)
 
             alerts.append(
                 {

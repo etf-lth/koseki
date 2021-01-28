@@ -1,21 +1,28 @@
 import base64
 import datetime
 import hashlib
+from koseki.plugin import KosekiPluginManager
 import logging
 import time
+
 import requests
+from flask import Flask, abort, redirect, request, session, url_for
+from flask_babel import Babel, format_datetime
 
-from flask import abort, redirect, request, session, url_for
-from flask_babel import format_datetime
-
+from koseki.db.storage import Storage
 from koseki.db.types import Group, Person
+from koseki.mail import KosekiMailer
 
 
 class KosekiCore:
-    def __init__(self, app, storage, babel):
+    def __init__(self, app: Flask, storage: Storage):
         self.app = app
         self.storage = storage
-        self.babel = babel
+
+        self.babel = Babel(app)
+        self.mail = KosekiMailer(app)
+        self.plugins = KosekiPluginManager(self)
+
         self.navigation = []
         self.alt_login = None
 
