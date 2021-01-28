@@ -9,12 +9,9 @@ WTForms==2.2.1
 Werkzeug==0.16.1
 cryptography==3.3.1
 flask_bootstrap==3.3.7.1
-ipaddr==2.2.0
 lxml==4.6.2
-numpy==1.19.5
-ordereddict==1.1
 protobuf==3.14.0
-pyOpenSSL==20.0.1
-pycups==2.0.1
-secrets==1.0.2
 wincertstore==0.2
+
+requests==2.25.1
+mysqlclient==2.0.3

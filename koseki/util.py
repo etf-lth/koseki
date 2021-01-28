@@ -1,28 +1,48 @@
-from typing import List
-from koseki.db.storage import Storage
-from flask import session
-
+import json
 import logging
+from typing import List
+
+from flask import session
+from sqlalchemy.util.langhelpers import NoneType
+
+from koseki.db.storage import Storage
 from koseki.db.types import Group, Person
+
 
 class KosekiAlertType:
     DANGER = "alert-danger"
     SUCCESS = "alert-success"
     WARNING = "alert-warning"
 
-class KosekiAlert:
-    def __init__(self, type: str, title: str, message: str):
-        self.type = type
-        self.title = title
-        self.message = message
 
-class KosekiNavigationEntry:
+class KosekiAlert(dict):
+    """dot.notation access to dictionary attributes"""
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+    def __init__(self, type: str, title: str, message: str):
+        dict.__init__(self, type=type, title=title, message=message)
+        self.type: str
+        self.title: str
+        self.message: str
+
+
+class KosekiNavigationEntry(dict):
+    """dot.notation access to dictionary attributes"""
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
     def __init__(self, uri: str, icon: str, title: str, weight: int, groups: List[str]):
-        self.uri = uri
-        self.icon = icon
-        self.title = title
-        self.weight = weight
-        self.groups = groups
+        dict.__init__(self, uri=uri, icon=icon, title=title,
+                      weight=weight, groups=groups)
+        self.uri: str
+        self.icon: str
+        self.title: str
+        self.weight: int
+        self.groups: List[str]
+
 
 class KosekiUtil:
     def __init__(self, storage: Storage):
@@ -31,7 +51,8 @@ class KosekiUtil:
         self.alt_login = None
 
     def nav(self, uri, icon, title, weight=0, groups=None):
-        self.navigation.append(KosekiNavigationEntry(uri, icon ,title, weight, groups))
+        self.navigation.append(KosekiNavigationEntry(
+            uri, icon, title, weight, groups))
 
     def calc_nav(self):
         nav: List[KosekiNavigationEntry] = []
@@ -40,7 +61,7 @@ class KosekiUtil:
                 1 for group in n.groups if self.member_of(group)
             ) > 0:
                 nav.append(n)
-        session["nav"] = list(map(lambda x: vars(x), sorted(nav, key=lambda x: x.weight)))
+        session["nav"] = sorted(nav, key=lambda x: x.weight)
 
     def start_session(self, uid):
         session["uid"] = int(uid)
@@ -63,7 +84,11 @@ class KosekiUtil:
             group = self.storage.query(Group).filter_by(gid=group).scalar()
         elif type(group) == str:
             group = self.storage.query(Group).filter_by(name=group).scalar()
-        return sum(1 for x in person.groups if x.gid == group.gid)
+
+        if type(group) is NoneType:
+            return False
+
+        return sum(1 for x in person.groups if x.gid == group.gid) > 0
 
     # TODO: move current_user to auth?
     def current_user(self):
@@ -82,4 +107,5 @@ class KosekiUtil:
 
     def alternate_login(self, alt):
         self.alt_login = alt()
-        logging.info("Registered alternate login provider: %s" % self.alt_login)
+        logging.info("Registered alternate login provider: %s" %
+                     self.alt_login)

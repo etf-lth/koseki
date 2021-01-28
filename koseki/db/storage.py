@@ -28,9 +28,9 @@ class Storage:
 
     @property
     def session(self) -> Session:
-        try:
+        if hasattr(g, "db"):
             return g.db
-        except AttributeError:
+        else:
             g.db = self.sm()
             return g.db
 

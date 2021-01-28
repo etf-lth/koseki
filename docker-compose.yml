@@ -2,13 +2,19 @@ version: '3.2'
 services:
   mariadb:
     image: mariadb:10.3
+    command: --init-file /data/application/docker-compose.sql
     volumes:
+    - ./docker-compose.sql:/data/application/docker-compose.sql
     - ./mariadb/conf:/etc/mysql/conf.d
     - ./mariadb/mysql:/var/lib/mysql
     ports:
       - "127.0.0.1:3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: koseki
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
   mail:
     image: bytemark/smtp
     ports:
