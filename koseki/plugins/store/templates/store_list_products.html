@@ -60,7 +60,7 @@
                 <td>{{ product.price }}</td>
                 <td>{{ product.order }}</td>
                 <td>
-                    <a href="{{ url_for('manage_product', pid=product.pid) }}" type="submit" class="btn btn-primary">
+                    <a href="{{ url_for('store.manage_product', pid=product.pid) }}" type="submit" class="btn btn-primary">
                         Manage product
                     </a>
                 </td>

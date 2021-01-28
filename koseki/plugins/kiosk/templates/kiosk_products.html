@@ -102,7 +102,7 @@
     }
 
 </script>
-<meta http-equiv="refresh" content="300; URL={{ url_for('kiosk_card')}}" />
+<meta http-equiv="refresh" content="300; URL={{ url_for('kiosk.kiosk_card')}}" />
 {% endblock %}
 {% block content %}
 
@@ -157,7 +157,7 @@
     <div class="col-8">{{ person.uid }}</div>
     <div class="col-4 font-weight-bold">Logged in:</div>
     <div class="col-8">{{ person.fname }} {{ person.lname }}
-        <a href="{{ url_for('kiosk_card') }}" class="btn btn-warning ml-3">Logout</a>
+        <a href="{{ url_for('kiosk.kiosk_card') }}" class="btn btn-warning ml-3">Logout</a>
     </div>
 </div>
 
