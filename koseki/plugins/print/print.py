@@ -2,10 +2,10 @@ import logging
 import os
 import time
 
-import cups
+import cups # type: ignore
 from flask import Blueprint, render_template, request
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
+from flask_wtf import FlaskForm # type: ignore
+from flask_wtf.file import FileField, FileRequired # type: ignore
 from koseki.plugin import KosekiPlugin
 from werkzeug.utils import secure_filename
 
@@ -15,11 +15,6 @@ class PrintForm(FlaskForm):
 
 
 class PrintPlugin(KosekiPlugin):
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
     def config(self) -> dict:
         return {"ALLOWED_EXTENSIONS": ("pdf")}
 
@@ -27,19 +22,19 @@ class PrintPlugin(KosekiPlugin):
         self.cupsConn = cups.Connection()
 
     def create_blueprint(self) -> Blueprint:
-        self.core.nav("/print", "print", "Print", 6)
+        self.util.nav("/print", "print", "Print", 6)
         blueprint: Blueprint = Blueprint(
             "store", __name__, template_folder="./templates"
         )
-        self.app.add_url_rule(
+        blueprint.add_url_rule(
             "/print",
             None,
-            self.core.require_session(self.print),
+            self.auth.require_session(self.print),
             methods=["GET", "POST"],
         )
         return blueprint
 
-    def allowed_file(self, filename):
+    def allowed_file(self, filename: str):
         return (
             "." in filename
             and filename.rsplit(".", 1)[1].lower()
@@ -95,7 +90,7 @@ class PrintPlugin(KosekiPlugin):
 
             # log that a document has been printed
             logging.info(
-                "Document %s printed by %s" % (form.file.name, self.core.current_user())
+                "Document %s printed by %s" % (form.file.name, self.util.current_user())
             )
 
             # show success message to user

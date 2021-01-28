@@ -1,20 +1,16 @@
 from flask import render_template
 from koseki.db.types import Person
+from koseki.view import KosekiView
 
 
-class ListView:
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
+class ListView(KosekiView):
     def register(self):
         self.app.add_url_rule(
             "/list",
             None,
-            self.core.require_session(self.list_members, ["admin", "board"]),
+            self.auth.require_session(self.list_members, ["admin", "board"]),
         )
-        self.core.nav("/list", "list", "List", 1, ["admin", "board"])
+        self.util.nav("/list", "list", "List", 1, ["admin", "board"])
 
     def list_members(self):
         return render_template(

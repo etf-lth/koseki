@@ -1,14 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import (
-    DECIMAL,
-    Column,
-    DateTime,
-    Enum,
-    ForeignKey,
-    Integer,
-    Unicode,
-)
+from sqlalchemy import DECIMAL, Column, DateTime, Enum, ForeignKey, Integer, Unicode
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.declarative.api import DeclarativeMeta
 from sqlalchemy.orm import relationship
@@ -102,14 +94,14 @@ class Person(Base):
 
     @property
     def balance(self):
-        return sum([p.amount for p in self.payments])
+        return sum([p.amount for p in self.payments])  # type: ignore
 
     @property
     def unpaid_payments(self):
         unpaids = []
         remainder = 0
         # person.fees sorts in descending ID-order, therefore the list is reversed to be chronological
-        for payment in reversed(self.payments):
+        for payment in reversed(self.payments):  # type: ignore
             if payment.amount == 0:
                 continue
             if payment.amount < 0:

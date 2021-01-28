@@ -1,10 +1,8 @@
 from flask import render_template
+from koseki.view import KosekiView
 
 
-class ErrorView:
-    def __init__(self, app):
-        self.app = app
-
+class ErrorView(KosekiView):
     def register(self):
         self.app.register_error_handler(400, self.error_bad_request)
         self.app.register_error_handler(403, self.error_forbidden)

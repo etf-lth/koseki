@@ -1,11 +1,11 @@
 import logging
 
 from flask import Blueprint, abort, redirect, render_template, url_for
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Product
 from koseki.plugin import KosekiPlugin
-from wtforms import DecimalField, IntegerField, SubmitField, TextField
-from wtforms.validators import DataRequired
+from wtforms import DecimalField, IntegerField, SubmitField, TextField  # type: ignore
+from wtforms.validators import DataRequired  # type: ignore
 
 
 class ProductForm(FlaskForm):
@@ -20,24 +20,24 @@ class ProductForm(FlaskForm):
 
 class StorePlugin(KosekiPlugin):
     def create_blueprint(self) -> Blueprint:
-        self.core.nav(
+        self.util.nav(
             "/store", "shopping-basket", "Store", 4, ["admin", "board", "krangare"]
         )
         blueprint: Blueprint = Blueprint(
             "store", __name__, template_folder="./templates"
         )
-        self.app.add_url_rule(
+        blueprint.add_url_rule(
             "/store",
             None,
-            self.core.require_session(
+            self.auth.require_session(
                 self.list_products, ["admin", "board", "krangare"]
             ),
             methods=["GET", "POST"],
         )
-        self.app.add_url_rule(
+        blueprint.add_url_rule(
             "/store/product/<int:pid>",
             None,
-            self.core.require_session(
+            self.auth.require_session(
                 self.manage_product, ["admin", "board", "krangare"]
             ),
             methods=["GET", "POST"],
@@ -89,8 +89,6 @@ class StorePlugin(KosekiPlugin):
         if not product:
             raise abort(404)
 
-        alerts = []
-
         if productForm.submitDelete.data and productForm.validate_on_submit():
             # Delete product
             self.storage.delete(product)
@@ -120,5 +118,5 @@ class StorePlugin(KosekiPlugin):
         productForm.order.data = product.order
 
         return render_template(
-            "store_manage_product.html", form=productForm, alerts=alerts,
+            "store_manage_product.html", form=productForm,
         )

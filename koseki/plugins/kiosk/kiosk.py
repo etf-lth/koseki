@@ -1,25 +1,22 @@
 import logging
 
 from flask import Blueprint, redirect, render_template, request, session, url_for
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Payment, Person, Product
 from koseki.plugin import KosekiPlugin
-from wtforms import HiddenField, PasswordField
-from wtforms.validators import DataRequired
+from wtforms import HiddenField, PasswordField  # type: ignore
+from wtforms.validators import DataRequired  # type: ignore
 
 
 class KioskCardForm(FlaskForm):
-
     card_id = PasswordField("Student Card ID", validators=[DataRequired()])
 
 
 class KioskRegisterForm(FlaskForm):
-
     student_id = HiddenField("Student ID", validators=[DataRequired()])
 
 
 class KioskProductForm(FlaskForm):
-
     products_field = HiddenField("Products", validators=[DataRequired()])
 
 
@@ -66,7 +63,7 @@ class KioskPlugin(KosekiPlugin):
         if "kiosk_card" in session:
             session.pop("kiosk_card")
 
-        alerts = self.core.fetch_alerts()
+        alerts = self.util.fetch_alerts()
         form = KioskCardForm()
 
         if form.validate_on_submit() and len(form.card_id.data) == 10:
@@ -86,7 +83,7 @@ class KioskPlugin(KosekiPlugin):
                         "message": "This is the first time you are using ETF Kiosk. Please verify by entering your student StiL/LUCAT.",
                     }
                 )
-                self.core.set_alerts(alerts)
+                self.util.set_alerts(alerts)
                 session["kiosk_card"] = form.card_id.data
                 return redirect(url_for("kiosk_register"))
 
@@ -103,11 +100,11 @@ class KioskPlugin(KosekiPlugin):
         if "kiosk_card" not in session:
             return redirect(url_for("kiosk_card"))
 
-        alerts = self.core.fetch_alerts()
+        alerts = self.util.fetch_alerts()
         form = KioskRegisterForm()
 
         if form.validate_on_submit():
-            person = (
+            person: Person = (
                 self.storage.session.query(Person)
                 .filter_by(stil=form.student_id.data)
                 .scalar()
@@ -123,7 +120,7 @@ class KioskPlugin(KosekiPlugin):
                         "message": "You can now use your student card in the Kiosk.",
                     }
                 )
-                self.core.set_alerts(alerts)
+                self.util.set_alerts(alerts)
                 return redirect(url_for("kiosk_card"))
             else:
                 alerts.append(
@@ -147,9 +144,9 @@ class KioskPlugin(KosekiPlugin):
         if "kiosk_uid" not in session:
             return redirect(url_for("kiosk_card"))
 
-        alerts = self.core.fetch_alerts()
+        alerts = self.util.fetch_alerts()
 
-        person = (
+        person: Person = (
             self.storage.session.query(Person)
             .filter_by(uid=session["kiosk_uid"])
             .scalar()
@@ -162,10 +159,11 @@ class KioskPlugin(KosekiPlugin):
                     "message": "Missing user %s" % (session["kiosk_uid"]),
                 }
             )
-            self.core.set_alerts(alerts)
+            self.util.set_alerts(alerts)
             return redirect(url_for("kiosk_card"))
 
         form = KioskProductForm()
+        product: Product
 
         if form.validate_on_submit():
             # Process form input
@@ -216,17 +214,17 @@ class KioskPlugin(KosekiPlugin):
                         payment = Payment(
                             uid=person.uid,
                             registered_by=person.uid,
-                            amount=-product.price,
+                            amount=-product.price,  # type: ignore
                             method="kiosk",
-                            reason="Bought %s for %d kr"
-                            % (product.name, product.price),
+                            reason="Bought %s for %.2f kr"
+                            % (product.name, product.price),  # type: ignore
                         )
                         self.storage.add(payment)
                         self.storage.commit()
 
                         logging.info(
                             "Person %d bought %d for %d kr"
-                            % (person.uid, product.pid, product.price)
+                            % (person.uid, product.pid, product.price)  # type: ignore
                         )
                         alerts.append(
                             {
@@ -235,7 +233,7 @@ class KioskPlugin(KosekiPlugin):
                                 "message": "",
                             }
                         )
-                self.core.set_alerts(alerts)
+                self.util.set_alerts(alerts)
                 return redirect(url_for("kiosk_success"))
 
         return render_template(
@@ -258,7 +256,7 @@ class KioskPlugin(KosekiPlugin):
         if "kiosk_uid" not in session:
             return redirect(url_for("kiosk_card"))
 
-        alerts = self.core.fetch_alerts()
+        alerts = self.util.fetch_alerts()
 
         person = (
             self.storage.session.query(Person)
@@ -273,7 +271,7 @@ class KioskPlugin(KosekiPlugin):
                     "message": "Missing user %s" % (session["kiosk_uid"]),
                 }
             )
-            self.core.set_alerts(alerts)
+            self.util.set_alerts(alerts)
             return redirect(url_for("kiosk_card"))
 
         if "kiosk_uid" in session:
@@ -287,14 +285,16 @@ class KioskPlugin(KosekiPlugin):
         ):
             return redirect(url_for("kiosk_card"))
 
-        alerts = self.core.fetch_alerts()
+        alerts = self.util.fetch_alerts()
 
-        if "User-Agent" in request.headers and request.headers.get(
+        if "User-Agent" in request.headers and request.headers.get(  # type: ignore
             "User-Agent"
         ).startswith("Kiosk"):
-            if ("Key=" + self.app.config["KIOSK_KEY"]) in request.headers.get(
+            if ("Key=" + self.app.config["KIOSK_KEY"]) in request.headers.get(  # type: ignore
                 "User-Agent"
-            ).split(" "):
+            ).split(
+                " "
+            ):
                 session["kiosk_password"] = self.app.config["KIOSK_KEY"]
                 return redirect(url_for("kiosk_card"))
             else:

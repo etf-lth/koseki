@@ -1,8 +1,9 @@
 from flask import render_template, request
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Fee, Person
-from wtforms import TextField
-from wtforms.validators import DataRequired, Email
+from koseki.view import KosekiView
+from wtforms import TextField  # type: ignore
+from wtforms.validators import DataRequired, Email  # type: ignore
 
 
 class EditForm(FlaskForm):
@@ -12,33 +13,28 @@ class EditForm(FlaskForm):
     stil = TextField("StiL")
 
 
-class MembershipView:
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
+class MembershipView(KosekiView):
     def register(self):
         self.app.add_url_rule(
-            "/membership", None, self.core.require_session(self.membership_general)
+            "/membership", None, self.auth.require_session(self.membership_general)
         )
         self.app.add_url_rule(
             "/membership/edit",
             None,
-            self.core.require_session(self.membership_edit),
+            self.auth.require_session(self.membership_edit),
             methods=["GET", "POST"],
         )
-        self.core.nav("/membership", "user", "My membership", 100)
+        self.util.nav("/membership", "user", "My membership", 100)
 
     def membership_general(self):
         person = (
             self.storage.session.query(Person)
-            .filter_by(uid=self.core.current_user())
+            .filter_by(uid=self.util.current_user())
             .scalar()
         )
         last_fee = (
             self.storage.session.query(Fee)
-            .filter_by(uid=self.core.current_user())
+            .filter_by(uid=self.util.current_user())
             .order_by(Fee.end.desc())
             .first()
         )
@@ -49,7 +45,7 @@ class MembershipView:
     def membership_edit(self):
         person = (
             self.storage.session.query(Person)
-            .filter_by(uid=self.core.current_user())
+            .filter_by(uid=self.util.current_user())
             .scalar()
         )
         form = EditForm(obj=person)

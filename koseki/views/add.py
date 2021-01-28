@@ -1,12 +1,11 @@
 import logging
 
-from flask import Flask, render_template
-from flask_wtf import FlaskForm
-from koseki.core import KosekiCore
-from koseki.db.storage import Storage
+from flask import render_template
+from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Person
-from wtforms import TextField
-from wtforms.validators import DataRequired, Email
+from koseki.view import KosekiView
+from wtforms import TextField  # type: ignore
+from wtforms.validators import DataRequired, Email  # type: ignore
 
 
 class EnrollForm(FlaskForm):
@@ -16,20 +15,15 @@ class EnrollForm(FlaskForm):
     stil = TextField("StiL")
 
 
-class AddView:
-    def __init__(self, app: Flask, core: KosekiCore, storage: Storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
+class AddView(KosekiView):
     def register(self):
         self.app.add_url_rule(
             "/enroll",
             None,
-            self.core.require_session(self.enroll_member, ["admin", "board", "enroll"]),
+            self.auth.require_session(self.enroll_member, ["admin", "board", "enroll"]),
             methods=["GET", "POST"],
         )
-        self.core.nav(
+        self.util.nav(
             "/enroll", "plus-circle", "Enroll", 2, ["admin", "board", "enroll"]
         )
 
@@ -66,15 +60,15 @@ class AddView:
                     }
                 )
             else:
-                person = Person(enrolled_by=self.core.current_user())
+                person = Person(enrolled_by=self.util.current_user())
                 form.populate_obj(person)
                 self.storage.add(person)
                 self.storage.commit()
 
                 logging.info("Enrolled %s %s" % (person.fname, person.lname))
 
-                self.core.mail.send_mail(person, "member_enrolled.mail", member=person)
-                self.core.mail.send_mail(
+                self.mail.send_mail(person, "member_enrolled.mail", member=person)
+                self.mail.send_mail(
                     self.app.config["ORG_EMAIL"],
                     "board_member_enrolled.mail",
                     member=person,

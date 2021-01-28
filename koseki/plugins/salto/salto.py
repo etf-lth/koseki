@@ -18,7 +18,7 @@ class SaltoPlugin(KosekiPlugin):
 
     def salto_all(self) -> str:
         # if "X-Real-IP" in request.headers and (
-        #    not request.headers["X-Real-IP"] in self.conf.SALTO_ALLOWED_IPS
+        #    not request.headers["X-Real-IP"] in self.app.config["SALTO_ALLOWED_IPS"]
         # ):
         #    abort(403)
         out: str = ""
@@ -32,22 +32,23 @@ class SaltoPlugin(KosekiPlugin):
 
     def salto_sales(self) -> str:
         if "X-Real-IP" in request.headers and (
-            not request.headers["X-Real-IP"] in self.allowed_ips
+            not request.headers["X-Real-IP"] in self.app.config["SALTO_ALLOWED_IPS"]
         ):
             abort(403)
         out: str = ""
+        member: Person
         for member in (
             self.storage.session.query(Person).filter_by(state="active").all()
         ):
             if member.stil is None or len(member.stil) < 1:
                 continue
-            if self.core.member_of("sales", member):
+            if self.util.member_of("sales", member):
                 out = out + member.stil + "\r\n"
         return out
 
     def salto_mek(self) -> str:
         if "X-Real-IP" in request.headers and (
-            not request.headers["X-Real-IP"] in self.allowed_ips
+            not request.headers["X-Real-IP"] in self.app.config["SALTO_ALLOWED_IPS"]
         ):
             abort(403)
         out: str = ""
@@ -56,6 +57,6 @@ class SaltoPlugin(KosekiPlugin):
         ):
             if member.stil is None or len(member.stil) < 1:
                 continue
-            if self.core.member_of("mek", member):
+            if self.util.member_of("mek", member):
                 out = out + member.stil + "\r\n"
         return out

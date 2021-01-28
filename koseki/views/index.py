@@ -2,20 +2,16 @@ from datetime import datetime
 
 from flask import render_template
 from koseki.db.types import Person
+from koseki.view import KosekiView
 
 
-class IndexView:
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
+class IndexView(KosekiView):
     def register(self):
-        self.app.add_url_rule("/", None, self.core.require_session(self.index))
-        self.core.nav("/", "home", "Home", -999)
+        self.app.add_url_rule("/", None, self.auth.require_session(self.index))
+        self.util.nav("/", "home", "Home", -999)
 
     def index(self):
-        if self.core.member_of("admin") or self.core.member_of("board"):
+        if self.util.member_of("admin") or self.util.member_of("board"):
             active = (
                 self.storage.session.query(Person).filter_by(state="active").count()
             )

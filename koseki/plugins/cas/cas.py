@@ -15,7 +15,7 @@ class CASPlugin(KosekiPlugin):
         }
 
     def create_blueprint(self) -> Blueprint:
-        self.core.alternate_login(self.cas_login)
+        self.util.alternate_login(self.cas_login)
         blueprint: Blueprint = Blueprint("cas", __name__)
         blueprint.add_url_rule("/cas", None, self.cas_ticket)
         return blueprint
@@ -30,7 +30,7 @@ class CASPlugin(KosekiPlugin):
             "button": "Sign in with LU",
         }
 
-    def cas_ticket(self) -> str:
+    def cas_ticket(self):
         if "ticket" not in request.args:
             # just pretend it failed
             return render_template("cas.html", error="cas-failed")
@@ -49,12 +49,12 @@ class CASPlugin(KosekiPlugin):
             u.close()
             root = ET.fromstring(response)
             if root[0].tag == "{http://www.yale.edu/tp/cas}authenticationSuccess":
-                uid = root[0][0].text.strip()
+                uid = root[0][0].text.strip() # type: ignore
 
                 person = self.storage.session.query(Person).filter_by(stil=uid).scalar()
                 if person:
                     # valid user, move along
-                    self.core.start_session(person.uid)
+                    self.util.start_session(person.uid)
                     return redirect(url_for("index"))
                 else:
                     # authenticated by cas but unknown to us
@@ -64,4 +64,4 @@ class CASPlugin(KosekiPlugin):
                 return render_template("cas.html", error="cas-failed")
         except urllib.error.URLError:
             # most likely cannot contact cas
-            return render_template("cas.html", error="cas-url-error")
+            return render_template("cas.html", error="cas-url-error") # TODO: move cas.html to plugin folder

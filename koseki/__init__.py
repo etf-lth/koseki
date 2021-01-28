@@ -1,16 +1,15 @@
-import importlib
 import logging
 
 from flask import Flask, g
-from flask_bootstrap import Bootstrap
+from flask_babel import Babel  # type: ignore
+from flask_bootstrap import Bootstrap  # type: ignore
 
 from koseki.config import KosekiConfig
 from koseki.core import KosekiCore
 from koseki.db.storage import Storage
-from koseki.db.types import Person, PersonGroup
-from koseki.plugin import KosekiPlugin
 from koseki.reverse import ReverseProxied
 from koseki.update import Updater
+from koseki.view import KosekiView
 from koseki.views.add import AddView
 from koseki.views.api import APIView
 from koseki.views.error import ErrorView
@@ -38,8 +37,9 @@ storage = Storage(
     )
 )
 Bootstrap(app)
+Babel(app)
 core = KosekiCore(app, storage)
-updater = Updater(core)
+updater = Updater(app, storage, core.mail)
 
 
 ## Return connections to db pool after closure
@@ -51,19 +51,22 @@ def close_db(error):
 
 
 def register_views():
-    views = []
-    views.append(AddView(app, core, storage))
-    views.append(APIView(app, core, storage))
-    views.append(ErrorView(app))
-    views.append(FeesView(app, core, storage))
-    views.append(IndexView(app, core, storage))
-    views.append(ListView(app, core, storage))
-    views.append(MailView(app, core, storage))
-    views.append(MembershipView(app, core, storage))
-    views.append(SessionView(app, core, storage))
-    views.append(UserView(app, core, storage))
-    for v in views:
-        v.register()
+    views = [
+        AddView,
+        APIView,
+        ErrorView,
+        FeesView,
+        IndexView,
+        ListView,
+        MailView,
+        MembershipView,
+        SessionView,
+        UserView,
+    ]
+    view: KosekiView
+    for viewType in views:
+        view = viewType(app, storage, core.auth, core.util, core.mail)
+        view.register()
 
 
 def create_app():
@@ -71,8 +74,8 @@ def create_app():
         storage.insert_initial_values()
         updater.start()
         core.plugins.register_plugins()
-        register_views()
-        app.wsgi_app = ReverseProxied(app.wsgi_app)
+        register_views() # Must come after creation of Core
+        app.wsgi_app = ReverseProxied(app.wsgi_app)  # type: ignore
     return app
 
 

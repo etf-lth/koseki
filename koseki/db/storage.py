@@ -47,8 +47,8 @@ class Storage:
         return self.session.query(obj)
 
     def __migrate_person_table(self):
+        con: Connection
         with self.engine.connect() as con:
-            con: Connection
             for column_name in [
                 "address_line1",
                 "address_line2",
@@ -99,6 +99,6 @@ class Storage:
                 )
             )  # pass: password
 
-    def __insert_initial_values_person(self):
+    def __insert_initial_values_person_group(self):
         if self.session.query(PersonGroup).count() < 1:
             self.add(PersonGroup(uid=1, gid=1))

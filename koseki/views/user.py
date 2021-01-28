@@ -1,8 +1,9 @@
 from flask import abort, render_template, request
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Group, Person, PersonGroup
-from wtforms import TextField
-from wtforms.validators import DataRequired, Email
+from koseki.view import KosekiView
+from wtforms import TextField  # type: ignore
+from wtforms.validators import DataRequired, Email  # type: ignore
 
 
 class GeneralForm(FlaskForm):
@@ -12,39 +13,34 @@ class GeneralForm(FlaskForm):
     stil = TextField("StiL")
 
 
-class UserView:
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
+class UserView(KosekiView):
     def register(self):
         self.app.add_url_rule(
             "/user/<int:uid>",
             None,
-            self.core.require_session(self.member_general, ["admin", "board"]),
+            self.auth.require_session(self.member_general, ["admin", "board"]),
             methods=["GET", "POST"],
         )
         self.app.add_url_rule(
             "/user/<int:uid>/groups",
             None,
-            self.core.require_session(self.member_groups, ["admin", "board"]),
+            self.auth.require_session(self.member_groups, ["admin", "board"]),
             methods=["GET", "POST"],
         )
         self.app.add_url_rule(
             "/user/<int:uid>/fees",
             None,
-            self.core.require_session(self.member_fees, ["admin", "board"]),
+            self.auth.require_session(self.member_fees, ["admin", "board"]),
         )
         self.app.add_url_rule(
             "/user/<int:uid>/payments",
             None,
-            self.core.require_session(self.member_payments, ["admin", "board"]),
+            self.auth.require_session(self.member_payments, ["admin", "board"]),
         )
         self.app.add_url_rule(
             "/user/<int:uid>/admin",
             None,
-            self.core.require_session(self.member_admin, ["admin"]),
+            self.auth.require_session(self.member_admin, ["admin"]),
             methods=["GET", "POST"],
         )
 
@@ -75,7 +71,7 @@ class UserView:
 
     def member_groups(self, uid):
         groups = self.storage.session.query(Group).all()
-        person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+        person: Person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
@@ -84,10 +80,10 @@ class UserView:
         if request.method == "POST":
             for group in groups:
                 # Only admin can add or remove admin!
-                if not self.core.member_of("admin") and group.name == "admin":
+                if not self.util.member_of("admin") and group.name == "admin":
                     continue
 
-                current_state = self.core.member_of(group, person)
+                current_state = self.util.member_of(group, person)
                 if sum(1 for gid in list(request.form.keys()) if gid == str(group.gid)):
                     # Member of the group, add if needed
                     not current_state and self.storage.add(
@@ -98,7 +94,7 @@ class UserView:
                     current_state and list(
                         map(
                             self.storage.delete,
-                            (g for g in person.groups if g.gid == group.gid),
+                            (g for g in person.groups if g.gid == group.gid),  # type: ignore
                         )
                     )
 

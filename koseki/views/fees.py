@@ -1,13 +1,12 @@
 import logging
 from datetime import datetime, timedelta
 
-from flask import Flask, render_template
-from flask_wtf import FlaskForm
-from koseki.core import KosekiCore
-from koseki.db.storage import Storage
+from flask import render_template
+from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Fee, Payment, Person
-from wtforms import DateField, IntegerField, SelectField, SubmitField, TextField
-from wtforms.validators import DataRequired, Optional
+from koseki.view import KosekiView
+from wtforms import DateField, IntegerField, SelectField, SubmitField, TextField  # type: ignore
+from wtforms.validators import DataRequired, Optional # type: ignore
 
 
 class FeeForm(FlaskForm):
@@ -44,35 +43,30 @@ class PaymentForm(FlaskForm):
     submitPayment = SubmitField("Register")
 
 
-class FeesView:
-    def __init__(self, app: Flask, core: KosekiCore, storage: Storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
+class FeesView(KosekiView):
     def register(self):
         self.app.add_url_rule(
             "/fees",
             None,
-            self.core.require_session(self.list_fees, ["admin", "accounter"]),
+            self.auth.require_session(self.list_fees, ["admin", "accounter"]),
         )
         self.app.add_url_rule(
             "/fees/csv",
             None,
-            self.core.require_session(self.export_csv, ["admin", "accounter"]),
+            self.auth.require_session(self.export_csv, ["admin", "accounter"]),
         )
         self.app.add_url_rule(
             "/fees/register",
             None,
-            self.core.require_session(self.register_fee, ["admin", "accounter"]),
+            self.auth.require_session(self.register_fee, ["admin", "accounter"]),
             methods=["GET", "POST"],
         )
         self.app.add_url_rule(
             "/payments",
             None,
-            self.core.require_session(self.list_payments, ["admin", "accounter"]),
+            self.auth.require_session(self.list_payments, ["admin", "accounter"]),
         )
-        self.core.nav("/fees", "certificate", "Fees", 3, ["admin", "accounter"])
+        self.util.nav("/fees", "certificate", "Fees", 3, ["admin", "accounter"])
 
     def list_fees(self):
         return render_template(
@@ -123,14 +117,14 @@ class FeesView:
                 start = feeForm.retro.data
             else:
                 # Calculate period of validity
-                last_fee = (
+                last_fee: Fee = (
                     self.storage.session.query(Fee)
                     .filter_by(uid=person.uid)
                     .order_by(Fee.end.desc())
-                    .first()
+                    .scalar()
                 )
 
-                if last_fee and last_fee.end > datetime.now():
+                if last_fee and last_fee.end > datetime.now():  # type: ignore
                     logging.debug(
                         "Last fee: start=%s, end=%s" % (last_fee.start, last_fee.end)
                     )
@@ -143,7 +137,7 @@ class FeesView:
             # Store fee
             fee = Fee(
                 uid=person.uid,
-                registered_by=self.core.current_user(),
+                registered_by=self.util.current_user(),
                 amount=feeForm.amount.data,
                 start=start,
                 end=end,
@@ -170,12 +164,12 @@ class FeesView:
                 person.state = "active"
                 self.storage.commit()
                 logging.info("%s %s is now active" % (person.fname, person.lname))
-                self.core.mail.send_mail(
+                self.mail.send_mail(
                     self.app.config["ORG_EMAIL"],
                     "board_member_active.mail",
                     member=person,
                 )
-                self.core.mail.send_mail(person, "member_active.mail", member=person)
+                self.mail.send_mail(person, "member_active.mail", member=person)
 
             alerts.append(
                 {
@@ -210,7 +204,7 @@ class FeesView:
             # Store payment
             payment = Payment(
                 uid=person.uid,
-                registered_by=self.core.current_user(),
+                registered_by=self.util.current_user(),
                 amount=paymentForm.amount.data,
                 method=paymentForm.method.data,
                 reason=paymentForm.reason.data,

@@ -1,19 +1,15 @@
 from flask import jsonify, request
 from koseki.db.types import Person
+from koseki.view import KosekiView
 from sqlalchemy import or_
 
 
-class APIView:
-    def __init__(self, app, core, storage):
-        self.app = app
-        self.core = core
-        self.storage = storage
-
+class APIView(KosekiView):
     def register(self):
         self.app.add_url_rule(
             "/api/ac/members",
             None,
-            self.core.require_session(
+            self.auth.require_session(
                 self.api_ac_members, ["admin", "accounter", "board"]
             ),
             methods=["GET"],
