@@ -52,7 +52,7 @@ class KosekiPluginManager:
             logging.info("Registering plugin: %s" % (plugin_name))
 
             # Instantiate plugin
-            plugin = plugin_type(self)
+            plugin = plugin_type(self.app, self.storage, self.auth, self.util)
             # Register config variables
             self.app.config.from_object(plugin.config())
             # Register URL handlers
