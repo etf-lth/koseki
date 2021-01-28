@@ -58,4 +58,4 @@ class KosekiConfig(object):
     #   Print - Allows sending documents to CUPS for printing (Linux-only!)
     #
     PLUGINS: List[str] = ["CAS", "Salto", "Kiosk", "Store"]
-    #PLUGINS: List[str] = set()
+    #PLUGINS: List[str] = list()
