@@ -166,7 +166,7 @@ class FeesView(KosekiView):
                 logging.info("%s %s is now active" % (person.fname, person.lname))
                 self.mail.send_mail(
                     self.app.config["ORG_EMAIL"],
-                    "board_member_active.mail",
+                    "mail/board_member_active.html",
                     member=person,
                 )
                 self.mail.send_mail(person, "member_active.mail", member=person)

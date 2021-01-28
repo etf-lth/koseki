@@ -1,0 +1,15 @@
+{% extends "mail/base_mail.html" %}
+{% block title %}{{ member.fname }} {{ member.lname }}'s membership is now active{% endblock %}
+
+{% block content %}
+
+The user's profile:<br />
+<a target="_blank" href="{{ config['URL_BASE'] }}/user/{{ member.uid }}">
+    {{ config['URL_BASE'] }}/user/{{ member.uid }}
+</a>
+
+<br /><br />
+
+<b>/ koseki</b>
+
+{% endblock %}

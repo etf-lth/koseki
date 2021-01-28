@@ -1,6 +1,0 @@
-{{ member.fname }} {{ member.lname }}'s membership has expired.
-
-The user's profile:
-{{ config['URL_BASE'] }}/user/{{ member.uid }}
-
-/ koseki

@@ -62,7 +62,7 @@ class Updater:
                     )
                     self.mail.send_mail(
                         self.app.config["ORG_EMAIL"],
-                        "board_member_expired.mail",
+                        "mail/board_member_expired.html",
                         member=member,
                     )
                 else:

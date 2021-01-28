@@ -1,0 +1,25 @@
+{% extends "mail/base_mail.html" %}
+{% block title %}{{ member.fname }} {{ member.lname }} have been enrolled{% endblock %}
+
+{% block content %}
+
+{{ member.fname }} {{ member.lname }} have been enrolled by {{ uid_to_name(member.enrolled_by) }}.
+Please note that the membership is pending until payment of the membership fee have been registered.
+
+<br /><br />
+
+Email: {{ member.email }}<br />
+StiL: {{ member.stil }}
+
+<br /><br />
+
+You may view the new member's profile:<br />
+<a target="_blank" href="{{ config['URL_BASE'] }}/user/{{ member.uid }}">
+    {{ config['URL_BASE'] }}/user/{{ member.uid }}
+</a>
+
+<br /><br />
+
+<b>/ koseki</b>
+
+{% endblock %}
