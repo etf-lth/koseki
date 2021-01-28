@@ -54,7 +54,8 @@ class KosekiPluginManager:
             # Instantiate plugin
             plugin = plugin_type(self.app, self.storage, self.auth, self.util)
             # Register config variables
-            self.app.config.from_mapping(plugin.config())
+            for k, v in plugin.config().items():
+                self.app.config.setdefault(k, v)
             # Register URL handlers
             self.app.register_blueprint(plugin.create_blueprint())
             self.plugins[plugin_name] = plugin
