@@ -48,7 +48,7 @@ class KosekiConfig(object):
     ORG_EMAIL = "contact@acme.nu"
 
     #
-    # Plugins - Must be correctly capitalized!!!
+    # Plugins - Must be correctly capitalized!
     #
     # Default:
     #   CAS - Integration with Lund University login system (Central Authentication System)
