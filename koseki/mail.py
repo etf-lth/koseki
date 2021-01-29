@@ -17,7 +17,7 @@ class KosekiMailer:
 
     def send_mail(self, to: Union[Person, str], template: str, **kwargs):
         try:
-            msg = MIMEMultipart('alternative')
+            msg = MIMEMultipart()
 
             from_mail = self.app.config["EMAIL_FROM"]
             to_mail: str
@@ -27,7 +27,8 @@ class KosekiMailer:
                 msg["To"] = formataddr(
                     (str(Header("%s %s" % (to.fname, to.lname), 'utf-8')), to_mail))
             elif isinstance(to, str):
-                msg["To"] = to_mail = to
+                to_mail = to
+                msg["To"] = Header(to_mail, "utf-8")
             else:
                 raise TypeError("Mail target was neither string nor Person")
 
@@ -36,7 +37,7 @@ class KosekiMailer:
 
             logging.info(
                 "send_mail to=%s, template=%s, args=%s" % (
-                    msg["To"], template, kwargs)
+                    to_mail, template, kwargs)
             )
 
             mimeType = "plain"
