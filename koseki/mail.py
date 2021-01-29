@@ -36,8 +36,8 @@ class KosekiMailer:
             msg["Subject"] = Header(self.app.config["EMAIL_SUBJECT"], "utf-8")
 
             logging.info(
-                "send_mail to=%s, template=%s, args=%s" % (
-                    to_mail, template, kwargs)
+                "send_mail to=%s, template=%s" % (
+                    to_mail, template)
             )
 
             mimeType = "plain"
