@@ -36,7 +36,7 @@ class KosekiMailer:
 
             logging.info(
                 "send_mail to=%s, template=%s, args=%s" % (
-                    to, template, kwargs)
+                    msg["To"], template, kwargs)
             )
 
             mimeType = "plain"
