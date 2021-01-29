@@ -1,5 +1,6 @@
 import logging
 import smtplib
+from email.header import Header
 from email.mime.text import MIMEText
 
 from flask import render_template
@@ -28,9 +29,9 @@ class KosekiMailer:
             msg = MIMEText(
                 render_template(template, **kwargs), mimeType, _charset="utf8"
             )
-            msg["To"] = to
-            msg["From"] = from_mail
-            msg["Subject"] = self.app.config["EMAIL_SUBJECT"]
+            msg["To"] = Header(to, "utf-8")
+            msg["From"] = Header(from_mail, "utf-8")
+            msg["Subject"] = Header(self.app.config["EMAIL_SUBJECT"], "utf-8")
 
             s = smtplib.SMTP(self.app.config["SMTP_SERVER"])
             s.sendmail(from_mail, [to], msg.as_string())
