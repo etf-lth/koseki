@@ -1,4 +1,5 @@
 import hashlib
+from koseki.util import KosekiAlert, KosekiAlertType
 
 from flask import redirect, render_template, request, url_for
 from koseki.db.types import Person
@@ -12,7 +13,7 @@ class SessionView(KosekiView):
         self.util.nav("/logout", "power-off", "Sign out", 999)
 
     def login(self):
-        alert = None
+        alerts: list[KosekiAlert] = []
         if request.method == "POST":
             person = (
                 self.storage.session.query(Person)
@@ -27,16 +28,18 @@ class SessionView(KosekiView):
                 self.util.start_session(person.uid)
                 return redirect(request.form["redir"])
             else:
-                alert = {
-                    "class": "alert-danger",
-                    "title": "Authentication error",
-                    "message": "The username or password is incorrect.",
-                }
+                alerts.append(
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Authentication error",
+                        "The username or password is incorrect.",
+                    )
+                )
 
         return render_template(
             "login.html",
             redir=request.args.get("redir", url_for("index")),
-            alert=alert,
+            alerts=alerts,
             alternate=self.util.get_alternate_login(),
         )
 

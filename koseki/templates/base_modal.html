@@ -20,6 +20,12 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    {% for alert in alerts %}
+                    <div class="alert {{ alert.type }}">
+                        <h4>{{ alert.title }}</h4>
+                        {{ alert.message }}
+                    </div>
+                    {% endfor %}
                     {% block content %} {% endblock %}
                 </div>
                 <div class="card-footer text-muted">

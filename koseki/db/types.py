@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DECIMAL, Column, DateTime, Enum, ForeignKey, Integer, Unicode
+from sqlalchemy import DECIMAL, Column, DateTime, Enum, ForeignKey, Integer, Unicode, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.declarative.api import DeclarativeMeta
 from sqlalchemy.orm import relationship
@@ -57,8 +57,8 @@ class Product(Base):
     __tablename__: str = "product"
 
     pid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    name = Column(Unicode(length=255))
-    img_url = Column(Unicode(length=510))
+    name = Column(Unicode(255))
+    img_url = Column(Text())
     price = Column(DECIMAL(10, 2))
     order = Column(Integer, default=0, nullable=False)
 
@@ -72,7 +72,7 @@ class Person(Base):
     lname = Column(Unicode(64))
     email = Column(Unicode(64))
     stil = Column(Unicode(64))  # Plugin: Salto
-    password = Column(Unicode(64))
+    password = Column(Text())
     enrolled = Column(DateTime, default=datetime.now)
     enrolled_by = Column(Integer, ForeignKey("person.uid"))
     card_id = Column(Unicode(64))  # Plugin: Kiosk
