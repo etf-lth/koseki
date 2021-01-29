@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 from flask import Blueprint, abort, redirect, render_template, url_for
 from flask_wtf import FlaskForm  # type: ignore
@@ -50,7 +49,7 @@ class StorePlugin(KosekiPlugin):
     def list_products(self):
         productForm = ProductForm()
 
-        alerts: List[KosekiAlert] = []
+        alerts: list[KosekiAlert] = []
 
         if productForm.submitAdd.data and productForm.validate_on_submit():
             # Store product

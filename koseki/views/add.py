@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 from flask import render_template
 from flask_wtf import FlaskForm  # type: ignore
@@ -31,7 +30,7 @@ class AddView(KosekiView):
 
     def enroll_member(self):
         form = EnrollForm()
-        alerts: List[KosekiAlert] = []
+        alerts: list[KosekiAlert] = []
 
         if form.validate_on_submit():
             if (

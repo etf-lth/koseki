@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime, timedelta
-from typing import List
 
 from flask import render_template
 from flask_wtf import FlaskForm  # type: ignore
@@ -95,7 +94,7 @@ class FeesView(KosekiView):
         feeForm = FeeForm()
         paymentForm = PaymentForm()
 
-        alerts: List[KosekiAlert] = []
+        alerts: list[KosekiAlert] = []
 
         if feeForm.submitFee.data and feeForm.validate_on_submit():
             person = (

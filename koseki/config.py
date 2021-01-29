@@ -1,5 +1,4 @@
 import secrets
-from typing import List
 
 
 class KosekiConfig(object):
@@ -57,5 +56,5 @@ class KosekiConfig(object):
     #   Store - Handles product registration
     #   Print - Allows sending documents to CUPS for printing (Linux-only!)
     #
-    PLUGINS: List[str] = ["CAS", "Salto", "Kiosk", "Store"]
-    #PLUGINS: List[str] = list()
+    PLUGINS: list[str] = ["CAS", "Salto", "Kiosk", "Store"]
+    #PLUGINS: list[str] = list()

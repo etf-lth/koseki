@@ -1,14 +1,13 @@
 import importlib
-import types
-from koseki.util import KosekiUtil
 import logging
-from typing import DefaultDict
+import types
 
 from flask import Flask
 from flask.blueprints import Blueprint
 
 from koseki.auth import KosekiAuth
 from koseki.db.storage import Storage
+from koseki.util import KosekiUtil
 
 
 class KosekiPlugin:
@@ -39,7 +38,7 @@ class KosekiPluginManager:
         self.storage = storage
         self.auth = auth
         self.util = util
-        self.plugins = DefaultDict[str, KosekiPlugin]()
+        self.plugins: dict[str, KosekiPlugin] = {}
 
     def register_plugins(self):
         plugin: KosekiPlugin

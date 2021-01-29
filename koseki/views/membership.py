@@ -1,5 +1,3 @@
-from typing import List
-
 from flask import render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Fee, Person
@@ -19,7 +17,8 @@ class EditForm(FlaskForm):
 class MembershipView(KosekiView):
     def register(self):
         self.app.add_url_rule(
-            "/membership", None, self.auth.require_session(self.membership_general)
+            "/membership", None, self.auth.require_session(
+                self.membership_general)
         )
         self.app.add_url_rule(
             "/membership/edit",
@@ -53,7 +52,7 @@ class MembershipView(KosekiView):
         )
         form = EditForm(obj=person)
 
-        alerts: List[KosekiAlert] = []
+        alerts: list[KosekiAlert] = []
         alerts.append(
             KosekiAlert(
                 KosekiAlertType.WARNING,

@@ -1,5 +1,3 @@
-from typing import List
-
 from flask import abort, render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Group, Person, PersonGroup
@@ -38,7 +36,8 @@ class UserView(KosekiView):
         self.app.add_url_rule(
             "/user/<int:uid>/payments",
             None,
-            self.auth.require_session(self.member_payments, ["admin", "board"]),
+            self.auth.require_session(
+                self.member_payments, ["admin", "board"]),
         )
         self.app.add_url_rule(
             "/user/<int:uid>/admin",
@@ -52,7 +51,7 @@ class UserView(KosekiView):
         if not person:
             raise abort(404)
 
-        alerts: List[KosekiAlert] = []
+        alerts: list[KosekiAlert] = []
         form = GeneralForm(obj=person)
 
         if form.validate_on_submit():
@@ -74,11 +73,12 @@ class UserView(KosekiView):
 
     def member_groups(self, uid):
         groups = self.storage.session.query(Group).all()
-        person: Person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+        person: Person = self.storage.session.query(
+            Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
-        alerts: List[KosekiAlert] = []
+        alerts: list[KosekiAlert] = []
 
         if request.method == "POST":
             for group in groups:
@@ -97,7 +97,8 @@ class UserView(KosekiView):
                     current_state and list(
                         map(
                             self.storage.delete,
-                            (g for g in person.groups if g.gid == group.gid),  # type: ignore
+                            (g for g in person.groups if g.gid ==  # type: ignore
+                             group.gid),  # type: ignore
                         )
                     )
 

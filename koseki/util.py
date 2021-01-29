@@ -1,6 +1,4 @@
-import json
 import logging
-from typing import List
 
 from flask import session
 from sqlalchemy.util.langhelpers import NoneType
@@ -34,20 +32,20 @@ class KosekiNavigationEntry(dict):
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
-    def __init__(self, uri: str, icon: str, title: str, weight: int, groups: List[str]):
+    def __init__(self, uri: str, icon: str, title: str, weight: int, groups: list[str]):
         dict.__init__(self, uri=uri, icon=icon, title=title,
                       weight=weight, groups=groups)
         self.uri: str
         self.icon: str
         self.title: str
         self.weight: int
-        self.groups: List[str]
+        self.groups: list[str]
 
 
 class KosekiUtil:
     def __init__(self, storage: Storage):
         self.storage = storage
-        self.navigation: List[KosekiNavigationEntry] = []
+        self.navigation: list[KosekiNavigationEntry] = []
         self.alt_login = None
 
     def nav(self, uri, icon, title, weight=0, groups=None):
@@ -55,7 +53,7 @@ class KosekiUtil:
             uri, icon, title, weight, groups))
 
     def calc_nav(self):
-        nav: List[KosekiNavigationEntry] = []
+        nav: list[KosekiNavigationEntry] = []
         for n in self.navigation:
             if n.groups is None or sum(
                 1 for group in n.groups if self.member_of(group)
@@ -94,12 +92,12 @@ class KosekiUtil:
     def current_user(self):
         return session["uid"]
 
-    def fetch_alerts(self) -> List[KosekiAlert]:
-        alerts: List[KosekiAlert] = session.pop("alerts", [])
+    def fetch_alerts(self) -> list[KosekiAlert]:
+        alerts: list[KosekiAlert] = session.pop("alerts", [])
         session["alerts"] = []
         return alerts
 
-    def set_alerts(self, alerts: List[KosekiAlert]) -> None:
+    def set_alerts(self, alerts: list[KosekiAlert]) -> None:
         session["alerts"] = alerts
 
     def get_alternate_login(self):
