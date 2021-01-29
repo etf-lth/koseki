@@ -22,8 +22,10 @@ from koseki.views.session import SessionView
 from koseki.views.user import UserView
 
 logging.basicConfig(
-    format="%(asctime)s %(message)s", level=logging.DEBUG, filename="koseki.log"
-)
+    format="%(asctime)s %(message)s",
+    level=logging.DEBUG,
+    handlers=[logging.FileHandler('koseki.log', 'a', 'utf-8')])
+
 app = Flask(__name__)
 app.config.from_object(KosekiConfig())
 app.config.from_pyfile("../koseki.cfg")
@@ -42,7 +44,7 @@ core = KosekiCore(app, storage)
 updater = Updater(app, storage, core.mail)
 
 
-## Return connections to db pool after closure
+# Return connections to db pool after closure
 @app.teardown_appcontext
 def close_db(error):
     db = g.pop("db", None)
@@ -74,7 +76,7 @@ def create_app():
         storage.insert_initial_values()
         updater.start()
         core.plugins.register_plugins()
-        register_views() # Must come after creation of Core
+        register_views()  # Must come after creation of Core
         app.wsgi_app = ReverseProxied(app.wsgi_app)  # type: ignore
     return app
 
