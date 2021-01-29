@@ -10,15 +10,15 @@
             <form class="form-horizontal" action="" method="post">
                 <input type="hidden" name="redir" value="{{ redir }}">
                 <div class="form-group row">
-                    <label class="col-sm-3 pr-sm-0 col-form-label text-sm-right" for="inputEmail">Email</label>
+                    <label class="col-sm-3 pr-sm-0 col-form-label text-sm-right" for="email">Email</label>
                     <div class="col-sm-8 pt-1">
-                        <input class="w-100" type="text" id="inputEmail" name="email" placeholder="Email">
+                        <input class="w-100" type="text" id="email" name="email" placeholder="Email">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3 pr-sm-0 col-form-label text-sm-right" for="inputPassword">Password</label>
+                    <label class="col-sm-3 pr-sm-0 col-form-label text-sm-right" for="password">Password</label>
                     <div class="col-sm-8 pt-1">
-                        <input class="w-100" type="password" id="inputPassword" name="password" placeholder="Password">
+                        <input class="w-100" type="password" id="password" name="password" placeholder="Password">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -27,7 +27,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-lock mr-1"></i> Sign in
                         </button>
-                        <a class="btn btn-secondary">Reset password</a>
+                        <a class="btn btn-secondary" href="{{ url_for('reset_password') }}">Reset password</a>
                     </div>
                 </div>
             </form>
