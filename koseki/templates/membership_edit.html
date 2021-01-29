@@ -1,15 +1,15 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, render_static, status, membership_tabs, gravatar_blob %}
+{% from "macros.html" import render_field, render_static, render_submit, status, membership_tabs, gravatar_blob %}
 {% block title %}My membership{% endblock %}
 {% block content %}
 
 <div class="row mb-3">
-    <div class="col-1">
-        <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com">
+    <div class="" style="padding-left: 15px">
+        <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com" style="margin: 0 20px;">
             {{ gravatar_blob(gravatar(person.email)) }}
         </a>
     </div>
-    <div class="col-10">
+    <div class="">
         <h1 class="mb-0 font-weight-bold">My membership</h1>
         <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
     </div>
@@ -17,37 +17,43 @@
 
 {{ membership_tabs('edit') }}
 
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <div class="card mb-3">
-        <h3 class="card-header">User data</h3>
-        <div class="card-body">
+<div class="card mb-3">
+    <h3 class="card-header">Update email</h3>
+    <div class="card-body">
+        <form action="" method="post">
+            {{ form_email.hidden_tag() }}
             <div class="row">
-                <div class="col-3">
-                    {{ render_field(form.fname, autofocus=true) }}
+                <div class="col-12 col-md-4">
+                    {{ render_field(form_email.email1) }}
                 </div>
-                <div class="col-3">
-                    {{ render_field(form.lname) }}
+                <div class="col-12 col-md-4">
+                    {{ render_field(form_email.email2) }}
                 </div>
-                <div class="col-6"></div>
-                <div class="col-3">
-                    {{ render_field(form.email) }}
+                <div class="col-12 col-md-3">
+                    {{ render_submit(form_email.submit_email, class="btn btn-primary", icon="check") }}
                 </div>
             </div>
-        </div>
-        <h3 class="card-header">Ancillary information</h3>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-3">
-                    {{ render_static(form.stil) }}
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">
-                <i class="fa fa-check mr-1"></i> Save
-            </button>
-        </div>
+        </form>
     </div>
-</form>
+    <h3 class="card-header">Change password</h3>
+    <div class="card-body">
+        <form action="" method="post">
+            {{ form_password.hidden_tag() }}
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    {{ render_field(form_password.password1) }}
+                </div>
+                <div class="col-12 col-md-4">
+                    {{ render_field(form_password.password2) }}
+                </div>
+                <div class="col-12 col-md-3">
+                    {{ render_submit(form_password.submit_password, class="btn btn-primary", icon="check") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-footer text-muted">
+        Updating certain information like your legal name requires you to contact a board member.
+    </div>
+</div>
 {% endblock %}

@@ -1,17 +1,26 @@
+import logging
+
 from flask import render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Fee, Person
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
-from wtforms import TextField  # type: ignore
-from wtforms.validators import DataRequired, Email  # type: ignore
+from wtforms import PasswordField, SubmitField, TextField  # type: ignore
+from wtforms.validators import DataRequired, Email, EqualTo  # type: ignore
 
 
-class EditForm(FlaskForm):
-    fname = TextField("First name", validators=[DataRequired()])
-    lname = TextField("Last name", validators=[DataRequired()])
-    email = TextField("Email", validators=[Email()])
-    stil = TextField("StiL")
+class EditEmailForm(FlaskForm):
+    email1 = TextField("Email", validators=[DataRequired(), Email()])
+    email2 = TextField("Repeat Email", validators=[DataRequired(), Email(),
+                                                   EqualTo('email1', message='Emails do not match')])
+    submit_email = SubmitField("Save")
+
+
+class EditPasswordForm(FlaskForm):
+    password1 = PasswordField("Password", validators=[DataRequired()])
+    password2 = PasswordField("Repeat Password", validators=[DataRequired(
+    ), EqualTo('password1', message='Passwords must match')])
+    submit_password = SubmitField("Save")
 
 
 class MembershipView(KosekiView):
@@ -45,31 +54,47 @@ class MembershipView(KosekiView):
         )
 
     def membership_edit(self):
-        person = (
+        person: Person = (
             self.storage.session.query(Person)
             .filter_by(uid=self.util.current_user())
             .scalar()
         )
-        form = EditForm(obj=person)
 
         alerts: list[KosekiAlert] = []
-        alerts.append(
-            KosekiAlert(
-                KosekiAlertType.WARNING,
-                "Note",
-                "Profile editing is currently disabled",
-            )
-        )
 
-        if request.method == "POST":
+        form_email = EditEmailForm()
+        form_password = EditPasswordForm()
+
+        if "submit_email" in request.form and form_email.validate():
+            person.email = form_email.email1.data
+            self.storage.commit()
+            logging.info("Changed email for %s %s" %
+                         (person.fname, person.lname))
+
             alerts.append(
                 KosekiAlert(
-                    KosekiAlertType.DANGER,
-                    "Error",
-                    "Profile editing is currently disabled",
+                    KosekiAlertType.SUCCESS,
+                    "Email updated",
+                    "Your email address has now been changed to %s." % (
+                        form_email.email1.data),
+                )
+            )
+
+        if "submit_password" in request.form and form_password.validate():
+            person.password = self.auth.hash_password(
+                form_password.password1.data)
+            self.storage.commit()
+            logging.info("Changed password for %s %s" %
+                         (person.fname, person.lname))
+
+            alerts.append(
+                KosekiAlert(
+                    KosekiAlertType.SUCCESS,
+                    "Password changed",
+                    "Your password has now been changed.",
                 )
             )
 
         return render_template(
-            "membership_edit.html", person=person, form=form, alerts=alerts
+            "membership_edit.html", person=person, form_email=form_email, form_password=form_password, alerts=alerts
         )

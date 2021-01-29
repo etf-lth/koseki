@@ -1,11 +1,17 @@
 from typing import Callable
-from koseki.util import KosekiUtil
+
+from argon2 import PasswordHasher # type: ignore
+from argon2.exceptions import VerifyMismatchError # type: ignore
 from flask import abort, redirect, request, session, url_for
+
+from koseki.db.types import Person
+from koseki.util import KosekiUtil
 
 
 class KosekiAuth:
     def __init__(self, util: KosekiUtil):
         self.util = util
+        self.__ph = PasswordHasher()
 
     def require_session(self, f: Callable, groups=None):
         def wrap(*args, **kwargs):
@@ -22,3 +28,15 @@ class KosekiAuth:
 
         wrap.__name__ = f.__name__
         return wrap
+
+    def hash_password(self, password: str) -> str:
+        return self.__ph.hash(password)
+
+    def verify_password(self, person: Person, password: str) -> bool:
+        if Person.password is None:
+            return False
+        try:
+            self.__ph.verify(person.password, password)
+            return True
+        except VerifyMismatchError:
+            return False
