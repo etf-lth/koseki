@@ -26,7 +26,7 @@ logging.basicConfig(
     level=logging.DEBUG,
     handlers=[logging.FileHandler('koseki.log', 'a', 'utf-8')])
 
-app = Flask(__name__)
+app = Flask("koseki")
 app.config.from_object(KosekiConfig())
 app.config.from_pyfile("../koseki.cfg")
 storage = Storage(

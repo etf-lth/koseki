@@ -11,13 +11,13 @@ class KosekiConfig(object):
 
     @property
     def FOOTER(self) -> str:
-        return "koseki &copy; " + self.KOSEKI_VERSION
+        return "koseki &copy; %s" % self.KOSEKI_VERSION
 
     #
     # Hosting config
     #
     URL_BASE = "http://localhost:5000"
-    UPLOAD_FOLDER = "./data"
+    UPLOAD_FOLDER = "./data" # TODO move to print plugin?
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
 
