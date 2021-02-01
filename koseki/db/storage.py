@@ -24,8 +24,6 @@ class Storage:
         m.create_all(bind=self.engine)
         self.sm = sessionmaker(bind=self.engine)
 
-        self.__migrate_person_table()
-
     @property
     def session(self) -> Session:
         if hasattr(g, "db"):
@@ -45,31 +43,6 @@ class Storage:
 
     def query(self, obj) -> Query:
         return self.session.query(obj)
-
-    def __migrate_person_table(self):
-        con: Connection
-        with self.engine.connect() as con:
-            for column_name in [
-                "address_line1",
-                "address_line2",
-                "city",
-                "postcode",
-                "region",
-                "country",
-                "phone_number",
-            ]:
-                con.execute(
-                    """
-                    IF NOT EXISTS( SELECT NULL
-                        FROM INFORMATION_SCHEMA.COLUMNS
-                        WHERE table_name = 'person'
-                        AND table_schema = 'koseki'
-                        AND column_name = '{columnname1}')  THEN
-                            ALTER TABLE person ADD COLUMN {columnname2} varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL;
-                    END IF;""".format(
-                        columnname1=column_name, columnname2=column_name
-                    )
-                )
 
     def insert_initial_values(self):
         self.__insert_initial_values_group()
