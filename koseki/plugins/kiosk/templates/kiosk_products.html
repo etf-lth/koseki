@@ -114,14 +114,14 @@
     {% for product in products %}
     <div class="col-3 pb-3">
         <div class="card border-primary h-100">
-            <img class="card-img-top border-bottom-blue p-3" src="{{ product.img_url }}" alt="Product image"
+            <img class="card-img-top border-bottom border-5 border-primary p-3" src="{{ product.img_url }}" alt="Product image"
                 style="height:250px">
             <div class="card-body p-0">
                 <div class="row mx-0">
                     <div class="col-7 pt-2 pb-2">
                         <h4 class="card-title fw-bold pt-2 mb-0">{{ product.name }}</h4>
                     </div>
-                    <div class="col-5 pt-2 pb-2 bg-custom-grey-comp2 h-100">
+                    <div class="col-5 pt-2 pb-2 border-light h-100">
                         <h1 class="fw-bold text-center text-primary mb-0">
                             {{ product.price|replace('.00', '') }} kr
                         </h1>
@@ -147,14 +147,14 @@
 </div>
 {% endblock %}
 {% block content_rside %}
-<div class="row border-bottom-green">
+<div class="row border-bottom border-2 border-success">
     <a id="checkoutButton" href="javascript:proceedCheckout()"
         class="col-12 btn w-100 py-4 mt-0 rounded-0 btn-dark">
         <div class="h1 mb-0 fw-bold py-3">Cart is empty</div>
     </a>
 </div>
 
-<div class="row border-bottom-green pt-3 pb-2 h4">
+<div class="row border-bottom border-2 border-success pt-3 pb-2 h4">
     <div class="col-4 fw-bold">User ID:</div>
     <div class="col-8">{{ person.uid }}</div>
     <div class="col-4 fw-bold">Logged in:</div>
@@ -167,25 +167,25 @@
 
 <div class="row pt-2 h4">
     <div class="col-6">
-        <div class="border-bottom-green-thin">Product</div>
+        <div class="border-bottom border-2 border-success">Product</div>
     </div>
     <div class="col-2">
-        <div class="border-bottom-green-thin">Price</div>
+        <div class="border-bottom border-2 border-success">Price</div>
     </div>
     <div class="col-2">
-        <div class="border-bottom-green-thin">QTY</div>
+        <div class="border-bottom border-2 border-success">QTY</div>
     </div>
     <div class="col-2">
-        <div class="border-bottom-green-thin">Sum</div>
+        <div class="border-bottom border-2 border-success">Sum</div>
     </div>
 </div>
 <div style="min-height: 400px;">
     <div id="cartItems" class="row pb-2 h4">
     </div>
 </div>
-<div class="row border-bottom-green"></div>
+<div class="row border-bottom border-5 border-success"></div>
 
-<div class="row border-bottom-green pt-2 pb-3 h1">
+<div class="row border-bottom border-5 border-success pt-2 pb-3 h1">
     <div class="col-4 offset-4">Total:</div>
     <div id="cartTotal" class="col-4 fw-bold">0 kr</div>
 </div>
