@@ -8,8 +8,10 @@ $color-red7: #cf1322;
 $color-orange6: #fa8c16;
 $color-orange7: #d46b08;
 
+$color-green5: #73d13d;
 $color-green6: #52c41a;
 $color-green7: #389e0d;
+$color-green8: #237804;
 
 $color-blue6: #1890ff;
 $color-blue7: #096dd9;
@@ -26,20 +28,20 @@ $color-gray10: #262626;
 //
 
 $color-danger: $color-red6;
-$color-danger-border: $color-red7;
+$color-danger-dark: $color-red7;
 
 $color-light: $color-gray4;
-$color-light-border: $color-gray5;
+$color-light-dark: $color-gray5;
 
 $color-success: $color-green6;
-$color-success-border: $color-green7;
+$color-success-dark: $color-green7;
 
-$color-primary-hover: $color-blue7;
+$color-primary-light: $color-blue7;
 $color-primary: $color-blue8;
-$color-primary-border: $color-blue9;
+$color-primary-dark: $color-blue9;
 
 $color-warning: $color-orange6;
-$color-warning-border: $color-orange7;
+$color-warning-dark: $color-orange7;
 
 //
 // THEME CODE
@@ -61,7 +63,7 @@ a {
     color: $color-primary;
 }
 a:hover {
-    color: $color-primary-hover;
+    color: $color-primary-light;
 }
 
 .text-danger {
@@ -82,47 +84,53 @@ a:hover {
 
 .bg-danger {
     background-color: $color-danger !important;
-    border-color: $color-danger-border !important;
+    border-color: $color-danger-dark !important;
 }
 .bg-light {
     background-color: $color-light !important;
-    border-color: $color-light-border !important;
+    border-color: $color-light-dark !important;
 }
 .bg-primary {
     background-color: $color-primary !important;
-    border-color: $color-primary-border !important;
+    border-color: $color-primary-dark !important;
 }
 .bg-success {
     background-color: $color-success !important;
-    border-color: $color-success-border !important;
+    border-color: $color-success-dark !important;
 }
 .bg-warning {
     background-color: $color-warning !important;
-    border-color: $color-warning-border !important;
+    border-color: $color-warning-dark !important;
 }
 
 .btn-danger {
     background-color: $color-danger;
-    border-color: $color-danger-border;
+    border-color: $color-danger-dark;
 }
 .btn-light {
     background-color: $color-light;
-    border-color: $color-light-border;
+    border-color: $color-light-dark;
 }
 .btn-primary {
     background-color: $color-primary;
-    border-color: $color-primary-border;
+    border-color: $color-primary-dark;
 }
 .btn-success {
     background-color: $color-success;
-    border-color: $color-success-border;
+    border-color: $color-success-dark;
 }
 .btn-warning {
     background-color: $color-warning;
-    border-color: $color-warning-border;
+    border-color: $color-warning-dark;
 }
 
+.page-link {
+    color: $color-primary;
+}
+.page-link:hover {
+    color: $color-primary-light;
+}
 .page-item.active .page-link {
     background-color: $color-primary;
-    border-color: $color-primary-border;
+    border-color: $color-primary-dark;
 }

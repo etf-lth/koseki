@@ -1,0 +1,133 @@
+//
+// ant.design Colors
+// - DO NOT EDIT - These are standardized, rather edit in the settings further below.
+//
+$color-red6: #f5222d; 
+$color-red7: #cf1322;
+
+$color-orange6: #fa8c16;
+$color-orange7: #d46b08;
+
+$color-green5: #73d13d;
+$color-green6: #52c41a;
+$color-green7: #389e0d;
+$color-green8: #237804;
+
+$color-blue6: #1890ff;
+$color-blue7: #096dd9;
+$color-blue8: #0050b3;
+$color-blue9: #003a8c;
+
+$color-gray4: #f0f0f0;
+$color-gray5: #d9d9d9;
+$color-gray6: #bfbfbf;
+$color-gray10: #262626;
+
+//
+// THEME SCSS SETTINGS
+//
+
+$color-danger: $color-red6;
+$color-danger-dark: $color-red7;
+
+$color-light: $color-gray4;
+$color-light-dark: $color-gray5;
+
+$color-success: $color-blue6;
+$color-success-dark: $color-blue7;
+
+$color-primary-light: #40872c;
+$color-primary: #266d12;
+$color-primary-dark: #0d5400;
+
+$color-warning: $color-orange6;
+$color-warning-dark: $color-orange7;
+
+//
+// THEME CODE
+//
+
+.koseki-modal-separator {
+    background: linear-gradient(
+        to right,
+        #266d12 0%,
+        #88c848 50%,
+        #a7d47d 100%,
+    );
+}
+
+a {
+    color: $color-primary;
+}
+a:hover {
+    color: $color-primary-light;
+}
+
+.text-danger {
+    color: $color-danger !important;
+}
+.text-light {
+    color: $color-light !important;
+}
+.text-primary {
+    color: $color-primary !important;
+}
+.text-success {
+    color: $color-primary !important;
+}
+.text-warning {
+    color: $color-warning !important;
+}
+
+.bg-danger {
+    background-color: $color-danger !important;
+    border-color: $color-danger-dark !important;
+}
+.bg-light {
+    background-color: $color-light !important;
+    border-color: $color-light-dark !important;
+}
+.bg-primary {
+    background-color: $color-primary !important;
+    border-color: $color-primary-dark !important;
+}
+.bg-success {
+    background-color: $color-success !important;
+    border-color: $color-success-dark !important;
+}
+.bg-warning {
+    background-color: $color-warning !important;
+    border-color: $color-warning-dark !important;
+}
+
+.btn-danger {
+    background-color: $color-danger;
+    border-color: $color-danger-dark;
+}
+.btn-light {
+    background-color: $color-light;
+    border-color: $color-light-dark;
+}
+.btn-primary {
+    background-color: $color-primary;
+    border-color: $color-primary-dark;
+}
+.btn-success {
+    background-color: $color-success;
+    border-color: $color-success-dark;
+}
+.btn-warning {
+    background-color: $color-warning;
+    border-color: $color-warning-dark;
+}
+
+.page-link {
+    color: $color-primary;
+}
+.page-link:hover {
+    color: $color-primary-light;
+}
+.page-item.active .page-link {
+    background-color: $color-primary;
+    border-color: $color-primary-dark;
+}
