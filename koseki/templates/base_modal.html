@@ -8,22 +8,21 @@
     <div class="row justify-content-center">
         <div class="col-sm-9 col-md-7 col-lg-6 col-xl-5 col-xxl-4">
             <div class="card mb-3">
-                <h3 class="card-header"></h3>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-3 p-1 bg-custom-grey"></div>
-                        <div class="col-3 p-1 bg-custom-grey-comp1"></div>
-                        <div class="col-3 p-1 bg-custom-blue"></div>
-                        <div class="col-3 p-1 bg-custom-grey-comp2"></div>
-                    </div>
+                <div class="card-header border-0 p-4">
+                    <img src="{{ config['URL_BASE']|safe }}/static/img/login-logo.png" class="img-fluid" alt="Logo">
                 </div>
-                <div class="card-body">
-                    {% for alert in alerts %}
-                    <div class="alert {{ alert.type }}">
-                        <h4>{{ alert.title }}</h4>
-                        {{ alert.message }}
+                <div class="py-1 bg-primary koseki-modal-separator w-100"></div>
+                <div class="card-body px-0">
+                    {% if alerts %}
+                    <div class="container py-2">
+                        {% for alert in alerts %}
+                        <div class="alert {{ alert.type }}">
+                            <h4>{{ alert.title }}</h4>
+                            {{ alert.message }}
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+                    {% endif %}
                     {% block content %} {% endblock %}
                 </div>
                 <div class="card-footer text-muted">

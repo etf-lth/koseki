@@ -10,6 +10,7 @@ from koseki.mail import KosekiMailer
 from koseki.plugin import KosekiPluginManager
 from koseki.reverse import ReverseProxied
 from koseki.schedule import KosekiScheduler
+from koseki.theme import install_theme
 from koseki.util import KosekiUtil
 from koseki.view import KosekiView
 from koseki.views.add import AddView
@@ -38,18 +39,14 @@ class KosekiCore:
         #
         # Theme
         #
+        static_folders: list[str] = []
+        install_theme(app, "koseki", static_folders)
+
         theme: str = app.config["THEME"]
-        if theme is None or not theme.strip():
-            theme = "koseki"
+        if theme is not None and len(theme.strip()) > 0 and theme != "koseki":
+            install_theme(app, theme, static_folders)
 
-        app.config.from_pyfile(os.path.join("themes", "koseki", "theme.cfg"))
-        app.config.from_pyfile(os.path.join("themes", theme, "theme.cfg"))
-
-        # Static folders are prioritized in ascending order.
-        app.static_folder = [
-            os.path.join(app.root_path, "themes", theme),
-            os.path.join(app.root_path, "themes", "koseki"),
-        ]
+        app.static_folder = static_folders
 
         #
         # Storage

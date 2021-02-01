@@ -1,0 +1,113 @@
+//
+// ant.design Colors
+// - DO NOT EDIT - These are standardized, rather edit in the settings further below.
+//
+$color-red6: #f5222d; 
+$color-red7: #cf1322;
+
+$color-orange6: #fa8c16;
+$color-orange7: #d46b08;
+
+$color-green6: #52c41a;
+$color-green7: #389e0d;
+
+$color-blue6: #1890ff;
+$color-blue7: #096dd9;
+$color-blue8: #0050b3;
+$color-blue9: #003a8c;
+
+$color-gray4: #f0f0f0;
+$color-gray6: #bfbfbf;
+$color-gray10: #262626;
+
+//
+// THEME SCSS SETTINGS
+//
+
+$color-danger: $color-red6;
+$color-danger-border: $color-red7;
+
+$color-success: $color-green6;
+$color-success-border: $color-green7;
+
+$color-primary-hover: $color-blue7;
+$color-primary: $color-blue8;
+$color-primary-border: $color-blue9;
+
+$color-warning: $color-orange6;
+$color-warning-border: $color-orange7;
+
+//
+// THEME CODE
+//
+
+.koseki-modal-separator {
+    background: linear-gradient(
+        to right,
+        $color-gray10 25%,
+        $color-gray6 25%,
+        $color-gray6 50%,
+        $color-blue8 50%,
+        $color-blue8 75%,
+        $color-gray4 75%
+    );
+}
+
+a {
+    color: $color-primary;
+}
+a:hover {
+    color: $color-primary-hover;
+}
+
+.text-danger {
+    color: $color-danger !important;
+}
+.text-primary {
+    color: $color-primary !important;
+}
+.text-success {
+    color: $color-primary !important;
+}
+.text-warning {
+    color: $color-warning !important;
+}
+
+.bg-danger {
+    background-color: $color-danger !important;
+    border-color: $color-danger-border !important;
+}
+.bg-primary {
+    background-color: $color-primary !important;
+    border-color: $color-primary-border !important;
+}
+.bg-success {
+    background-color: $color-success !important;
+    border-color: $color-success-border !important;
+}
+.bg-warning {
+    background-color: $color-warning !important;
+    border-color: $color-warning-border !important;
+}
+
+.btn-danger {
+    background-color: $color-danger;
+    border-color: $color-danger-border;
+}
+.btn-primary {
+    background-color: $color-primary;
+    border-color: $color-primary-border;
+}
+.btn-success {
+    background-color: $color-success;
+    border-color: $color-success-border;
+}
+.btn-warning {
+    background-color: $color-warning;
+    border-color: $color-warning-border;
+}
+
+.page-item.active .page-link {
+    background-color: $color-primary;
+    border-color: $color-primary-border;
+}

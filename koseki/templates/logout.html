@@ -4,12 +4,15 @@
 {% block title %}Signed out{% endblock %}
 <!-- -->
 {% block content %}
-<div class="alert alert-success">
-    <h4>Signed out!</h4>
-    You have now successfully signed out. Close this browser for good measure.
+<div class="container py-2">
+    <!-- MIGRATE TO alerts[] instead -->
+    <div class="alert alert-success">
+        <h4>Signed out!</h4>
+        You have now successfully signed out. Close this browser for good measure.
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        <i class="fas fa-lock me-1"></i> Sign in
+    </a>
 </div>
-<a href="{{ url_for('index') }}" class="btn btn-secondary">
-    <i class="fas fa-lock me-1"></i> Sign in
-</a>
 <!-- -->
 {% endblock %}

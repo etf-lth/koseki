@@ -18,18 +18,22 @@
             </div>
         </div>
     </form>
-    {% if sso_providers %}
-    <div class="border-bottom border-primary border-5 w-100 mt-5 mb-4"></div>
+</div>
+
+{% if sso_providers %}
+<div class="py-1 bg-primary koseki-modal-separator w-100 my-4"></div>
+
+<div class="container pt-2 pb-4">
     <h1 class="text-center text-primary fw-bold">Login with SSO</h1>
     {% for sso_provider in sso_providers %}
-    <div class="mb-3 text-center">
+    <div class="text-center mt-3">
         <small>{{ sso_provider['text'] }}</small>
-        <br /><br />
-        <a href="{{ sso_provider['url'] }}" class="btn btn-primary btn-lg mx-auto"
+        <a href="{{ sso_provider['url'] }}" class="btn btn-primary btn-lg mx-auto mt-3"
             style="background-color: {{ sso_provider['color'] }}; border-color: rgba(0, 0, 0, 10%);">
             <i class="fas fa-sign-in-alt me-1"></i> {{ sso_provider['button'] }}</a>
     </div>
     {% endfor %}
-    {% endif %}
 </div>
+{% endif %}
+<!-- -->
 {% endblock %}

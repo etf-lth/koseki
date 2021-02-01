@@ -1,4 +1,4 @@
-{% macro render_field(field, class='', autofocus=False, disabled=False, inline=False) %}
+{% macro render_field(field, class='', autofocus=False, disabled=False, required=False, inline=False) %}
 
 {% if field.type == "PasswordField" %}
 {% set htmlType = "password" %}
@@ -12,24 +12,25 @@
         <label for="{{ field.id }}" class="col-form-label">{{ field.label.text }}</label>
     </div>
     <div class="col-sm-10">
-        <input type="{{ htmlType }}" id="{{ field.id }}" name="{{ field.name }}" class="form-control {{ class}}"
-            {{ "autofocus" if autofocus}} {{ "disabled" if disabled}}>
-    </div>
-    {% if field.errors %}
-    <div class="col-auto">
+        <input type="{{ htmlType }}" id="{{ field.id }}" name="{{ field.name }}"
+            class="form-control {{ 'is-invalid' if field.errors }} {{ class }}" {{ "autofocus" if autofocus }}
+            {{ "disabled" if disabled }} {{ "required" if required or field.errors}}
+            aria-describedby="validation{{ field.id }}Feedback">
+        {% if field.errors %}
         <div id="validation{{ field.id }}Feedback" class="invalid-feedback">
             {% for error in field.errors %}
             {{ error }}</br>
             {% endfor %}
         </div>
+        {% endif %}
     </div>
-    {% endif %}
 </div>
 {% else %}
 <div class="mb-3">
     <label for="{{ field.id }}" class="form-label">{{ field.label.text }}</label>
     <input type="{{ htmlType }}" id="{{ field.id }}" name="{{ field.name }}" class="form-control {{ class }}"
-        {{ "autofocus" if autofocus}} {{ "disabled" if disabled}}>
+        {{ "autofocus" if autofocus }} {{ "disabled" if disabled }} {{ "required" if required or field.errors}}
+        aria-describedby="validation{{ field.id }}Feedback">
     {% if field.errors %}
     <div id="validation{{ field.id }}Feedback" class="invalid-feedback">
         {% for error in field.errors %}

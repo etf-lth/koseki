@@ -12,13 +12,13 @@ from wtforms.validators import DataRequired, Email  # type: ignore
 
 
 class LoginForm(FlaskForm):
-    email = TextField("Email", validators=[DataRequired(), Email()])
-    password = PasswordField("Password", validators=[DataRequired()])
+    email = TextField("Email", validators=[DataRequired("Email required"), Email("Invalid email")])
+    password = PasswordField("Password", validators=[DataRequired("Password required")])
     submit_login = SubmitField("Sign in")
 
 
 class ResetPasswordForm(FlaskForm):
-    email = TextField("Email", validators=[DataRequired(), Email()])
+    email = TextField("Email", validators=[DataRequired("Email required"), Email("Invalid email")])
     submit_reset = SubmitField("Reset password")
 
 
