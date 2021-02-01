@@ -30,7 +30,7 @@
                     {{ render_field(form_email.email2) }}
                 </div>
                 <div class="col-12 col-md-3">
-                    {{ render_submit(form_email.submit_email, class="btn btn-primary", icon="check") }}
+                    {{ render_submit(form_email.submit_email, class="btn btn-primary", icon="check", fakelabel=True) }}
                 </div>
             </div>
         </form>
@@ -47,7 +47,7 @@
                     {{ render_field(form_password.password2) }}
                 </div>
                 <div class="col-12 col-md-3">
-                    {{ render_submit(form_password.submit_password, class="btn btn-primary", icon="check") }}
+                    {{ render_submit(form_password.submit_password, class="btn btn-primary", icon="check", fakelabel=True) }}
                 </div>
             </div>
         </form>

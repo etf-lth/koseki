@@ -6,22 +6,22 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-8 main-login">
-            <form class="form-horizontal" action="" method="post">
+        <div class="col-md-8">
+            <form action="" method="post">
                 <input type="hidden" name="redir" value="{{ redir }}">
-                <div class="form-group row">
+                <div class="mb-3 row">
                     <label class="col-sm-3 pe-sm-0 col-form-label text-sm-end" for="email">Email</label>
                     <div class="col-sm-8 pt-1">
                         <input class="w-100" type="text" id="email" name="email" placeholder="Email">
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="mb-3 row">
                     <label class="col-sm-3 pe-sm-0 col-form-label text-sm-end" for="password">Password</label>
                     <div class="col-sm-8 pt-1">
                         <input class="w-100" type="password" id="password" name="password" placeholder="Password">
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="mb-3 row">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-9 mt-3 mt-sm-0 pe-0">
                         <button type="submit" class="btn btn-primary">

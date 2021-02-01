@@ -1,5 +1,5 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, fee_tabs %}
+{% from "macros.html" import render_field, render_submit, fee_tabs %}
 {% block title %}Register fee{% endblock %}
 {% block scripts %}
 <script>
@@ -45,8 +45,8 @@
         </div>
         <div class="card-footer border-top-green">
             <div class="row">
-                <div class="col-12 col-md-2 submit-form-group-no-margin">
-                    {{ render_field(feeForm.submitFee, class="btn btn-primary") }}
+                <div class="col-12 col-md-2 mb-0">
+                    {{ render_submit(feeForm.submitFee, class="btn btn-primary") }}
                 </div>
             </div>
         </div>
@@ -80,8 +80,8 @@ Remember: When incuring debt, the amount must be negative! (e.g. -20)
         </div>
         <div class="card-footer border-top-gold">
             <div class="row">
-                <div class="col-12 col-md-2 submit-form-group-no-margin">
-                    {{ render_field(paymentForm.submitPayment, class="btn btn-primary") }}
+                <div class="col-12 col-md-2 mb-0">
+                    {{ render_submit(paymentForm.submitPayment, class="btn btn-primary") }}
                 </div>
             </div>
         </div>

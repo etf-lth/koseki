@@ -1,7 +1,7 @@
 
 import os
 
-from flask_bootstrap import Bootstrap  # type: ignore
+from flask_bs4 import Bootstrap  # type: ignore
 from flask_multistatic import MultiStaticFlask  # type: ignore
 
 from koseki.auth import KosekiAuth
