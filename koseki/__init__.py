@@ -73,7 +73,6 @@ def register_views():
 
 def create_app():
     with app.app_context():
-        storage.insert_initial_values()
         updater.start()
         core.plugins.register_plugins()
         register_views()  # Must come after creation of Core

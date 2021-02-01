@@ -24,6 +24,8 @@ class Storage:
         m.create_all(bind=self.engine)
         self.sm = sessionmaker(bind=self.engine)
 
+        self.__insert_initial_values()
+
     @property
     def session(self) -> Session:
         if hasattr(g, "db"):
@@ -44,7 +46,7 @@ class Storage:
     def query(self, obj) -> Query:
         return self.session.query(obj)
 
-    def insert_initial_values(self):
+    def __insert_initial_values(self):
         self.__insert_initial_values_group()
         self.__insert_initial_values_person()
         self.__insert_initial_values_person_group()

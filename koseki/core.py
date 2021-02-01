@@ -17,12 +17,13 @@ from koseki.util import KosekiUtil
 
 class KosekiCore:
     def __init__(self, app: Flask, storage: Storage):
-        self.util = KosekiUtil(storage)
-        self.auth = KosekiAuth(self.util)
         self.app = app
         self.storage = storage
-        self.mail = KosekiMailer(app)
-        self.plugins = KosekiPluginManager(self.app, self.storage, self.auth, self.util)
+        self.util = KosekiUtil(self.storage)
+        self.auth = KosekiAuth(self.util)
+        self.mail = KosekiMailer(self.app)
+        self.plugins = KosekiPluginManager(
+            self.app, self.storage, self.auth, self.util)
 
         app.context_processor(self.make_nav_processor)
         app.context_processor(self.now_processor)
@@ -47,7 +48,8 @@ class KosekiCore:
     def gravatar_processor(self):
         def gravatar(mail):
             return (
-                "//gravatar.com/avatar/" + hashlib.md5(mail.encode("utf-8")).hexdigest()
+                "//gravatar.com/avatar/" +
+                hashlib.md5(mail.encode("utf-8")).hexdigest()
             )
 
         return dict(gravatar=gravatar)
@@ -57,7 +59,8 @@ class KosekiCore:
 
     def uid_to_name(self):
         def uid_to_name_inner(uid):
-            person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+            person = self.storage.session.query(
+                Person).filter_by(uid=uid).scalar()
             return "%s %s" % (person.fname, person.lname) if person else "Nobody"
 
         return dict(uid_to_name=uid_to_name_inner)
