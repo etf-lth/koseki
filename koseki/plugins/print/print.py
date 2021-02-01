@@ -8,7 +8,6 @@ from flask_wtf import FlaskForm  # type: ignore
 from flask_wtf.file import FileField, FileRequired  # type: ignore
 from koseki.plugin import KosekiPlugin
 from koseki.util import KosekiAlert, KosekiAlertType
-from werkzeug.utils import secure_filename
 
 
 class PrintForm(FlaskForm):
@@ -75,7 +74,8 @@ class PrintPlugin(KosekiPlugin):
                 return render_template("print.html", form=form, alerts=alerts)
 
             # save file to harddrive
-            filename = secure_filename(file.filename)
+            filename = "".join(
+                [c for c in file.filename if c.isalpha() or c.isdigit() or c == ' ']).rstrip()
             filepath = os.path.join(
                 self.app.config["UPLOAD_FOLDER"], filename +
                 "_" + str(time.time())

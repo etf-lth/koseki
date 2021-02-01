@@ -1,7 +1,6 @@
 
 import os
 
-from flask_bs4 import Bootstrap  # type: ignore
 from flask_multistatic import MultiStaticFlask  # type: ignore
 
 from koseki.auth import KosekiAuth
@@ -34,7 +33,6 @@ class KosekiCore:
         app.wsgi_app = ReverseProxied(app.wsgi_app)  # type: ignore
         app.config.from_object(KosekiConfig())
         app.config.from_pyfile(os.path.join("..", "koseki.cfg"))
-        Bootstrap(app)
         self.app = app
 
         #
