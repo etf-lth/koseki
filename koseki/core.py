@@ -94,7 +94,10 @@ class KosekiCore:
             self.scheduler.start()
 
             # Start the webserver
-            self.app.run()
+            try:
+                self.app.run()
+            except SystemExit:
+                pass  # Flask shut down.
 
     def _register_views(self):
         views = [

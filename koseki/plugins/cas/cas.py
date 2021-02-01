@@ -28,6 +28,7 @@ class CASPlugin(KosekiPlugin):
             + self.app.config["URL_BASE"]
             + "/cas&renew=false",
             "button": "Sign in with LU",
+            "color": "#875e29",
         }
 
     def cas_ticket(self):

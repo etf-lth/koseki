@@ -1,14 +1,21 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% macro render_field(field, class='', autofocus=False, disabled=False, inline=False) %}
+
+{% if field.type == "PasswordField" %}
+{% set htmlType = "password" %}
+{% else %}
+{% set htmlType = "text" %}
+{% endif %}
+
 {% if inline %}
 <div class="row mb-3">
     <div class="col-sm-2">
         <label for="{{ field.id }}" class="col-form-label">{{ field.label.text }}</label>
     </div>
     <div class="col-sm-10">
-        <input type="{{ field.type }}" id="{{ field.id }}" class="form-control {{ class}}" {{ "autofocus" if autofocus}}
-            {{ "disabled" if disabled}}>
+        <input type="{{ htmlType }}" id="{{ field.id }}" name="{{ field.name }}" class="form-control {{ class}}"
+            {{ "autofocus" if autofocus}} {{ "disabled" if disabled}}>
     </div>
     {% if field.errors %}
     <div class="col-auto">
@@ -23,8 +30,8 @@
 {% else %}
 <div class="mb-3">
     <label for="{{ field.id }}" class="form-label">{{ field.label.text }}</label>
-    <input type="{{ field.type }}" id="{{ field.id }}" class="form-control {{ class }}" {{ "autofocus" if autofocus}}
-        {{ "disabled" if disabled}}>
+    <input type="{{ htmlType }}" id="{{ field.id }}" name="{{ field.name }}" class="form-control {{ class }}"
+        {{ "autofocus" if autofocus}} {{ "disabled" if disabled}}>
     {% if field.errors %}
     <div id="validation{{ field.id }}Feedback" class="invalid-feedback">
         {% for error in field.errors %}
@@ -83,7 +90,7 @@ render_field(field, class=class, disabled=True)
 {% if amount > 0 : %}
 <span class="text-success">{{ amount }} kr</span>
 {% elif -500 > amount : %}
-<span class="text-danger font-weight-bold">{{ amount }} kr</span>
+<span class="text-danger fw-bold">{{ amount }} kr</span>
 {% elif 0 > amount : %}
 <span class="text-danger">{{ amount }} kr</span>
 {% else : %}

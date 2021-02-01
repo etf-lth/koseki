@@ -78,10 +78,10 @@
             let price = productData.get(k).price;
             total += (price * v);
             cartArea.append('<div class="col-1">#' + k + '</div>');
-            cartArea.append('<div class="col-5 font-weight-bold">' + productData.get(k).name + '</div>');
+            cartArea.append('<div class="col-5 fw-bold">' + productData.get(k).name + '</div>');
             cartArea.append('<div class="col-2">' + price + '</div>');
             cartArea.append('<div class="col-2">x ' + v + '</div>');
-            cartArea.append('<div class="col-2 font-weight-bold">' + (price * v) + ' kr</div>');
+            cartArea.append('<div class="col-2 fw-bold">' + (price * v) + ' kr</div>');
         }
 
         $("#cartTotal").text(total + " kr")
@@ -119,10 +119,10 @@
             <div class="card-body p-0">
                 <div class="row mx-0">
                     <div class="col-7 pt-2 pb-2">
-                        <h4 class="card-title font-weight-bold pt-2 mb-0">{{ product.name }}</h4>
+                        <h4 class="card-title fw-bold pt-2 mb-0">{{ product.name }}</h4>
                     </div>
                     <div class="col-5 pt-2 pb-2 bg-custom-grey-comp2 h-100">
-                        <h1 class="font-weight-bold text-center text-primary mb-0">
+                        <h1 class="fw-bold text-center text-primary mb-0">
                             {{ product.price|replace('.00', '') }} kr
                         </h1>
                     </div>
@@ -150,20 +150,20 @@
 <div class="row border-bottom-green">
     <a id="checkoutButton" href="javascript:proceedCheckout()"
         class="col-12 btn w-100 py-4 mt-0 rounded-0 btn-dark">
-        <div class="h1 mb-0 font-weight-bold py-3">Cart is empty</div>
+        <div class="h1 mb-0 fw-bold py-3">Cart is empty</div>
     </a>
 </div>
 
 <div class="row border-bottom-green pt-3 pb-2 h4">
-    <div class="col-4 font-weight-bold">User ID:</div>
+    <div class="col-4 fw-bold">User ID:</div>
     <div class="col-8">{{ person.uid }}</div>
-    <div class="col-4 font-weight-bold">Logged in:</div>
+    <div class="col-4 fw-bold">Logged in:</div>
     <div class="col-8">{{ person.fname }} {{ person.lname }}
         <a href="{{ url_for('kiosk.kiosk_card') }}" class="btn btn-warning ms-3">Logout</a>
     </div>
 </div>
 
-<div class="h1 mb-0 font-weight-bold">Cart</div>
+<div class="h1 mb-0 fw-bold">Cart</div>
 
 <div class="row pt-2 h4">
     <div class="col-6">
@@ -187,7 +187,7 @@
 
 <div class="row border-bottom-green pt-2 pb-3 h1">
     <div class="col-4 offset-4">Total:</div>
-    <div id="cartTotal" class="col-4 font-weight-bold">0 kr</div>
+    <div id="cartTotal" class="col-4 fw-bold">0 kr</div>
 </div>
 
 {% endblock %}

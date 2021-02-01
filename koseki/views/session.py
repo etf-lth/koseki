@@ -7,8 +7,14 @@ from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Person
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
-from wtforms import SubmitField, TextField  # type: ignore
+from wtforms import PasswordField, SubmitField, TextField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
+
+
+class LoginForm(FlaskForm):
+    email = TextField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit_login = SubmitField("Sign in")
 
 
 class ResetPasswordForm(FlaskForm):
@@ -30,10 +36,10 @@ class SessionView(KosekiView):
 
         form_reset_password = ResetPasswordForm()
 
-        if "submit_reset" in request.form and form_reset_password.validate():
+        if form_reset_password.validate_on_submit():
             person: Person = (
                 self.storage.session.query(Person)
-                .filter_by(email=request.form["email"])
+                .filter_by(email=form_reset_password.email.data)
                 .scalar()
             )
 
@@ -66,15 +72,17 @@ class SessionView(KosekiView):
     def login(self):
         alerts: list[KosekiAlert] = []
 
-        if request.method == "POST":
+        form_login = LoginForm()
+
+        if form_login.validate_on_submit():
             person = (
                 self.storage.session.query(Person)
-                .filter_by(email=request.form["email"])
+                .filter_by(email=form_login.email.data)
                 .scalar()
             )
             if (
                 person
-                and self.auth.verify_password(person, request.form["password"])
+                and self.auth.verify_password(person, form_login.password.data)
             ):
                 self.util.start_session(person.uid)
                 return redirect(request.form["redir"])
@@ -90,8 +98,9 @@ class SessionView(KosekiView):
         return render_template(
             "login.html",
             redir=request.args.get("redir", url_for("index")),
+            form_login=form_login,
             alerts=alerts,
-            alternate=self.util.get_alternate_login(),
+            sso_providers=[self.util.get_alternate_login()],
         )
 
     def logout(self):

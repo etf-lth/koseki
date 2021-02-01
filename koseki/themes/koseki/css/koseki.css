@@ -38,10 +38,6 @@
     background: url(../img/login-head.png) no-repeat;
 }
 
-.base-modal .alternate {
-    border-left: 1px solid #B9B9B9;
-}
-
 .base-kiosk, .base-kiosk-wide {
     background-color: #dadada;
 }

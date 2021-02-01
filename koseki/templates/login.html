@@ -1,46 +1,35 @@
 <!-- -->
 {% extends "base_modal.html" %}
+{% from "macros.html" import render_field, render_submit %}
 <!-- -->
 {% block title %}Sign in{% endblock %}
 <!-- -->
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <form action="" method="post">
-                <input type="hidden" name="redir" value="{{ redir }}">
-                <div class="mb-3 row">
-                    <label class="col-sm-3 pe-sm-0 col-form-label text-sm-end" for="email">Email</label>
-                    <div class="col-sm-8 pt-1">
-                        <input class="w-100" type="text" id="email" name="email" placeholder="Email">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label class="col-sm-3 pe-sm-0 col-form-label text-sm-end" for="password">Password</label>
-                    <div class="col-sm-8 pt-1">
-                        <input class="w-100" type="password" id="password" name="password" placeholder="Password">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-9 mt-3 mt-sm-0 pe-0">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-lock me-1"></i> Sign in
-                        </button>
-                        <a class="btn btn-secondary" href="{{ url_for('reset_password') }}">Reset password</a>
-                    </div>
-                </div>
-            </form>
-        </div>
-        {% if alternate %}
-        <div class="col-md-4 alternate mt-3 mt-md-0 mb-3">
-            <div>
-                {{ alternate['text'] }}
+<div class="container py-4">
+    <form action="" method="post">
+        {{ form_login.hidden_tag() }}
+        <input type="hidden" name="redir" value="{{ redir }}">
+        {{ render_field(form_login.email, inline=True) }}
+        {{ render_field(form_login.password, inline=True) }}
+        <div class="row justify-content-end">
+            <div class="col-sm-10">
+                {{ render_submit(form_login.submit_login, class="btn btn-primary", icon="lock") }}
+                <a class="btn btn-secondary" href="{{ url_for('reset_password') }}">Reset password</a>
             </div>
-            <a href="{{ alternate['url'] }}" class="btn btn-primary mt-3">
-                <i class="fas fa-lock me-1"></i> {{ alternate['button'] }}</a>
         </div>
-        {% endif %}
+    </form>
+    {% if sso_providers %}
+    <div class="border-bottom border-primary border-5 w-100 mt-5 mb-4"></div>
+    <h1 class="text-center text-primary fw-bold">Login with SSO</h1>
+    {% for sso_provider in sso_providers %}
+    <div class="mb-3 text-center">
+        <small>{{ sso_provider['text'] }}</small>
+        <br /><br />
+        <a href="{{ sso_provider['url'] }}" class="btn btn-primary btn-lg mx-auto"
+            style="background-color: {{ sso_provider['color'] }}; border-color: rgba(0, 0, 0, 10%);">
+            <i class="fas fa-sign-in-alt me-1"></i> {{ sso_provider['button'] }}</a>
     </div>
+    {% endfor %}
+    {% endif %}
 </div>
 {% endblock %}
