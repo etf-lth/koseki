@@ -1,20 +1,9 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, render_static, render_submit, status, membership_tabs, gravatar_blob %}
+{% from "macros.html" import render_field, render_static, render_submit, status, membership_header, membership_tabs %}
 {% block title %}My membership{% endblock %}
 {% block content %}
 
-<div class="row mb-3">
-    <div class="ps-3">
-        <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com" style="margin: 0 20px;">
-            {{ gravatar_blob(gravatar(person.email)) }}
-        </a>
-    </div>
-    <div class="">
-        <h1 class="mb-0 fw-bold">My membership</h1>
-        <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
-    </div>
-</div>
-
+{{ membership_header(person, gravatar) }}
 {{ membership_tabs('edit') }}
 
 <div class="card mb-3">
@@ -29,8 +18,8 @@
                 <div class="col-12 col-md-4">
                     {{ render_field(form_email.email2) }}
                 </div>
-                <div class="col-12 col-md-3">
-                    {{ render_submit(form_email.submit_email, class="btn btn-primary", icon="check", fakelabel=True) }}
+                <div class="col-12 col-md-3 pt-md-3">
+                    {{ render_submit(form_email.submit_email, class="btn btn-primary mt-md-3", icon="check") }}
                 </div>
             </div>
         </form>
@@ -46,8 +35,8 @@
                 <div class="col-12 col-md-4">
                     {{ render_field(form_password.password2) }}
                 </div>
-                <div class="col-12 col-md-3">
-                    {{ render_submit(form_password.submit_password, class="btn btn-primary", icon="check", fakelabel=True) }}
+                <div class="col-12 col-md-3 pt-md-3">
+                    {{ render_submit(form_password.submit_password, class="btn btn-primary mt-md-3", icon="check") }}
                 </div>
             </div>
         </form>

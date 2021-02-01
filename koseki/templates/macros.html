@@ -136,6 +136,24 @@ render_field(field, class=class, disabled=True)
 <hr />
 {%- endmacro %}
 
+{% macro gravatar_blob(url, size=80) -%}
+<img src="{{ url }}?s=80&d=identicon" width="{{size}}px" height="{{size}}px" style="border-radius: 500px;">
+{%- endmacro %}
+
+{% macro membership_header(person, grav) -%}
+<div class="row mb-3">
+    <div class="col-auto pt-2">
+        <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com" class="ms-4 me-1">
+            {{ gravatar_blob(grav(person.email)) }}
+        </a>
+    </div>
+    <div class="col-auto">
+        <h1 class="mb-0 fw-bold">My membership</h1>
+        <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
+    </div>
+</div>
+{%- endmacro %}
+
 {% macro membership_tabs(current) -%}
 <br />
 <ul class="pagination">
@@ -146,8 +164,4 @@ render_field(field, class=class, disabled=True)
     {% endfor %}
 </ul>
 <hr />
-{%- endmacro %}
-
-{% macro gravatar_blob(url, size=80) -%}
-<img src="{{ url }}?s=80&d=identicon" width="{{size}}px" height="{{size}}px" style="border-radius: 500px;">
 {%- endmacro %}

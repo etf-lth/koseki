@@ -1,21 +1,11 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, status, membership_tabs, gravatar_blob, fee_method, fee_id, payment_balance
+{% from "macros.html" import render_field, status, membership_header, membership_tabs, fee_method, fee_id,
+payment_balance
 %}
 {% block title %}My membership{% endblock %}
 {% block content %}
 
-<div class="row mb-3">
-    <div class="ps-3">
-        <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com" style="margin: 0 20px;">
-            {{ gravatar_blob(gravatar(person.email)) }}
-        </a>
-    </div>
-    <div class="">
-        <h1 class="mb-0 fw-bold">My membership</h1>
-        <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
-    </div>
-</div>
-
+{{ membership_header(person, gravatar) }}
 {{ membership_tabs('') }}
 
 <h4>Hello {{ person.fname }}!</h4>
