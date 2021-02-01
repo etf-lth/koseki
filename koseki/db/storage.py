@@ -1,4 +1,5 @@
-from flask import g
+from typing import Optional
+
 from koseki.db.types import *
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
@@ -22,16 +23,20 @@ class Storage:
         m: MetaData = Base.metadata
         m.create_all(bind=self.engine)
         self.sm = sessionmaker(bind=self.engine)
+        self.db: Optional[Session] = None
 
         self.__insert_initial_values()
 
+    def close(self, error: Optional[Exception]) -> None:
+        if self.db is not None:
+            self.db.close()
+            self.db = None
+
     @property
     def session(self) -> Session:
-        if hasattr(g, "db"):
-            return g.db
-        else:
-            g.db = self.sm()
-            return g.db
+        if self.db is None:
+            self.db = self.sm()
+        return self.db
 
     def add(self, obj):
         self.session.add(obj)

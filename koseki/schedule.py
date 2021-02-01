@@ -9,7 +9,7 @@ from koseki.db.types import Fee, Person
 from koseki.mail import KosekiMailer
 
 
-class Updater:
+class KosekiScheduler:
     def __init__(self, app: Flask, storage: Storage, mail: KosekiMailer):
         self.app = app
         self.storage = storage

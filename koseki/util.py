@@ -5,10 +5,9 @@ import hashlib
 import logging
 import time
 
-
+import requests
 from flask import session
-from flask_babel import format_datetime
-import requests  # type: ignore
+from flask_babel import format_datetime  # type: ignore
 from sqlalchemy.util.langhelpers import NoneType
 
 from koseki.db.storage import Storage
