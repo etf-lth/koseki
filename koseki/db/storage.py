@@ -1,5 +1,4 @@
 from flask import g
-from sqlalchemy.engine.base import Connection
 from koseki.db.types import *
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
