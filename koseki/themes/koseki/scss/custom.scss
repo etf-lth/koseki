@@ -2,9 +2,11 @@
 // ant.design Colors
 // - DO NOT EDIT - These are standardized, rather edit in the settings further below.
 //
-$color-red6: #f5222d; 
+$color-red5: #f5222d;
+$color-red6: #f5222d;
 $color-red7: #cf1322;
 
+$color-orange5: #ffa940;
 $color-orange6: #fa8c16;
 $color-orange7: #d46b08;
 
@@ -13,26 +15,36 @@ $color-green6: #52c41a;
 $color-green7: #389e0d;
 $color-green8: #237804;
 
+$color-blue5: #40a9ff;
 $color-blue6: #1890ff;
 $color-blue7: #096dd9;
 $color-blue8: #0050b3;
 $color-blue9: #003a8c;
 
+$color-gray1: #ffffff;
+$color-gray2: #fafafa;
+$color-gray3: #f5f5f5;
 $color-gray4: #f0f0f0;
 $color-gray5: #d9d9d9;
 $color-gray6: #bfbfbf;
+$color-gray7: #8c8c8c;
+$color-gray8: #595959;
+$color-gray9: #434343;
 $color-gray10: #262626;
 
 //
 // THEME SCSS SETTINGS
 //
 
+$color-danger-light: $color-red5;
 $color-danger: $color-red6;
 $color-danger-dark: $color-red7;
 
+$color-light-light: $color-gray3;
 $color-light: $color-gray4;
 $color-light-dark: $color-gray5;
 
+$color-success-light: $color-blue5;
 $color-success: $color-blue6;
 $color-success-dark: $color-blue7;
 
@@ -40,6 +52,7 @@ $color-primary-light: #40872c;
 $color-primary: #266d12;
 $color-primary-dark: #0d5400;
 
+$color-warning-light: $color-orange5;
 $color-warning: $color-orange6;
 $color-warning-dark: $color-orange7;
 
@@ -52,7 +65,7 @@ $color-warning-dark: $color-orange7;
         to right,
         #266d12 0%,
         #88c848 50%,
-        #a7d47d 100%,
+        #a7d47d 100%
     );
 }
 
@@ -104,21 +117,55 @@ a:hover {
     background-color: $color-danger;
     border-color: $color-danger-dark;
 }
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+    background-color: $color-danger-light;
+    border-color: $color-danger;
+}
 .btn-light {
     background-color: $color-light;
     border-color: $color-light-dark;
+}
+.btn-light:hover,
+.btn-light:focus,
+.btn-light:active {
+    background-color: $color-light-light;
+    border-color: $color-light;
 }
 .btn-primary {
     background-color: $color-primary;
     border-color: $color-primary-dark;
 }
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: $color-primary-light;
+    border-color: $color-primary;
+}
 .btn-success {
     background-color: $color-success;
     border-color: $color-success-dark;
 }
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background-color: $color-success-light;
+    border-color: $color-success;
+}
 .btn-warning {
     background-color: $color-warning;
     border-color: $color-warning-dark;
+}
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active {
+    background-color: $color-warning-light;
+    border-color: $color-warning;
+}
+
+.btn:focus {
+    box-shadow: none !important;
 }
 
 .page-link {
