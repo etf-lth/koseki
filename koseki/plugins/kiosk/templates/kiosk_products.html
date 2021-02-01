@@ -16,11 +16,11 @@
 
     function incProduct(pid) {
         setCartProduct(pid, 1);
-        new Audio("{{ config['URL_BASE']|safe }}/static/beep1.mp3").play();
+        new Audio("{{ config['URL_BASE']|safe }}/static/audio/kiosk_beep1.mp3").play();
     }
     function decProduct(pid) {
         setCartProduct(pid, -1);
-        new Audio("{{ config['URL_BASE']|safe }}/static/beep2.mp3").play();
+        new Audio("{{ config['URL_BASE']|safe }}/static/audio/kiosk_beep2.mp3").play();
     }
 
     function setCartProduct(pid, addAmount) {
@@ -129,15 +129,17 @@
                 </div>
             </div>
             <div class="row mx-0">
-                <a href="javascript:incProduct({{ product.pid }})"
-                    class="col-7 btn btn-success btn-lg btn-block py-3 mt-0 rounded-0"
-                    data-inc-product-id="{{ product.pid }}">
-                    Add
-                </a>
-                <a href="javascript:decProduct({{ product.pid }})"
-                    class="col-5 btn btn-dark btn-lg btn-block py-3 mt-0 rounded-0">
-                    Undo
-                </a>
+                <div class="d-grid">
+                    <a href="javascript:incProduct({{ product.pid }})"
+                        class="col-7 btn btn-success btn-lg gap py-3 mt-0 rounded-0"
+                        data-inc-product-id="{{ product.pid }}">
+                        Add
+                    </a>
+                    <a href="javascript:decProduct({{ product.pid }})"
+                        class="col-5 btn btn-dark btn-lg gap py-3 mt-0 rounded-0">
+                        Undo
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -147,7 +149,7 @@
 {% block content_rside %}
 <div class="row border-bottom-green">
     <a id="checkoutButton" href="javascript:proceedCheckout()"
-        class="col-12 btn btn-block py-4 mt-0 rounded-0 btn-dark">
+        class="col-12 btn w-100 py-4 mt-0 rounded-0 btn-dark">
         <div class="h1 mb-0 font-weight-bold py-3">Cart is empty</div>
     </a>
 </div>
@@ -157,7 +159,7 @@
     <div class="col-8">{{ person.uid }}</div>
     <div class="col-4 font-weight-bold">Logged in:</div>
     <div class="col-8">{{ person.fname }} {{ person.lname }}
-        <a href="{{ url_for('kiosk.kiosk_card') }}" class="btn btn-warning ml-3">Logout</a>
+        <a href="{{ url_for('kiosk.kiosk_card') }}" class="btn btn-warning ms-3">Logout</a>
     </div>
 </div>
 

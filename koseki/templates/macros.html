@@ -25,7 +25,7 @@
 {% endif %}
 <button id="{{ field.name }}" class="btn {{ class }}" name="{{ field.name }}" type="submit">
     {% if icon != '': %}
-    <i class="fa fa-{{ icon }} mr-1"></i>
+    <i class="fa fa-{{ icon }} me-1"></i>
     {% endif %}
     {{ field.label.text }}
 </button>
@@ -33,31 +33,31 @@
 
 {% macro status(status) -%}
 {% if status == 'active': %}
-<h5 class="d-inline"><span class="badge badge-success">Active</span></h5>
+<h5 class="d-inline"><span class="badge bg-success">Active</span></h5>
 {% elif status == 'pending': %}
-<h5 class="d-inline"><span class="badge badge-warning">Pending</span></h5>
+<h5 class="d-inline"><span class="badge bg-warning">Pending</span></h5>
 {% elif status == 'expired': %}
-<h5 class="d-inline"><span class="badge badge-danger">Expired</span></h5>
+<h5 class="d-inline"><span class="badge bg-danger">Expired</span></h5>
 {% else : %}
-<h5 class="d-inline"><span class="badge badge-secondary">{{ status }}</span></h5>
+<h5 class="d-inline"><span class="badge bg-secondary">{{ status }}</span></h5>
 {% endif %}
 {%- endmacro %}
 
 {% macro group(group) -%}
-<h5 class="d-inline"><span class="badge badge-primary">{{ group }}</span></h5>
+<h5 class="d-inline"><span class="badge bg-primary">{{ group }}</span></h5>
 {%- endmacro %}
 
 {% macro fee_method(method) -%}
-<h5 class="d-inline"><span class="badge badge-primary">{{ method if method else 'N/A' }}</span></h5>
+<h5 class="d-inline"><span class="badge bg-primary">{{ method if method else 'N/A' }}</span></h5>
 {%- endmacro %}
 
 {% macro fee_id(fid, start, end, now) -%}
 {% if now > end : %}
-<h5 class="d-inline"><span class="badge badge-danger">{{ fid }}</span></h5>
+<h5 class="d-inline"><span class="badge bg-danger">{{ fid }}</span></h5>
 {% elif now > start : %}
-<h5 class="d-inline"><span class="badge badge-success">{{ fid }}</span></h5>
+<h5 class="d-inline"><span class="badge bg-success">{{ fid }}</span></h5>
 {% else : %}
-<h5 class="d-inline"><span class="badge badge-warning">{{ fid }}</span></h5>
+<h5 class="d-inline"><span class="badge bg-warning">{{ fid }}</span></h5>
 {% endif %}
 {%- endmacro %}
 

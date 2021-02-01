@@ -9,6 +9,9 @@ class KosekiConfig(object):
     #
     KOSEKI_VERSION = "MMXXI"
 
+    CONTACT_ADDRESS_ENABLED = False
+    CONTACT_PHONE_ENABLED = False
+
     @property
     def FOOTER(self) -> str:
         return "koseki &copy; %s" % self.KOSEKI_VERSION
@@ -45,6 +48,12 @@ class KosekiConfig(object):
     #
     ORG_NAME = "Koseki"
     ORG_EMAIL = "contact@acme.nu"
+
+    #
+    # Theme configs
+    #
+    # Theme names are always all-lowercase.
+    THEME = "koseki"
 
     #
     # Plugins - Must be correctly capitalized!

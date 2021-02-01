@@ -7,7 +7,6 @@ import time
 
 import requests
 from flask import session
-from flask_babel import format_datetime  # type: ignore
 from sqlalchemy.util.langhelpers import NoneType
 
 from koseki.db.storage import Storage
@@ -98,8 +97,8 @@ class KosekiUtil:
 
         return dict(gravatar=gravatar)
 
-    def format_date(self, value, format="y-MM-dd"):
-        return format_datetime(value, format)
+    def format_date(self, value: datetime.datetime, format="%Y-%m-%d"):
+        return value.strftime(format)
 
     def uid_to_name(self):
         def uid_to_name_inner(uid):

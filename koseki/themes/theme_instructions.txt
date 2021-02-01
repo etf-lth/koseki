@@ -1,0 +1,8 @@
+--------------------------------------------------
+
+  Instructions:
+
+--------------------------------------------------
+
+Either download a theme or create a copy one of the existing themes and name it something else.
+Afterwards go into settings and change your "THEME" from koseki to the name you chose.

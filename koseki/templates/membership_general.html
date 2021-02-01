@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="row mb-3">
-    <div class="" style="padding-left: 15px">
+    <div class="ps-3">
         <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com" style="margin: 0 20px;">
             {{ gravatar_blob(gravatar(person.email)) }}
         </a>
@@ -47,21 +47,21 @@
 </p>
 <h4>Membership profile</h4>
 <div class="row">
-    <div class="col-4 col-md-2 font-weight-bold text-right">First name</div>
+    <div class="col-4 col-md-2 font-weight-bold text-end">First name</div>
     <div class="col-8 col-md-10">{{ person.fname }}</div>
-    <div class="col-4 col-md-2 font-weight-bold text-right">Last name</div>
+    <div class="col-4 col-md-2 font-weight-bold text-end">Last name</div>
     <div class="col-8 col-md-10">{{ person.lname }}</div>
-    <div class="col-4 col-md-2 font-weight-bold text-right">Email</div>
+    <div class="col-4 col-md-2 font-weight-bold text-end">Email</div>
     <div class="col-8 col-md-10">{{ person.email }}</div>
-    <div class="col-4 col-md-2 font-weight-bold text-right">StiL</div>
+    <div class="col-4 col-md-2 font-weight-bold text-end">StiL</div>
     <div class="col-8 col-md-10">{{ person.stil if person.stil else '<span class="text-muted">None</span>'|safe}}</div>
-    <div class="col-4 col-md-2 font-weight-bold text-right">State</div>
+    <div class="col-4 col-md-2 font-weight-bold text-end">State</div>
     <div class="col-8 col-md-10">{{ status(person.state) }}</div>
-    <div class="col-4 col-md-2 font-weight-bold text-right">Enrolled</div>
+    <div class="col-4 col-md-2 font-weight-bold text-end">Enrolled</div>
     <div class="col-8 col-md-10">{{ person.enrolled|date }}</div>
-    <div class="col-4 col-md-2 font-weight-bold text-right">Enrolled by</div>
+    <div class="col-4 col-md-2 font-weight-bold text-end">Enrolled by</div>
     <div class="col-8 col-md-10">{{ uid_to_name(person.enrolled_by) }}</div>
-    <div class="col-4 col-md-2 font-weight-bold text-right">Balance</div>
+    <div class="col-4 col-md-2 font-weight-bold text-end">Balance</div>
     <div class="col-8 col-md-10">{{ payment_balance(person.balance) }}</div>
 </div>
 <br />
@@ -111,7 +111,7 @@
     {% for payment in person.payments %}
     <tr>
         <td>
-            <h5 class="d-inline"><span class="badge badge-primary">{{ payment.pid }}</span></h5>
+            <h5 class="d-inline"><span class="badge bg-primary">{{ payment.pid }}</span></h5>
         </td>
         <td>{{ payment.registered|date }}</td>
         <td>{{ payment.amount }}</td>

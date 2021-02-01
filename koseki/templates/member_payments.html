@@ -17,7 +17,7 @@
     {% if person.payments %}
     {% for payment in person.payments %}
     <tr>
-        <td><h5 class="d-inline"><span class="badge badge-primary">{{ payment.pid }}</span></h5></td>
+        <td><h5 class="d-inline"><span class="badge bg-primary">{{ payment.pid }}</span></h5></td>
         <td>{{ payment.registered|date }}</td>
         <td>{{ payment.amount }}</td>
         <td>{{ fee_method(payment.method) }}</td>

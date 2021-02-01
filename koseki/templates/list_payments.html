@@ -14,7 +14,7 @@
                 <th>Member</th>
                 <th>
                     <div class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Registered <span
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#">Registered <span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>
@@ -37,7 +37,7 @@
             {% if payments %}
             {% for payment in payments %}
             <tr data-registered="{{ payment.registered|date }}">
-                <td><h5 class="d-inline"><span class="badge badge-primary">{{ payment.pid }}</span></h5></td>
+                <td><h5 class="d-inline"><span class="badge bg-primary">{{ payment.pid }}</span></h5></td>
                 <td><a href="{{ url_for('member_general', uid=payment.uid) }}">{{ uid_to_name(payment.uid) }}</a></td>
                 <td>{{ payment.registered|date }}</td>
                 <td>{{ payment.amount }}</td>

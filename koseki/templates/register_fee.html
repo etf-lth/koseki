@@ -2,8 +2,6 @@
 {% from "macros.html" import render_field, fee_tabs %}
 {% block title %}Register fee{% endblock %}
 {% block scripts %}
-<link rel="stylesheet" href="{{ config['URL_BASE']|safe }}/static/css/jquery-ui-1.12.1.min.css" />
-<script src="{{ config['URL_BASE']|safe }}/static/js/jquery-ui-1.12.1.min.js"></script>
 <script>
     $(function () {
         $(".autocomplete_member").autocomplete({
