@@ -17,6 +17,7 @@ $color-blue8: #0050b3;
 $color-blue9: #003a8c;
 
 $color-gray4: #f0f0f0;
+$color-gray5: #d9d9d9;
 $color-gray6: #bfbfbf;
 $color-gray10: #262626;
 
@@ -26,6 +27,9 @@ $color-gray10: #262626;
 
 $color-danger: $color-red6;
 $color-danger-border: $color-red7;
+
+$color-light: $color-gray4;
+$color-light-border: $color-gray5;
 
 $color-success: $color-green6;
 $color-success-border: $color-green7;
@@ -63,6 +67,9 @@ a:hover {
 .text-danger {
     color: $color-danger !important;
 }
+.text-light {
+    color: $color-light !important;
+}
 .text-primary {
     color: $color-primary !important;
 }
@@ -76,6 +83,10 @@ a:hover {
 .bg-danger {
     background-color: $color-danger !important;
     border-color: $color-danger-border !important;
+}
+.bg-light {
+    background-color: $color-light !important;
+    border-color: $color-light-border !important;
 }
 .bg-primary {
     background-color: $color-primary !important;
@@ -93,6 +104,10 @@ a:hover {
 .btn-danger {
     background-color: $color-danger;
     border-color: $color-danger-border;
+}
+.btn-light {
+    background-color: $color-light;
+    border-color: $color-light-border;
 }
 .btn-primary {
     background-color: $color-primary;
