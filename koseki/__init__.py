@@ -74,7 +74,6 @@ def register_views():
 def create_app():
     with app.app_context():
         updater.start()
-        core.plugins.register_plugins()
         register_views()  # Must come after creation of Core
         app.wsgi_app = ReverseProxied(app.wsgi_app)  # type: ignore
     return app
