@@ -9,9 +9,6 @@ class KosekiConfig(object):
     #
     KOSEKI_VERSION = "MMXXI"
 
-    CONTACT_ADDRESS_ENABLED = False
-    CONTACT_PHONE_ENABLED = False
-
     @property
     def FOOTER(self) -> str:
         return "koseki &copy; %s" % self.KOSEKI_VERSION
