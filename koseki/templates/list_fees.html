@@ -7,10 +7,10 @@
 {{ fee_tabs('list_fees') }}
 
 <div class="table-responsive">
-    <table class="table table-striped table-sm">
+    <table class="table table-striped table-sm align-middle">
         <thead>
             <tr>
-                <th style="width: 40px">#</th>
+                <th class="text-center">#</th>
                 <th>Member</th>
                 <th>
                     <div class="dropdown">
@@ -38,15 +38,15 @@
             {% if fees %}
             {% for fee in fees %}
             <tr data-registered="{{ fee.registered|date }}">
-                <td>{{ fee_id(fee.fid, fee.start, fee.end, now()) }}</td>
+                <td class="text-center">{{ fee_id(fee.fid, fee.start, fee.end, now()) }}</td>
                 <td><a href="{{ url_for('member_general', uid=fee.uid) }}">{{ uid_to_name(fee.uid) }}</a></td>
                 <td>{{ fee.registered|date }}</td>
                 <td>{{ fee.start|date }}</td>
                 <td>{{ fee.end|date }}</td>
                 <td>{{ fee.amount }}</td>
                 <td>{{ fee_method(fee.method) }}</td>
-                <td><a
-                        href="{{ url_for('member_general', uid=fee.registered_by) }}">{{ uid_to_name(fee.registered_by) }}</a>
+                <td><a href="{{ url_for('member_general', uid=fee.registered_by) }}">{{ uid_to_name(fee.registered_by)
+                        }}</a>
                 </td>
             </tr>
             {% endfor %}

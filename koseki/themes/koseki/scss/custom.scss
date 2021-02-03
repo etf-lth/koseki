@@ -184,6 +184,11 @@ a:hover {
     box-shadow: none !important;
 }
 
+.form-check-input:checked {
+    background: $color-primary;
+    border-color: $color-primary;
+}
+
 .page-link {
     color: $color-primary;
 }

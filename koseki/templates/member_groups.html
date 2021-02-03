@@ -8,16 +8,19 @@
 
 <form class="container" action="" method="post">
     <div class="row">
-        <table class="col-md-9 col-lg-7 col-xl-6 table table-striped table-sm">
+        <table class="col table table-striped table-sm align-middle">
             <tr>
-                <th style="width: 24px"><i class="glyphicon glyphicon-ok"></i></th>
+                <th></th>
                 <th>Name</th>
                 <th>Description</th>
             </tr>
             {% for grp in groups %}
             <tr>
-                <td class="pt-2 pb-0"><input type="checkbox" name="{{ grp.gid }}" {{ ' checked' if member_of(grp,
-                        person)}} {{ 'disabled' if grp.name=='admin' and not member_of('admin') }}></td>
+                <td>
+                    <input type="checkbox" name="{{ grp.gid }}" class="form-check-input mx-auto d-block mt-0"
+                        style="width: 20px;height: 20px;" {{ ' checked' if member_of(grp, person)}} {{ 'disabled' if
+                        grp.name=='admin' and not member_of('admin') }}>
+                </td>
                 <td>{{ group(grp.name) }}</td>
                 <td>{{ grp.descr }}</td>
             </tr>

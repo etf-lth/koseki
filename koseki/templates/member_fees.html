@@ -8,7 +8,7 @@
 
 <table class="table table-striped table-sm">
     <tr>
-        <th style="width: 24px">#</th>
+        <th class="text-center">#</th>
         <th>Registered</th>
         <th>Start</th>
         <th>End</th>
@@ -19,7 +19,7 @@
     {% if person.fees %}
     {% for fee in person.fees %}
     <tr>
-        <td>{{ fee_id(fee.fid, fee.start, fee.end, now()) }}</td>
+        <td class="text-center">{{ fee_id(fee.fid, fee.start, fee.end, now()) }}</td>
         <td>{{ fee.registered|date }}</td>
         <td>{{ fee.start|date }}</td>
         <td>{{ fee.end|date }}</td>
