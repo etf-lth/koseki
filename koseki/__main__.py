@@ -1,4 +1,4 @@
-from koseki import run_koseki
+from koseki import run_dev
 
 if __name__ == "__main__":
-    run_koseki()
+    run_dev()
