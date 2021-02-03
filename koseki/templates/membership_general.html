@@ -1,27 +1,27 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, status, membership_header, membership_tabs, fee_method, fee_id,
+{% from "macros.html" import render_field, status, person_header, membership_tabs, fee_method, fee_id,
 payment_balance
 %}
 {% block title %}My membership{% endblock %}
 {% block content %}
 
-{{ membership_header(person, gravatar) }}
-{{ membership_tabs('') }}
+{{ person_header(person, "My membership", gravatar) }}
+{{ membership_tabs("") }}
 
 <h4>Hello {{ person.fname }}!</h4>
 <p>
-    {% if person.state == 'active' %}
+    {% if person.state == "active" %}
 
     You are currently an <strong>active member</strong>.<br>
     Your membership expires
     <strong>{{ last_fee.end|date if last_fee else "whenever (database inconsistency!)" }}</strong>.
 
-    {% elif person.state == 'pending' %}
+    {% elif person.state == "pending" %}
 
     Your enrollment is <strong>pending</strong>. You will become an active member as soon
     as we have registered your payment of the membership fee.
 
-    {% elif person.state == 'expired' %}
+    {% elif person.state == "expired" %}
 
     You are <strong>currently not an active member</strong>. Become an active member by
     paying your membership fee.

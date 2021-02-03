@@ -1,10 +1,10 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, render_static, render_submit, status, membership_header, membership_tabs %}
+{% from "macros.html" import render_field, render_static, render_submit, status, person_header, membership_tabs %}
 {% block title %}My membership{% endblock %}
 {% block content %}
 
-{{ membership_header(person, gravatar) }}
-{{ membership_tabs('edit') }}
+{{ person_header(person, "My membership", gravatar) }}
+{{ membership_tabs("edit") }}
 
 <div class="card mb-3">
     <h3 class="card-header">Update email</h3>

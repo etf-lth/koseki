@@ -1,27 +1,28 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, status, group, person_header %}
+{% from "macros.html" import render_field, status, group, person_header, member_tabs %}
 {% block title %}{{ person.fname }} {{ person.lname }}{% endblock %}
 {% block content %}
 
-{{ person_header(person, 'groups', gravatar(person.email)) }}
+{{ person_header(person, "Manage member", gravatar) }}
+{{ member_tabs("groups", person) }}
 
 <form class="container" action="" method="post">
     <div class="row">
-    <table class="col-md-9 col-lg-7 col-xl-6 table table-striped table-sm">
-        <tr>
-            <th style="width: 24px"><i class="glyphicon glyphicon-ok"></i></th>
-            <th>Name</th>
-            <th>Description</th>
-        </tr>
-        {% for grp in groups %}
-        <tr>
-            <td class="pt-2 pb-0"><input type="checkbox" name="{{ grp.gid }}" {{ ' checked' if member_of(grp, person)}}
-                    {{ 'disabled' if grp.name == 'admin' and not member_of('admin') }}></td>
-            <td>{{ group(grp.name) }}</td>
-            <td>{{ grp.descr }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+        <table class="col-md-9 col-lg-7 col-xl-6 table table-striped table-sm">
+            <tr>
+                <th style="width: 24px"><i class="glyphicon glyphicon-ok"></i></th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            {% for grp in groups %}
+            <tr>
+                <td class="pt-2 pb-0"><input type="checkbox" name="{{ grp.gid }}" {{ ' checked' if member_of(grp,
+                        person)}} {{ 'disabled' if grp.name=='admin' and not member_of('admin') }}></td>
+                <td>{{ group(grp.name) }}</td>
+                <td>{{ grp.descr }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 
     <div class="">

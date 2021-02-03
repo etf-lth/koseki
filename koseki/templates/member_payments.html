@@ -1,9 +1,10 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, status, group, person_header, fee_method %}
+{% from "macros.html" import render_field, status, group, person_header, member_tabs, fee_method %}
 {% block title %}{{ person.fname }} {{ person.lname }}{% endblock %}
 {% block content %}
 
-{{ person_header(person, 'payments', gravatar(person.email)) }}
+{{ person_header(person, "Manage member", gravatar) }}
+{{ member_tabs("payments", person) }}
 
 <table class="table table-striped table-sm">
     <tr>
@@ -17,7 +18,9 @@
     {% if person.payments %}
     {% for payment in person.payments %}
     <tr>
-        <td><h5 class="d-inline"><span class="badge bg-primary">{{ payment.pid }}</span></h5></td>
+        <td>
+            <h5 class="d-inline"><span class="badge bg-primary">{{ payment.pid }}</span></h5>
+        </td>
         <td>{{ payment.registered|date }}</td>
         <td>{{ payment.amount }}</td>
         <td>{{ fee_method(payment.method) }}</td>
