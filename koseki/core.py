@@ -71,7 +71,7 @@ class KosekiCore:
         self.plugins = KosekiPluginManager(
             self.app, self.storage, self.auth, self.util)
 
-    def start(self):
+    def start(self, flask_server=True):
         with self.app.app_context():
             # Register own context processors
             self._register_context_processors()
@@ -89,10 +89,11 @@ class KosekiCore:
             self.scheduler.start()
 
             # Start the webserver
-            try:
-                self.app.run()
-            except SystemExit:
-                pass  # Flask shut down.
+            if flask_server:
+                try:
+                    self.app.run()
+                except SystemExit:
+                    pass  # Flask shut down.
 
     def _register_views(self):
         views = [
