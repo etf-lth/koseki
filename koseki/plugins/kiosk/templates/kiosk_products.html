@@ -11,7 +11,7 @@
 
     const productData = new Map();
     {% for product in products %}
-    productData.set({{ product.pid }}, {name: "{{ product.name }}", price: {{ product.price}} });
+    productData.set({{ product.pid }}, { name: "{{ product.name }}", price: {{ product.price }} });
     {% endfor %}
 
     function incProduct(pid) {
@@ -114,8 +114,8 @@
     {% for product in products %}
     <div class="col-3 pb-3">
         <div class="card border-primary h-100">
-            <img class="card-img-top border-bottom border-5 border-primary p-3" src="{{ product.img_url }}" alt="Product image"
-                style="height:250px">
+            <img class="card-img-top border-bottom border-5 border-primary p-3" src="{{ product.img_url }}"
+                alt="Product image" style="height:250px">
             <div class="card-body p-0">
                 <div class="row mx-0">
                     <div class="col-7 pt-2 pb-2">
@@ -129,17 +129,15 @@
                 </div>
             </div>
             <div class="row mx-0">
-                <div class="d-grid">
-                    <a href="javascript:incProduct({{ product.pid }})"
-                        class="col-7 btn btn-success btn-lg gap py-3 mt-0 rounded-0"
-                        data-inc-product-id="{{ product.pid }}">
-                        Add
-                    </a>
-                    <a href="javascript:decProduct({{ product.pid }})"
-                        class="col-5 btn btn-dark btn-lg gap py-3 mt-0 rounded-0">
-                        Undo
-                    </a>
-                </div>
+                <a href="javascript:incProduct({{ product.pid }})"
+                    class="col-7 btn btn-success btn-lg gap py-3 mt-0 rounded-0"
+                    data-inc-product-id="{{ product.pid }}">
+                    Add
+                </a>
+                <a href="javascript:decProduct({{ product.pid }})"
+                    class="col-5 btn btn-dark btn-lg gap py-3 mt-0 rounded-0">
+                    Undo
+                </a>
             </div>
         </div>
     </div>
@@ -147,14 +145,13 @@
 </div>
 {% endblock %}
 {% block content_rside %}
-<div class="row border-bottom border-2 border-success">
-    <a id="checkoutButton" href="javascript:proceedCheckout()"
-        class="col-12 btn w-100 py-4 mt-0 rounded-0 btn-dark">
+<div class="row border-bottom border-5 border-success">
+    <a id="checkoutButton" href="javascript:proceedCheckout()" class="col-12 btn w-100 py-4 mt-0 rounded-0 btn-dark">
         <div class="h1 mb-0 fw-bold py-3">Cart is empty</div>
     </a>
 </div>
 
-<div class="row border-bottom border-2 border-success pt-3 pb-2 h4">
+<div class="row border-bottom border-5 border-success pt-3 pb-2 h4">
     <div class="col-4 fw-bold">User ID:</div>
     <div class="col-8">{{ person.uid }}</div>
     <div class="col-4 fw-bold">Logged in:</div>

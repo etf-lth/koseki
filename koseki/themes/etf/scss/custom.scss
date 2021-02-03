@@ -116,6 +116,22 @@ a:hover {
     border-color: $color-warning-dark !important;
 }
 
+.border-danger {
+    border-color: $color-danger-dark !important;
+}
+.border-light {
+    border-color: $color-light-dark !important;
+}
+.border-primary {
+    border-color: $color-primary-dark !important;
+}
+.border-success {
+    border-color: $color-success-dark !important;
+}
+.border-warning {
+    border-color: $color-warning-dark !important;
+}
+
 .btn-danger {
     background-color: $color-danger;
     border-color: $color-danger-dark;

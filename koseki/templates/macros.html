@@ -1,11 +1,22 @@
-{% macro render_field(field, class='', autofocus=False, disabled=False, required=False, inline=False) %}
+{% macro render_field(field, class='', autofocus=False, disabled=False, required=False, inline=False, icon="") %}
 
 {% if field.type == "PasswordField" %}
 {% set htmlType = "password" %}
+{% elif field.type == "SubmitField" %}
+{% set htmlType = "submit" %}
 {% else %}
 {% set htmlType = "text" %}
 {% endif %}
 
+{% if htmlType == "submit" %}
+<button id="{{ field.id }}" class="btn {{ class }}" name="{{ field.name }}" type="submit" value="1" {{ "autofocus" if
+    autofocus }} {{ "disabled" if disabled }}>
+    {% if icon != "": %}
+    <i class="fa fa-{{ icon }} me-1"></i>
+    {% endif %}
+    {{ field.label.text }}
+</button>
+{% else %}
 {% if inline %}
 <div class="row mb-3">
     <div class="col-sm-2">
@@ -13,8 +24,8 @@
     </div>
     <div class="col-sm-10">
         <input type="{{ htmlType }}" id="{{ field.id }}" name="{{ field.name }}"
-            class="form-control {{ 'is-invalid' if field.errors }} {{ class }}" {{ "autofocus" if autofocus }}
-            {{ "disabled" if disabled }} {{ "required" if required or field.errors}}
+            class="form-control {{ 'is-invalid' if field.errors }} {{ class }}" {{ ('value="'|safe ~ field.data ~ '"'|safe) if field.data }} {{ "autofocus"
+            if autofocus }} {{ "disabled" if disabled }} {{ "required" if required or field.errors}}
             aria-describedby="validation{{ field.id }}Feedback">
         {% if field.errors %}
         <div id="validation{{ field.id }}Feedback" class="invalid-feedback">
@@ -29,8 +40,8 @@
 <div class="mb-3">
     <label for="{{ field.id }}" class="form-label">{{ field.label.text }}</label>
     <input type="{{ htmlType }}" id="{{ field.id }}" name="{{ field.name }}" class="form-control {{ class }}"
-        {{ "autofocus" if autofocus }} {{ "disabled" if disabled }} {{ "required" if required or field.errors}}
-        aria-describedby="validation{{ field.id }}Feedback">
+    {{ ('value="'|safe ~ field.data ~ '"'|safe) if field.data }} {{ "autofocus" if autofocus }} {{ "disabled" if disabled }} {{ "required" if required
+        or field.errors}} aria-describedby="validation{{ field.id }}Feedback">
     {% if field.errors %}
     <div id="validation{{ field.id }}Feedback" class="invalid-feedback">
         {% for error in field.errors %}
@@ -39,6 +50,7 @@
     </div>
     {% endif %}
 </div>
+{% endif %}
 {% endif %}
 {% endmacro %}
 
