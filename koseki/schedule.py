@@ -18,7 +18,8 @@ class KosekiScheduler:
 
     def start(self):
         self.__sched.start()
-        self.__sched.add_job(self.__update_members, "cron", hour=4, minute=0, second=0)
+        self.__sched.add_job(self.__update_members, "cron",
+                             hour=4, minute=0, second=0)
         self.__sched.add_job(
             self.__send_debt_mail,
             "cron",
@@ -51,7 +52,8 @@ class KosekiScheduler:
                 ):
                     # Membership has expired
                     logging.info(
-                        "Member %s %s no longer active" % (member.fname, member.lname)
+                        "Member %s %s no longer active" % (
+                            member.fname, member.lname)
                     )
                     member.state = "expired"
                     self.storage.commit()
@@ -70,10 +72,10 @@ class KosekiScheduler:
                     last_fee: Fee = (
                         self.storage.session.query(Fee)
                         .filter_by(uid=member.uid)
-                        .order_by(Fee.end.desc())
-                        .scalar()
+                        .order_by(Fee.end.desc()).first()
                     )
-                    days_left = (last_fee.end - datetime.now()).days  # type: ignore # TODO
+                    days_left = (last_fee.end - datetime.now()  # type: ignore
+                                 ).days
 
                     # Send reminder to member
                     if days_left == 14:
