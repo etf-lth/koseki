@@ -7,10 +7,15 @@ logging.basicConfig(
     level=logging.DEBUG,
     handlers=[logging.FileHandler('koseki.log', 'a', 'utf-8')])
 
-
-def run_koseki(flask_server=True):
+def run_prod():
     core = KosekiCore()
-    core.start(flask_server=flask_server)
+    core.start(flask_server=False)
+    return core.app
+
+def run_dev():
+    core = KosekiCore()
+    core.start(flask_server=True)
+    return core.app
 
 
-__all__ = ["run_koseki"]
+__all__ = ["run_prod", "run_dev"]
