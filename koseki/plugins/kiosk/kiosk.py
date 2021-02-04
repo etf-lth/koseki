@@ -88,6 +88,7 @@ class KioskPlugin(KosekiPlugin):
                 session["kiosk_card"] = form.card_id.data
                 return redirect(url_for("kiosk.kiosk_register"))
 
+        form.card_id.data = ""
         return render_template("kiosk_card.html", form=form, alerts=alerts,)
 
     def kiosk_register(self):
