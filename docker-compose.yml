@@ -17,5 +17,6 @@ services:
       MYSQL_PASSWORD: password
   mail:
     image: bytemark/smtp
+    restart: always
     ports:
       - "127.0.0.1:25:25"
