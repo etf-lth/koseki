@@ -74,7 +74,7 @@ class Storage:
                     lname="Testsson",
                     email="admin@example.com",
                     stil="admin",
-                    password="5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
+                    password="$argon2id$v=19$m=16,t=2,p=1$S1AwUjlDVXVnbFNBV2J3cg$ErwAfuI1RV2nl/B17lfQWg",
                 )
             )  # pass: password
 
