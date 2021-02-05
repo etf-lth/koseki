@@ -17,6 +17,7 @@ class KosekiConfig(object):
     # Hosting config
     #
     URL_BASE = "http://localhost:5000"
+    WEB_PORT = 5000
     UPLOAD_FOLDER = "./data" # TODO move to print plugin?
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
@@ -36,7 +37,9 @@ class KosekiConfig(object):
     #
     # Email config
     #
+    SMTP_USE_TLS = False
     SMTP_SERVER = "127.0.0.1"
+    SMTP_PORT = 25
     EMAIL_FROM = "Koseki Member management <member@acme.nu>"
     EMAIL_SUBJECT = "Koseki Member management"
 

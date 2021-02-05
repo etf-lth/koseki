@@ -48,7 +48,9 @@ class KosekiMailer:
                 render_template(template, **kwargs), mimeType, _charset="utf8"
             ))
 
-            s = smtplib.SMTP(self.app.config["SMTP_SERVER"])
+            s = smtplib.SMTP(host=self.app.config["SMTP_SERVER"], port=self.app.config["SMTP_PORT"])
+            if self.app.config["SMTP_USE_TLS"]:
+                s.starttls()
             s.sendmail(from_mail, to_mail, msg.as_string())
             s.quit()
         except (Exception, ConnectionRefusedError) as e:
