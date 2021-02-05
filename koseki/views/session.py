@@ -100,7 +100,7 @@ class SessionView(KosekiView):
             redir=request.args.get("redir", url_for("index")),
             form_login=form_login,
             alerts=alerts,
-            sso_providers=[self.util.get_alternate_login()],
+            sso_providers=self.util.get_alternate_logins(),
         )
 
     def logout(self):

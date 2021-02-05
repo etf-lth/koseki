@@ -23,6 +23,7 @@
                 </div>
             </div>
         </div>
+        {% if plugin_isenabled("salto") %}
         <h3 class="card-header">Ancillary information</h3>
         <div class="card-body">
             <div class="row">
@@ -31,6 +32,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">
                 <i class="fa fa-plus-circle me-1"></i> Enroll

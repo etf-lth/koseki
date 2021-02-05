@@ -1,6 +1,9 @@
 
+import datetime
 import os
+import time
 
+from flask import session
 from flask_multistatic import MultiStaticFlask  # type: ignore
 
 from koseki.auth import KosekiAuth
@@ -110,15 +113,17 @@ class KosekiCore:
         ]
         view: KosekiView
         for viewType in views:
-            view = viewType(self.app, self.storage,
-                            self.auth, self.util, self.mail)
+            view = viewType(self.app, self.auth, self.mail, self.plugins, self.storage,
+                            self.util)
             view.register()
 
     def _register_context_processors(self):
-        self.app.context_processor(self.util.gravatar_processor)
-        self.app.context_processor(self.util.make_nav_processor)
-        self.app.context_processor(self.util.member_of_processor)
-        self.app.context_processor(self.util.now_processor)
-        self.app.context_processor(self.util.swish_qrcode_processor)
-        self.app.context_processor(self.util.uid_to_name)
+        self.app.context_processor(lambda : dict(plugin_isenabled=self.plugins.isenabled))
+        self.app.context_processor(lambda : dict(gravatar=self.util.gravatar))
+        self.app.context_processor(lambda : dict(make_nav=lambda: session["nav"]))
+        self.app.context_processor(lambda : dict(member_of=self.util.member_of))
+        self.app.context_processor(lambda : 
+            dict(now=lambda: datetime.datetime(2000, 1, 1).fromtimestamp(time.time())))
+        self.app.context_processor(lambda : dict(swish_qrcode=self.util.swish_qrcode))
+        self.app.context_processor(lambda : dict(uid_to_name=self.util.uid_to_name))
         self.app.add_template_filter(self.util.format_date, "date")

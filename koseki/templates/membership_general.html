@@ -43,8 +43,10 @@ payment_balance
     <div class="col-8 col-md-10">{{ person.lname }}</div>
     <div class="col-4 col-md-2 fw-bold text-end">Email</div>
     <div class="col-8 col-md-10">{{ person.email }}</div>
+    {% if plugin_isenabled("salto") %}
     <div class="col-4 col-md-2 fw-bold text-end">StiL</div>
     <div class="col-8 col-md-10">{{ person.stil if person.stil else '<span class="text-muted">None</span>'|safe}}</div>
+    {% endif %}
     <div class="col-4 col-md-2 fw-bold text-end">State</div>
     <div class="col-8 col-md-10">{{ status(person.state) }}</div>
     <div class="col-4 col-md-2 fw-bold text-end">Enrolled</div>

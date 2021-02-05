@@ -1,3 +1,4 @@
+from koseki.plugin import KosekiPluginManager
 from flask import Flask
 
 from koseki.auth import KosekiAuth
@@ -10,16 +11,18 @@ class KosekiView:
     def __init__(
         self,
         app: Flask,
-        storage: Storage,
         auth: KosekiAuth,
-        util: KosekiUtil,
         mail: KosekiMailer,
+        plugins: KosekiPluginManager,
+        storage: Storage,
+        util: KosekiUtil,
     ):
         self.app = app
-        self.storage = storage
         self.auth = auth
-        self.util = util
         self.mail = mail
+        self.plugins = plugins
+        self.storage = storage
+        self.util = util
 
     def register(self) -> None:
         pass

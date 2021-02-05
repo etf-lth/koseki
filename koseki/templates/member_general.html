@@ -42,7 +42,8 @@
                 </div>
             </div>
         </div>
-        <h3 class="card-header">Ancillary information</h3>
+        {% if plugin_isenabled("salto") %}
+        <h3 class="card-header">Student information</h3>
         <div class="card-body">
             <div class="row">
                 <div class="col-6 col-md-3">
@@ -50,6 +51,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">
                 <i class="fa fa-check me-1"></i> Save

@@ -15,7 +15,7 @@ class CASPlugin(KosekiPlugin):
         }
 
     def create_blueprint(self) -> Blueprint:
-        self.util.alternate_login(self.cas_login)
+        self.util.alternate_login(self.cas_login())
         blueprint: Blueprint = Blueprint("cas", __name__)
         blueprint.add_url_rule("/cas", None, self.cas_ticket)
         return blueprint

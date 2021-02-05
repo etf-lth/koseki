@@ -3,11 +3,9 @@ import base64
 import datetime
 import hashlib
 import logging
-import time
 
 import requests
 from flask import session
-from sqlalchemy.util.langhelpers import NoneType
 
 from koseki.db.storage import Storage
 from koseki.db.types import Group, Person
@@ -52,13 +50,13 @@ class KosekiUtil:
     def __init__(self, storage: Storage):
         self.storage = storage
         self.navigation: list[KosekiNavigationEntry] = []
-        self.alt_login = None
+        self.alt_login = []
 
-    def nav(self, uri, icon, title, weight=0, groups=None):
+    def nav(self, uri, icon, title, weight=0, groups=None) -> None:
         self.navigation.append(KosekiNavigationEntry(
             uri, icon, title, weight, groups))
 
-    def calc_nav(self):
+    def calc_nav(self) -> None:
         nav: list[KosekiNavigationEntry] = []
         for n in self.navigation:
             if n.groups is None or sum(
@@ -67,78 +65,54 @@ class KosekiUtil:
                 nav.append(n)
         session["nav"] = sorted(nav, key=lambda x: x.weight)
 
-    def start_session(self, uid):
+    def start_session(self, uid) -> None:
         session["uid"] = int(uid)
         session.permanent = True
         session.modified = True
         self.calc_nav()
 
-    def destroy_session(self):
+    def destroy_session(self) -> None:
         session.pop("uid", None)
 
-    def make_nav_processor(self):
-        def make_nav():
-            return session["nav"]
+    def gravatar(self, mail) -> str:
+        return (
+            "//gravatar.com/avatar/" +
+            hashlib.md5(mail.encode("utf-8")).hexdigest()
+        )
 
-        return dict(make_nav=make_nav)
-
-    def now_processor(self):
-        def now():
-            return datetime.datetime(2000, 1, 1).fromtimestamp(time.time())
-
-        return dict(now=now)
-
-    def gravatar_processor(self):
-        def gravatar(mail):
-            return (
-                "//gravatar.com/avatar/" +
-                hashlib.md5(mail.encode("utf-8")).hexdigest()
-            )
-
-        return dict(gravatar=gravatar)
-
-    def format_date(self, value: datetime.datetime, format="%Y-%m-%d"):
+    def format_date(self, value: datetime.datetime, format="%Y-%m-%d") -> str:
         return value.strftime(format)
 
-    def uid_to_name(self):
-        def uid_to_name_inner(uid):
-            person = self.storage.session.query(
-                Person).filter_by(uid=uid).scalar()
-            return "%s %s" % (person.fname, person.lname) if person else "Nobody"
+    def uid_to_name(self, uid) -> str:
+        person = self.storage.session.query(
+            Person).filter_by(uid=uid).scalar()
+        return "%s %s" % (person.fname, person.lname) if person else "Nobody"
 
-        return dict(uid_to_name=uid_to_name_inner)
+    def swish_qrcode(self, member) -> str:
+        if member.balance >= 0:
+            return ""
+        data = dict(
+            format="png",
+            size=350,
+            message={"value": member.stil, "editable": False},
+            amount={"value": -float(member.balance), "editable": False},
+            payee={"value": "123 019 24 76", "editable": False},
+        )
+        headers = {"Content-type": "application/json"}
+        response = requests.post(
+            "https://mpc.getswish.net/qrg-swish/api/v1/prefilled",
+            headers=headers,
+            json=data,
+        )
+        return (
+            "data:"
+            + response.headers["Content-Type"]
+            + ";"
+            + "base64,"
+            + str(base64.b64encode(response.content), "utf-8")
+        )
 
-    def swish_qrcode_processor(self):
-        def swish_qrcode(member):
-            if member.balance >= 0:
-                return ""
-            data = dict(
-                format="png",
-                size=350,
-                message={"value": member.stil, "editable": False},
-                amount={"value": -float(member.balance), "editable": False},
-                payee={"value": "123 019 24 76", "editable": False},
-            )
-            headers = {"Content-type": "application/json"}
-            response = requests.post(
-                "https://mpc.getswish.net/qrg-swish/api/v1/prefilled",
-                headers=headers,
-                json=data,
-            )
-            return (
-                "data:"
-                + response.headers["Content-Type"]
-                + ";"
-                + "base64,"
-                + str(base64.b64encode(response.content), "utf-8")
-            )
-
-        return dict(swish_qrcode=swish_qrcode)
-
-    def member_of_processor(self):
-        return dict(member_of=self.member_of)
-
-    def member_of(self, group, person=None):
+    def member_of(self, group, person=None) -> bool:
         if person is None:
             person = self.current_user()
         if type(person) in (int, int):
@@ -148,7 +122,7 @@ class KosekiUtil:
         elif type(group) == str:
             group = self.storage.query(Group).filter_by(name=group).scalar()
 
-        if type(group) is NoneType:
+        if group is None:
             return False
 
         return sum(1 for x in person.groups if x.gid == group.gid) > 0
@@ -165,10 +139,9 @@ class KosekiUtil:
     def set_alerts(self, alerts: list[KosekiAlert]) -> None:
         session["alerts"] = alerts
 
-    def get_alternate_login(self):
+    def get_alternate_logins(self) -> list[dict]:
         return self.alt_login
 
-    def alternate_login(self, alt):
-        self.alt_login = alt()
-        logging.info("Registered alternate login provider: %s" %
-                     self.alt_login)
+    def alternate_login(self, alt: dict):
+        self.alt_login.append(alt)
+        logging.info("Registered alternate login provider: %s" % alt["button"])
