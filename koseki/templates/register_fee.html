@@ -36,11 +36,6 @@
                 <div class="col-12 col-md-3">
                     {{ render_field(feeForm.method) }}
                 </div>
-                <div class="col-12 col-md-3">
-                    {% if member_of('admin') %}
-                    {{ render_field(feeForm.retro) }}
-                    {% endif %}
-                </div>
             </div>
         </div>
         <div class="card-footer border-top border-5 border-success">

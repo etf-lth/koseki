@@ -64,7 +64,6 @@ class KioskPlugin(KosekiPlugin):
         if "kiosk_card" in session:
             session.pop("kiosk_card")
 
-        alerts = self.util.fetch_alerts()
         form = KioskCardForm()
 
         if form.validate_on_submit() and len(form.card_id.data) == 10:
@@ -77,19 +76,18 @@ class KioskPlugin(KosekiPlugin):
                 session["kiosk_uid"] = person.uid
                 return redirect(url_for("kiosk.kiosk_products"))
             else:
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.WARNING,
                         "Card not verified",
                         "This is the first time you are using ETF Kiosk. Please verify by entering your student StiL/LUCAT.",
                     )
                 )
-                self.util.set_alerts(alerts)
                 session["kiosk_card"] = form.card_id.data
                 return redirect(url_for("kiosk.kiosk_register"))
 
         form.card_id.data = ""
-        return render_template("kiosk_card.html", form=form, alerts=alerts,)
+        return render_template("kiosk_card.html", form=form)
 
     def kiosk_register(self):
         if (
@@ -102,7 +100,6 @@ class KioskPlugin(KosekiPlugin):
         if "kiosk_card" not in session:
             return redirect(url_for("kiosk.kiosk_card"))
 
-        alerts = self.util.fetch_alerts()
         form = KioskRegisterForm()
 
         if form.validate_on_submit():
@@ -115,17 +112,16 @@ class KioskPlugin(KosekiPlugin):
                 person.card_id = session.pop("kiosk_card")
                 self.storage.commit()
 
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.SUCCESS,
                         "Card verified successfully",
                         "You can now use your student card in the Kiosk.",
                     )
                 )
-                self.util.set_alerts(alerts)
                 return redirect(url_for("kiosk.kiosk_card"))
             else:
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Missing user account",
@@ -134,7 +130,7 @@ class KioskPlugin(KosekiPlugin):
                     )
                 )
 
-        return render_template("kiosk_register.html", form=form, alerts=alerts,)
+        return render_template("kiosk_register.html", form=form)
 
     def kiosk_products(self):
         if (
@@ -146,22 +142,19 @@ class KioskPlugin(KosekiPlugin):
         if "kiosk_uid" not in session:
             return redirect(url_for("kiosk.kiosk_card"))
 
-        alerts = self.util.fetch_alerts()
-
         person: Person = (
             self.storage.session.query(Person)
             .filter_by(uid=session["kiosk_uid"])
             .scalar()
         )
         if not person:
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.DANGER,
                     "Error",
                     "Missing user %s" % (session["kiosk_uid"]),
                 )
             )
-            self.util.set_alerts(alerts)
             return redirect(url_for("kiosk.kiosk_card"))
 
         form = KioskProductForm()
@@ -179,7 +172,7 @@ class KioskPlugin(KosekiPlugin):
                 productQty = int(p.split(":")[1])
                 # Check if QTY is valid
                 if productQty < 1 or productQty > 100:
-                    alerts.append(
+                    self.util.alert(
                         KosekiAlert(
                             KosekiAlertType.DANGER,
                             "Error",
@@ -198,7 +191,7 @@ class KioskPlugin(KosekiPlugin):
                     products.append(product)
                     productAmounts.append(productQty)
                 else:
-                    alerts.append(
+                    self.util.alert(
                         KosekiAlert(
                             KosekiAlertType.DANGER,
                             "Error",
@@ -216,32 +209,30 @@ class KioskPlugin(KosekiPlugin):
                         payment = Payment(
                             uid=person.uid,
                             registered_by=person.uid,
-                            amount=-product.price,  # type: ignore
+                            amount=-product.price,
                             method="kiosk",
                             reason="Bought %s for %.2f kr"
-                            % (product.name, product.price),  # type: ignore
+                            % (product.name, product.price),
                         )
                         self.storage.add(payment)
                         self.storage.commit()
 
                         logging.info(
-                            "Person %d bought %d for %d kr"
-                            % (person.uid, product.pid, product.price)  # type: ignore
+                            "Person %d bought %d for %.2f kr"
+                            % (person.uid, product.pid, product.price)
                         )
-                        alerts.append(
+                        self.util.alert(
                             KosekiAlert(
                                 KosekiAlertType.SUCCESS,
                                 "Successfully bought %s" % (product.name),
                                 "",
                             )
                         )
-                self.util.set_alerts(alerts)
                 return redirect(url_for("kiosk.kiosk_success"))
 
         return render_template(
             "kiosk_products.html",
             form=form,
-            alerts=alerts,
             person=person,
             products=self.storage.session.query(Product)
             .order_by(Product.order.asc())
@@ -258,27 +249,24 @@ class KioskPlugin(KosekiPlugin):
         if "kiosk_uid" not in session:
             return redirect(url_for("kiosk.kiosk_card"))
 
-        alerts = self.util.fetch_alerts()
-
         person = (
             self.storage.session.query(Person)
             .filter_by(uid=session["kiosk_uid"])
             .scalar()
         )
         if not person:
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.DANGER,
                     "Error",
                     "Missing user %s" % (session["kiosk_uid"]),
                 )
             )
-            self.util.set_alerts(alerts)
             return redirect(url_for("kiosk.kiosk_card"))
 
         if "kiosk_uid" in session:
             session.pop("kiosk_uid")
-        return render_template("kiosk_success.html", person=person, alerts=alerts,)
+        return render_template("kiosk_success.html", person=person)
 
     def kiosk_login(self):
         if (
@@ -286,8 +274,6 @@ class KioskPlugin(KosekiPlugin):
             and session["kiosk_password"] == self.app.config["KIOSK_KEY"]
         ):
             return redirect(url_for("kiosk.kiosk_card"))
-
-        alerts = self.util.fetch_alerts()
 
         if "User-Agent" in request.headers and request.headers.get(  # type: ignore
             "User-Agent"
@@ -300,7 +286,7 @@ class KioskPlugin(KosekiPlugin):
                 session["kiosk_password"] = self.app.config["KIOSK_KEY"]
                 return redirect(url_for("kiosk.kiosk_card"))
             else:
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Error",
@@ -308,7 +294,7 @@ class KioskPlugin(KosekiPlugin):
                     )
                 )
         else:
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.DANGER,
                     "Error",
@@ -316,10 +302,9 @@ class KioskPlugin(KosekiPlugin):
                 )
             )
 
-        return render_template("kiosk_login.html", alerts=alerts,)
+        return render_template("kiosk_login.html")
 
     def kiosk_logout(self):
         if "kiosk_password" in session:
             session.pop("kiosk_password")
         return redirect(url_for("kiosk.kiosk_login"))
-

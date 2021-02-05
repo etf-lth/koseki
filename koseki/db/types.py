@@ -59,7 +59,7 @@ class Product(Base):
     pid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     name = Column(Unicode(255))
     img_url = Column(Text())
-    price = Column(DECIMAL(10, 2))
+    price = Column(DECIMAL(10, 2), nullable=False)
     order = Column(Integer, default=0, nullable=False)
 
 

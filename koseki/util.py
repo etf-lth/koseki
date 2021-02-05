@@ -131,13 +131,15 @@ class KosekiUtil:
     def current_user(self):
         return session["uid"]
 
-    def fetch_alerts(self) -> list[KosekiAlert]:
+    def alert(self, alert: KosekiAlert) -> None:
+        if "alerts" not in session:
+            session["alerts"] = []
+        session["alerts"].append(alert)
+
+    def render_alerts(self) -> list[KosekiAlert]:
         alerts: list[KosekiAlert] = session.pop("alerts", [])
         session["alerts"] = []
         return alerts
-
-    def set_alerts(self, alerts: list[KosekiAlert]) -> None:
-        session["alerts"] = alerts
 
     def get_alternate_logins(self) -> list[dict]:
         return self.alt_login
