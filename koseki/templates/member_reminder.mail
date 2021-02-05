@@ -14,5 +14,5 @@ or
 
 See you soon again!
 
-ElektroTekniska Föreningen
-http://medlem.etf.nu/
+{{ config['ORG_NAME']|safe }}
+{{ config['URL_BASE'] }}

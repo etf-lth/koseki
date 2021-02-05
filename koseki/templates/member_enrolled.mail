@@ -12,5 +12,5 @@ or
 
 You may visit {{ config['URL_BASE'] }} for more information about your membership.
 
-ElektroTekniska Föreningen
-http://medlem.etf.nu/
+{{ config['ORG_NAME']|safe }}
+{{ config['URL_BASE'] }}

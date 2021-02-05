@@ -2,5 +2,5 @@ Hello, {{ member.fname }}.
 
 Your membership is now active.
 
-ElektroTekniska Föreningen
-http://medlem.etf.nu/
+{{ config['ORG_NAME']|safe }}
+{{ config['URL_BASE'] }}
