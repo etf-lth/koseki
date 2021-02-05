@@ -50,7 +50,7 @@ class KosekiUtil:
     def __init__(self, storage: Storage):
         self.storage = storage
         self.navigation: list[KosekiNavigationEntry] = []
-        self.alt_login = []
+        self.alt_login: list[dict] = []
 
     def nav(self, uri, icon, title, weight=0, groups=None) -> None:
         self.navigation.append(KosekiNavigationEntry(
