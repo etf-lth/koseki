@@ -62,4 +62,4 @@ class KosekiPluginManager:
             self.plugins[plugin_name] = plugin
 
     def isenabled(self, plugin: str) -> bool:
-        return plugin in self.plugins
+        return plugin in (p.lower() for p in self.plugins.keys())
