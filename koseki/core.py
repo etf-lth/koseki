@@ -5,6 +5,7 @@ import time
 
 from flask import session
 from flask_multistatic import MultiStaticFlask  # type: ignore
+from markupsafe import Markup
 
 from koseki.auth import KosekiAuth
 from koseki.config import KosekiConfig
@@ -94,7 +95,8 @@ class KosekiCore:
             # Start the webserver
             if flask_server:
                 try:
-                    self.app.run(host="127.0.0.1", port=self.app.config["WEB_PORT"])
+                    self.app.run(host="127.0.0.1",
+                                 port=self.app.config["WEB_PORT"])
                 except SystemExit:
                     pass  # Flask shut down.
 
@@ -118,13 +120,20 @@ class KosekiCore:
             view.register()
 
     def _register_context_processors(self):
-        self.app.context_processor(lambda : dict(plugin_isenabled=self.plugins.isenabled))
-        self.app.context_processor(lambda : dict(gravatar=self.util.gravatar))
-        self.app.context_processor(lambda : dict(make_nav=lambda: session["nav"]))
-        self.app.context_processor(lambda : dict(member_of=self.util.member_of))
-        self.app.context_processor(lambda : 
-            dict(now=lambda: datetime.datetime(2000, 1, 1).fromtimestamp(time.time())))
-        self.app.context_processor(lambda : dict(swish_qrcode=self.util.swish_qrcode))
-        self.app.context_processor(lambda : dict(uid_to_name=self.util.uid_to_name))
-        self.app.context_processor(lambda : dict(alerts=self.util.render_alerts()))
+        self.app.context_processor(lambda: dict(
+            plugin_isenabled=self.plugins.isenabled))
+        self.app.context_processor(lambda: dict(gravatar=self.util.gravatar))
+        self.app.context_processor(
+            lambda: dict(make_nav=lambda: session["nav"]))
+        self.app.context_processor(lambda: dict(member_of=self.util.member_of))
+        self.app.context_processor(lambda:
+                                   dict(now=lambda: datetime.datetime(2000, 1, 1).fromtimestamp(time.time())))
+        self.app.context_processor(lambda: dict(
+            swish_qrcode=self.util.swish_qrcode))
+        self.app.context_processor(lambda: dict(
+            uid_to_name=self.util.uid_to_name))
+        self.app.context_processor(lambda: dict(
+            alerts=self.util.render_alerts()))
         self.app.add_template_filter(self.util.format_date, "date")
+        self.app.add_template_filter(lambda x: x if x is not None else Markup(
+            '<span class="text-muted">None</span>'), "pretty_none")

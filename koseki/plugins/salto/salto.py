@@ -7,6 +7,7 @@ class SaltoPlugin(KosekiPlugin):
     def config(self) -> dict:
         return {
             "SALTO_ALLOWED_IPS": ["130.235.20.201", "130.235.20.67", "194.47.250.246"],
+            "USER_USERNAME_ENABLED": True, # Override to enable Debt in Koseki
         }
 
     def create_blueprint(self) -> Blueprint:

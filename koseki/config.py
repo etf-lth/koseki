@@ -5,7 +5,7 @@ class KosekiConfig(object):
     DEBUG = False
 
     #
-    # Koseki config
+    # Koseki
     #
     KOSEKI_VERSION = "MMXXI"
 
@@ -49,7 +49,16 @@ class KosekiConfig(object):
     ORG_NAME = "Koseki"
     ORG_EMAIL = "contact@acme.nu"
 
+    #
+    # User config
+    #
+    USER_USERNAME_ENABLED = False
+    USER_ADDRESS_ENABLED = False
+    USER_PHONE_NUMBER_ENABLED = False
+
+    #
     # Payment config
+    #
     PAYMENT_DEBT_ENABLED = False
 
     #

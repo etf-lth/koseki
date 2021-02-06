@@ -25,6 +25,7 @@ class KioskPlugin(KosekiPlugin):
     def config(self) -> dict:
         return {
             "KIOSK_KEY": "123456",
+            "PAYMENT_DEBT_ENABLED": True,  # Override to enable Debt in Koseki
         }
 
     def create_blueprint(self) -> Blueprint:

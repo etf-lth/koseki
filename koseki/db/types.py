@@ -35,7 +35,8 @@ class Fee(Base):
     registered = Column(DateTime, default=datetime.now)
     start = Column(DateTime)
     end = Column(DateTime)
-    method = Column(Enum("swish", "cash", "bankgiro", "creditcard"), default="swish")
+    method = Column(Enum("swish", "cash", "bankgiro",
+                    "creditcard"), default="swish")
 
 
 class Payment(Base):
@@ -126,3 +127,17 @@ class Person(Base):
     def reduce_empty_to_null(self) -> None:
         if self.username == "":
             self.username = None
+        if self.address_line1 == "":
+            self.address_line1 = None
+        if self.address_line2 == "":
+            self.address_line2 = None
+        if self.city == "":
+            self.city = None
+        if self.postcode == "":
+            self.postcode = None
+        if self.region == "":
+            self.region = None
+        if self.country == "":
+            self.country = None
+        if self.phone_number == "":
+            self.phone_number = None

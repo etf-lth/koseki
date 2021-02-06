@@ -37,26 +37,53 @@ payment_balance
 </p>
 <h4>Membership profile</h4>
 <div class="row">
-    <div class="col-4 col-md-2 fw-bold text-end">First name</div>
-    <div class="col-8 col-md-10">{{ person.fname }}</div>
-    <div class="col-4 col-md-2 fw-bold text-end">Last name</div>
-    <div class="col-8 col-md-10">{{ person.lname }}</div>
-    <div class="col-4 col-md-2 fw-bold text-end">Email</div>
-    <div class="col-8 col-md-10">{{ person.email }}</div>
-    {% if plugin_isenabled("salto") %}
-    <div class="col-4 col-md-2 fw-bold text-end">StiL</div>
-    <div class="col-8 col-md-10">{{ person.username if person.username else '<span class="text-muted">None</span>'|safe}}</div>
-    {% endif %}
-    <div class="col-4 col-md-2 fw-bold text-end">State</div>
-    <div class="col-8 col-md-10">{{ status(person.state) }}</div>
-    <div class="col-4 col-md-2 fw-bold text-end">Enrolled</div>
-    <div class="col-8 col-md-10">{{ person.enrolled|date }}</div>
-    <div class="col-4 col-md-2 fw-bold text-end">Enrolled by</div>
-    <div class="col-8 col-md-10">{{ uid_to_name(person.enrolled_by) }}</div>
-    {% if config["PAYMENT_DEBT_ENABLED"] %}
-    <div class="col-4 col-md-2 fw-bold text-end">Balance</div>
-    <div class="col-8 col-md-10">{{ payment_balance(person.balance) }}</div>
-    {% endif %}
+    <div class="col-12 col-md-4">
+        <div class="row">
+            <div class="col-6 fw-bold text-end">First name</div>
+            <div class="col-6">{{ person.fname }}</div>
+            <div class="col-6 fw-bold text-end">Last name</div>
+            <div class="col-6">{{ person.lname }}</div>
+            <div class="col-6 fw-bold text-end">Email</div>
+            <div class="col-6">{{ person.email }}</div>
+            {% if plugin_isenabled("salto") %}
+            <div class="col-6 fw-bold text-end">StiL</div>
+            <div class="col-6">{{ person.username|pretty_none }}
+            </div>
+            {% endif %}
+            <div class="col-6 fw-bold text-end">State</div>
+            <div class="col-6">{{ status(person.state) }}</div>
+            <div class="col-6 fw-bold text-end">Enrolled</div>
+            <div class="col-6">{{ person.enrolled|date }}</div>
+            <div class="col-6 fw-bold text-end">Enrolled by</div>
+            <div class="col-6">{{ uid_to_name(person.enrolled_by) }}</div>
+            {% if config["PAYMENT_DEBT_ENABLED"] %}
+            <div class="col-6 fw-bold text-end">Balance</div>
+            <div class="col-6">{{ payment_balance(person.balance) }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="row">
+            {% if config["USER_ADDRESS_ENABLED"] %}
+            <div class="col-6 fw-bold text-end">Address</div>
+            <div class="col-6">{{ person.address_line1|pretty_none }}</div>
+            <div class="col-6 fw-bold text-end">Address (complement)</div>
+            <div class="col-6">{{ person.address_line2|pretty_none }}</div>
+            <div class="col-6 fw-bold text-end">City</div>
+            <div class="col-6">{{ person.city|pretty_none }}</div>
+            <div class="col-6 fw-bold text-end">Zip / Postal code</div>
+            <div class="col-6">{{ person.postcode|pretty_none }}</div>
+            <div class="col-6 fw-bold text-end">Region / State</div>
+            <div class="col-6">{{ person.region|pretty_none }}</div>
+            <div class="col-6 fw-bold text-end">Country</div>
+            <div class="col-6">{{ person.country|pretty_none }}</div>
+            {% endif %}
+            {% if config["USER_PHONE_NUMBER_ENABLED"] %}
+            <div class="col-6 fw-bold text-end">Phone number</div>
+            <div class="col-6">{{ person.phone_number|pretty_none }}</div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 <br />
 <h4>Registered membership fees</h4>
