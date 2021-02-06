@@ -53,8 +53,10 @@ payment_balance
     <div class="col-8 col-md-10">{{ person.enrolled|date }}</div>
     <div class="col-4 col-md-2 fw-bold text-end">Enrolled by</div>
     <div class="col-8 col-md-10">{{ uid_to_name(person.enrolled_by) }}</div>
+    {% if config["PAYMENT_DEBT_ENABLED"] %}
     <div class="col-4 col-md-2 fw-bold text-end">Balance</div>
     <div class="col-8 col-md-10">{{ payment_balance(person.balance) }}</div>
+    {% endif %}
 </div>
 <br />
 <h4>Registered membership fees</h4>
@@ -88,6 +90,7 @@ payment_balance
     </tr>
     {% endif %}
 </table>
+{% if config["PAYMENT_DEBT_ENABLED"] %}
 <br />
 <h4>Payments</h4>
 <table class="table table-striped table-sm">
@@ -120,4 +123,5 @@ payment_balance
     </tr>
     {% endif %}
 </table>
+{% endif %}
 {% endblock %}

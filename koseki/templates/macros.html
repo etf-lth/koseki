@@ -50,7 +50,7 @@
         {% if field.errors %}
         <div id="validation{{ field.id }}Feedback" class="invalid-feedback">
             {% for error in field.errors %}
-            {{ error }}</br>
+            {{ error }}<br />
             {% endfor %}
         </div>
         {% endif %}
@@ -61,120 +61,123 @@
 {% endif %}
 {% endmacro %}
 
-{% macro render_static(field, class='') %}
-render_field(field, class=class, disabled=True)
+{% macro render_submit(field, class=" btn-primary", icon="" ) %}
+<button id="{{ field.id }}" class="btn {{ class }}"
+name="{{ field.name }}" type="submit">
+{% if icon != '': %}
+<i class="fa fa-{{ icon }} me-1"></i>
+{% endif %}
+{{ field.label.text }}
+</button>
 {% endmacro %}
 
-{% macro render_submit(field, class=' btn-primary', icon='' ) %} <button id="{{ field.id }}" class="btn {{ class }}"
-            name="{{ field.name }}" type="submit">
-            {% if icon != '': %}
-            <i class="fa fa-{{ icon }} me-1"></i>
-            {% endif %}
-            {{ field.label.text }}
-            </button>
-            {% endmacro %}
+{% macro status(status) -%}
+{% if status == 'active': %}
+<h5 class="d-inline"><span class="badge bg-success">Active</span></h5>
+{% elif status == 'pending': %}
+<h5 class="d-inline"><span class="badge bg-warning">Pending</span></h5>
+{% elif status == 'expired': %}
+<h5 class="d-inline"><span class="badge bg-danger">Expired</span></h5>
+{% else : %}
+<h5 class="d-inline"><span class="badge bg-secondary">{{ status }}</span></h5>
+{% endif %}
+{%- endmacro %}
 
-            {% macro status(status) -%}
-            {% if status == 'active': %}
-            <h5 class="d-inline"><span class="badge bg-success">Active</span></h5>
-            {% elif status == 'pending': %}
-            <h5 class="d-inline"><span class="badge bg-warning">Pending</span></h5>
-            {% elif status == 'expired': %}
-            <h5 class="d-inline"><span class="badge bg-danger">Expired</span></h5>
-            {% else : %}
-            <h5 class="d-inline"><span class="badge bg-secondary">{{ status }}</span></h5>
-            {% endif %}
-            {%- endmacro %}
+{% macro group(group) -%}
+<h5 class="d-inline"><span class="badge bg-primary">{{ group }}</span></h5>
+{%- endmacro %}
 
-            {% macro group(group) -%}
-            <h5 class="d-inline"><span class="badge bg-primary">{{ group }}</span></h5>
-            {%- endmacro %}
+{% macro fee_method(method) -%}
+<h5 class="d-inline"><span class="badge bg-primary">{{ method if method else 'N/A' }}</span></h5>
+{%- endmacro %}
 
-            {% macro fee_method(method) -%}
-            <h5 class="d-inline"><span class="badge bg-primary">{{ method if method else 'N/A' }}</span></h5>
-            {%- endmacro %}
+{% macro fee_id(fid, start, end, now) -%}
+{% if now > end : %}
+<h5 class="d-inline"><span class="badge bg-danger">{{ fid }}</span></h5>
+{% elif now > start : %}
+<h5 class="d-inline"><span class="badge bg-success">{{ fid }}</span></h5>
+{% else : %}
+<h5 class="d-inline"><span class="badge bg-warning">{{ fid }}</span></h5>
+{% endif %}
+{%- endmacro %}
 
-            {% macro fee_id(fid, start, end, now) -%}
-            {% if now > end : %}
-            <h5 class="d-inline"><span class="badge bg-danger">{{ fid }}</span></h5>
-            {% elif now > start : %}
-            <h5 class="d-inline"><span class="badge bg-success">{{ fid }}</span></h5>
-            {% else : %}
-            <h5 class="d-inline"><span class="badge bg-warning">{{ fid }}</span></h5>
-            {% endif %}
-            {%- endmacro %}
+{% macro payment_balance(amount) -%}
+{% if amount > 0 : %}
+<span class="text-success">{{ amount }} kr</span>
+{% elif -500 > amount : %}
+<span class="text-danger fw-bold">{{ amount }} kr</span>
+{% elif 0 > amount : %}
+<span class="text-danger">{{ amount }} kr</span>
+{% else : %}
+<span>{{ amount }} kr</span>
+{% endif %}
+{%- endmacro %}
 
-            {% macro payment_balance(amount) -%}
-            {% if amount > 0 : %}
-            <span class="text-success">{{ amount }} kr</span>
-            {% elif -500 > amount : %}
-            <span class="text-danger fw-bold">{{ amount }} kr</span>
-            {% elif 0 > amount : %}
-            <span class="text-danger">{{ amount }} kr</span>
-            {% else : %}
-            <span>{{ amount }} kr</span>
-            {% endif %}
-            {%- endmacro %}
+{% macro fee_tabs(current) -%}
+<br />
+<ul class="pagination">
+    {% if config["PAYMENT_DEBT_ENABLED"] %}
+        {% set tabs = (('list_fees','Fees'),('list_payments','Payments'),('register_fee','Register')) %}
+    {% else %}
+        {% set tabs = (('list_fees','Fees'),('register_fee','Register')) %}
+    {% endif %}
+    {% for uri,name in tabs %}
+    <li class="page-item {{ ' active' if current == uri }}">
+        <a class="page-link" href="{{ url_for(uri) }}">{{ name }}</a>
+    </li>
+    {% endfor %}
+</ul>
+<hr />
+{%- endmacro %}
 
-            {% macro fee_tabs(current) -%}
-            <br />
-            <ul class="pagination">
-                {% for uri,name in (('list_fees','Fees'),('list_payments','Payments'),('register_fee','Register')) %}
-                <li class="page-item {{ ' active' if current == uri }}">
-                    <a class="page-link" href="{{ url_for(uri) }}">{{ name }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-            <hr />
-            {%- endmacro %}
+{% macro gravatar_blob(url, size=80) -%}
+<img src="{{ url }}?s=80&d=identicon" width="{{size}}px" height="{{size}}px" style="border-radius: 500px;">
+{%- endmacro %}
 
-            {% macro gravatar_blob(url, size=80) -%}
-            <img src="{{ url }}?s=80&d=identicon" width="{{size}}px" height="{{size}}px" style="border-radius: 500px;">
-            {%- endmacro %}
+{% macro person_header(person, title, grav) -%}
+<div class="row mb-3">
+    <div class="col-auto pt-2">
+        <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com"
+            class="ms-4 me-1">
+            {{ gravatar_blob(grav(person.email)) }}
+        </a>
+    </div>
+    <div class="col-auto">
+        <h1 class="mb-0 fw-bold">{{ title }}</h1>
+        <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
+    </div>
+</div>
+{%- endmacro %}
 
-            {% macro person_header(person, title, grav) -%}
-            <div class="row mb-3">
-                <div class="col-auto pt-2">
-                    <a href="//gravatar.com/" target="_new" title="Change your avatar at Gravatar.com"
-                        class="ms-4 me-1">
-                        {{ gravatar_blob(grav(person.email)) }}
-                    </a>
-                </div>
-                <div class="col-auto">
-                    <h1 class="mb-0 fw-bold">{{ title }}</h1>
-                    <h2 class="text-muted">{{ person.fname }} {{ person.lname }}</h2>
-                </div>
-            </div>
-            {%- endmacro %}
+{% macro membership_tabs(current) -%}
+<br />
+<ul class="pagination">
+    {% for uri,name in (('','Overview'),('edit','Edit profile')) %}
+    <li class="page-item {{ ' active' if current == uri }}">
+        <a class="page-link" href="{{ config['URL_BASE'] }}/membership{{ '/'+uri if uri != '' }}">{{ name
+            }}</a>
+    </li>
+    {% endfor %}
+</ul>
+<hr />
+{%- endmacro %}
 
-            {% macro membership_tabs(current) -%}
-            <br />
-            <ul class="pagination">
-                {% for uri,name in (('','Overview'),('edit','Edit profile')) %}
-                <li class="page-item {{ ' active' if current == uri }}">
-                    <a class="page-link" href="{{ config['URL_BASE'] }}/membership{{ '/'+uri if uri != '' }}">{{ name
-                        }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-            <hr />
-            {%- endmacro %}
-
-            {% macro member_tabs(current, person) -%}
-            <br />
-            <ul class="pagination">
-                {% set tabs =
-                (('','General'),('groups','Groups'),('fees','Fees'),('payments','Payments'),('admin','Power
-                Tools'))
-                %}
-                {% for uri,name in tabs %}
-                <li class="page-item {{ ' active' if current == uri }}">
-                    <a class="page-link"
-                        href="{{ config['URL_BASE'] }}/user/{{ person.uid }}{{ '/'+uri if uri != '' }}">{{
-                        name
-                        }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-            <hr />
-            {%- endmacro %}
+{% macro member_tabs(current, person) -%}
+<br />
+<ul class="pagination">
+    {% if config["PAYMENT_DEBT_ENABLED"] %}
+        {% set tabs = (('','General'),('groups','Groups'),('fees','Fees'),('payments','Payments'),('admin','Power Tools')) %}
+    {% else %}
+        {% set tabs = (('','General'),('groups','Groups'),('fees','Fees'),('admin','Power Tools')) %}
+    {% endif %}
+    {% for uri,name in tabs %}
+    <li class="page-item {{ ' active' if current == uri }}">
+        <a class="page-link"
+            href="{{ config['URL_BASE'] }}/user/{{ person.uid }}{{ '/'+uri if uri != '' }}">{{
+            name
+            }}</a>
+    </li>
+    {% endfor %}
+</ul>
+<hr />
+{%- endmacro %}

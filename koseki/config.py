@@ -49,6 +49,9 @@ class KosekiConfig(object):
     ORG_NAME = "Koseki"
     ORG_EMAIL = "contact@acme.nu"
 
+    # Payment config
+    PAYMENT_DEBT_ENABLED = False
+
     #
     # Theme configs
     #

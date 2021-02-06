@@ -43,7 +43,9 @@
                         </ul>
                     </div>
                 </th>
+                {% if config["PAYMENT_DEBT_ENABLED"] %}
                 <th>Balance</th>
+                {% endif %}
                 <th>Groups</th>
             </tr>
         </thead>
@@ -56,7 +58,9 @@
                 <td><a href="{{ url_for('member_general', uid=item.uid) }}">{{ item.lname }}</a></td>
                 <td><a href="mailto:{{ item.email }}">{{ item.email }}</a></td>
                 <td>{{ status(item.state) }}</td>
+                {% if config["PAYMENT_DEBT_ENABLED"] %}
                 <td>{{ payment_balance(item.balance) }}</td>
+                {% endif %}
                 <td>
                     {% for grp in item.groups %}
                     {{ group(grp.group.name) }}

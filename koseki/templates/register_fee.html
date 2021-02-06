@@ -48,6 +48,7 @@
     </div>
 </form>
 
+{% if config["PAYMENT_DEBT_ENABLED"] %}
 <br />
 <hr>
 <br />
@@ -82,4 +83,5 @@
         </div>
     </div>
 </form>
+{% endif %}
 {% endblock %}

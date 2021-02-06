@@ -43,12 +43,12 @@ class KosekiPluginManager:
     def register_plugins(self):
         plugin: KosekiPlugin
         for plugin_name in self.app.config["PLUGINS"]:
+            logging.info("Registering plugin: %s" % (plugin_name))
+
             plugin_module: types.ModuleType = importlib.import_module(
                 "koseki.plugins." + plugin_name.lower()
             )
             plugin_type: type = getattr(plugin_module, plugin_name + "Plugin")
-
-            logging.info("Registering plugin: %s" % (plugin_name))
 
             # Instantiate plugin
             plugin = plugin_type(self.app, self.storage, self.auth, self.util)

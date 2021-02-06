@@ -21,6 +21,11 @@ class ProductForm(FlaskForm):
 
 
 class StorePlugin(KosekiPlugin):
+    def config(self) -> dict:
+        return {
+            "PAYMENT_DEBT_ENABLED": True,  # Override to enable Debt in Koseki
+        }
+
     def create_blueprint(self) -> Blueprint:
         self.util.nav(
             "/store", "shopping-basket", "Store", 4, [
