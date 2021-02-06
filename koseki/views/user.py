@@ -11,7 +11,7 @@ class GeneralForm(FlaskForm):
     fname = TextField("First name", validators=[DataRequired()])
     lname = TextField("Last name", validators=[DataRequired()])
     email = TextField("Email", validators=[Email(), DataRequired()])
-    stil = TextField("StiL")
+    username = TextField("StiL")
 
 
 class UserView(KosekiView):

@@ -71,7 +71,7 @@ class Person(Base):
     fname = Column(Unicode(64))
     lname = Column(Unicode(64))
     email = Column(Unicode(64))
-    stil = Column(Unicode(64))  # Plugin: Salto
+    username = Column(Unicode(64))
     password = Column(Text())
     enrolled = Column(DateTime, default=datetime.now)
     enrolled_by = Column(Integer, ForeignKey("person.uid"))
@@ -124,5 +124,5 @@ class Person(Base):
 
     # Note: This is *not* a @property
     def reduce_empty_to_null(self) -> None:
-        if self.stil == "":
-            self.stil = None
+        if self.username == "":
+            self.username = None

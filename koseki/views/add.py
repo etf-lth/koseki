@@ -13,7 +13,7 @@ class EnrollForm(FlaskForm):
     fname = TextField("First name", validators=[DataRequired()])
     lname = TextField("Last name", validators=[DataRequired()])
     email = TextField("Email", validators=[Email()])
-    stil = TextField("StiL")
+    username = TextField("StiL")
 
 
 class AddView(KosekiView):
@@ -45,16 +45,16 @@ class AddView(KosekiView):
                     )
                 )
             elif (
-                form.stil.data
+                form.username.data
                 and self.storage.session.query(Person)
-                .filter_by(stil=form.stil.data)
+                .filter_by(username=form.username.data)
                 .scalar()
             ):
                 self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Error",
-                        "The specified StiL %s is already in use!" % form.stil.data,
+                        "The specified StiL %s is already in use!" % form.username.data,
                     )
                 )
             else:

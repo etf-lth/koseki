@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, request
+from flask import Blueprint
 from koseki.db.types import Person
 from koseki.plugin import KosekiPlugin
 
@@ -22,12 +22,13 @@ class SaltoPlugin(KosekiPlugin):
         # ):
         #    abort(403)
         out: str = ""
+        member: Person
         for member in (
             self.storage.session.query(Person).filter_by(state="active").all()
         ):
-            if member.stil is None or len(member.stil) < 1:
+            if member.username is None or len(member.username) < 1:
                 continue
-            out = out + member.stil + "\r\n"
+            out = out + member.username + "\r\n"
         return out
 
     def salto_sales(self) -> str:
@@ -40,10 +41,10 @@ class SaltoPlugin(KosekiPlugin):
         for member in (
             self.storage.session.query(Person).filter_by(state="active").all()
         ):
-            if member.stil is None or len(member.stil) < 1:
+            if member.username is None or len(member.username) < 1:
                 continue
             if self.util.member_of("sales", member):
-                out = out + member.stil + "\r\n"
+                out = out + member.username + "\r\n"
         return out
 
     def salto_mek(self) -> str:
@@ -55,8 +56,8 @@ class SaltoPlugin(KosekiPlugin):
         for member in (
             self.storage.session.query(Person).filter_by(state="active").all()
         ):
-            if member.stil is None or len(member.stil) < 1:
+            if member.username is None or len(member.username) < 1:
                 continue
             if self.util.member_of("mek", member):
-                out = out + member.stil + "\r\n"
+                out = out + member.username + "\r\n"
         return out

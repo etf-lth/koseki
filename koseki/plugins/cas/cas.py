@@ -52,7 +52,7 @@ class CASPlugin(KosekiPlugin):
             if root[0].tag == "{http://www.yale.edu/tp/cas}authenticationSuccess":
                 uid = root[0][0].text.strip() # type: ignore
 
-                person = self.storage.session.query(Person).filter_by(stil=uid).scalar()
+                person = self.storage.session.query(Person).filter_by(username=uid).scalar()
                 if person:
                     # valid user, move along
                     self.util.start_session(person.uid)

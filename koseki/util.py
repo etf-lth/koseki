@@ -1,4 +1,3 @@
-
 import base64
 import datetime
 import hashlib
@@ -94,7 +93,7 @@ class KosekiUtil:
         data = dict(
             format="png",
             size=350,
-            message={"value": member.stil, "editable": False},
+            message={"value": member.username, "editable": False},
             amount={"value": -float(member.balance), "editable": False},
             payee={"value": "123 019 24 76", "editable": False},
         )

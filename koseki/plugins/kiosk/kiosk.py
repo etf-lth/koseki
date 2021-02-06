@@ -14,7 +14,7 @@ class KioskCardForm(FlaskForm):
 
 
 class KioskRegisterForm(FlaskForm):
-    student_id = HiddenField("Student ID", validators=[DataRequired()])
+    username = HiddenField("Student ID", validators=[DataRequired()])
 
 
 class KioskProductForm(FlaskForm):
@@ -105,7 +105,7 @@ class KioskPlugin(KosekiPlugin):
         if form.validate_on_submit():
             person: Person = (
                 self.storage.session.query(Person)
-                .filter_by(stil=form.student_id.data)
+                .filter_by(username=form.username.data)
                 .scalar()
             )
             if person:
@@ -126,7 +126,7 @@ class KioskPlugin(KosekiPlugin):
                         KosekiAlertType.DANGER,
                         "Missing user account",
                         "Could not find user '%s'. Please contact an ETF board member."
-                        % (form.student_id.data),
+                        % (form.username.data),
                     )
                 )
 
