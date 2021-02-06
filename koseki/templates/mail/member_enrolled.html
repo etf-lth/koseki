@@ -1,0 +1,34 @@
+{% extends "mail/base_mail.html" %}
+{% block title %}{{ member.fname }} {{ member.lname }} has been enrolled{% endblock %}
+
+{% block content %}
+
+<b>Hello, {{ member.fname }}.</b>
+
+<br /><br />
+
+You have now been enrolled.<br />
+Your membership is activated when your membership fee has been registered.<br />
+If you have already paid the fee, please disregard this mail. Otherwise please:
+
+<br /><br />
+
+1) Pay the fee specified on http://etf.nu/om-etf/ to Bankgiro 281-1362. Please state your name as reference.
+
+<br /><br />
+
+or
+
+<br /><br />
+
+2) Pay the fee by cash to the treasurer.
+
+<br /><br />
+
+You may visit your membership profile for more information about your membership.<br />
+If you have not already set a password, please click the "Reset password" button.<br />
+<a target="_blank" href="{{ config['URL_BASE'] }}">
+    {{ config['URL_BASE'] }}
+</a>
+
+{% endblock %}

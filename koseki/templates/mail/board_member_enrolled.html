@@ -1,15 +1,17 @@
 {% extends "mail/base_mail.html" %}
-{% block title %}{{ member.fname }} {{ member.lname }} have been enrolled{% endblock %}
+{% block title %}{{ member.fname }} {{ member.lname }} has been enrolled{% endblock %}
 
 {% block content %}
 
-{{ member.fname }} {{ member.lname }} have been enrolled by {{ uid_to_name(member.enrolled_by) }}.
-Please note that the membership is pending until payment of the membership fee have been registered.
+{{ member.fname }} {{ member.lname }} has been enrolled by {{ uid_to_name(member.enrolled_by) }}.
+Please note that the membership is pending until payment of the membership fee has been registered.
 
 <br /><br />
 
 Email: {{ member.email }}<br />
+{% if config["USER_USERNAME_ENABLED"] %}
 StiL: {{ member.username }}
+{% endif %}
 
 <br /><br />
 

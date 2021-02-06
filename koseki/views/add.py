@@ -65,7 +65,7 @@ class AddView(KosekiView):
 
                 logging.info("Enrolled %s %s" % (person.fname, person.lname))
 
-                self.mail.send_mail(person, "member_enrolled.mail", member=person)
+                self.mail.send_mail(person, "mail/member_enrolled.html", member=person)
                 self.mail.send_mail(
                     self.app.config["ORG_EMAIL"],
                     "mail/board_member_enrolled.html",
