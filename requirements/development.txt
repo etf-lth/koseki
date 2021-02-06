@@ -1,4 +1,4 @@
 -r common.txt
-git+https://github.com/matangover/mypyls.git#egg=mypyls[default-mypy]
+git+https://github.com/matangover/mypyls.git#egg=mypyls
 sqlalchemy-stubs>=0.3
 mypy>=0.800
