@@ -4,27 +4,17 @@
 {% block title %}Error{% endblock %}
 <!-- -->
 {% block content %}
-<div class="alert alert-danger">
-    <h4 class="alert-heading">{{ code }} {{ codename}}</h4>
-    <p class="mb-0">
-        {{ message }}
-        <br />Koseki was therefore unable to produce a correct response.
-        <br />Please contact a member of the ETF staff if the problem persists.
-    </p>
+
+<div class="container pt-2 pb-4">
+    {% if code == 400 %}
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+        Go to home
+    </a>
+    {% else %}
+    <a href="javascript:history.back()" class="btn btn-secondary">
+        Go back
+    </a>
+    {% endif %}
 </div>
 
-{% if code == 400 %}
-<!-- -->
-<a href="{{ url_for('index') }}" class="btn btn-secondary">
-    Go to home
-</a>
-<!-- -->
-{% else %}
-<!-- -->
-<a href="javascript:history.back()" class="btn btn-secondary">
-    Go back
-</a>
-<!-- -->
-{% endif %}
-<!-- -->
 {% endblock %}
