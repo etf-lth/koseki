@@ -29,9 +29,6 @@
         a[x-apple-data-detectors] {
             color: inherit !important;
         }
-        a, a[href] {
-            color: {{ config['THEME_COLOR_PRIMARY'] }};
-        }
     </style>
 
 </head>
@@ -76,11 +73,11 @@
                                     <td style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">
                                         <p style="margin: 0;"><b>2021 &reg; {{ config['ORG_NAME']|safe }}</b>
                                             <br /><br />
-                                            Detta mejl är skickat av medlemssystemet och kan<br>
-                                            inte avprenumereras från. Om du vill bli borttagen ut av<br>
-                                            medlemsdatabasen, vänligen <a target="_blank"
-                                                href="mailto:{{ config['ORG_EMAIL']|safe }}">kontakta en
-                                                styrelsemedlem</a>.
+                                            This mail was sent by the membership system and cannot<br>
+                                                be unsubscribed from. If you want to be deleted from the<br>
+                                                membership database, please <a target="_blank"
+                                                    href="mailto:{{ config['ORG_EMAIL']|safe }}">contact a
+                                                    board member</a>.
                                         </p>
                                     </td>
                                     <td align="right">
