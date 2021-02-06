@@ -1,5 +1,8 @@
 DEBUG = False
 
+# No '/' at the end of the URL
+URL_BASE = "http://localhost:5000"
+
 DB_HOST = "127.0.0.1"
 DB_USER = "root"
 DB_DATABASE = "koseki"
@@ -11,11 +14,3 @@ EMAIL_SUBJECT = "ACME Member management"
 
 ORG_NAME = "ElektroTekniska Föreningen vid LTH"
 ORG_EMAIL = "board@acme.nu"
-
-URL_BASE = "http://localhost:5000"
-
-# Ending of '/cas' will be applied automatically
-CAS_SERVER = "https://ldpv3.acme.nu/idp/profile"
-
-# Password used for Kiosk unlock
-KIOSK_KEY = "123"
