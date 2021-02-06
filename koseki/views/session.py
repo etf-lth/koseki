@@ -32,8 +32,6 @@ class SessionView(KosekiView):
         self.util.nav("/logout", "power-off", "Sign out", 999)
 
     def reset_password(self):
-        alerts: list[KosekiAlert] = []
-
         form_reset_password = ResetPasswordForm()
 
         if form_reset_password.validate_on_submit():
@@ -55,7 +53,7 @@ class SessionView(KosekiView):
                 self.mail.send_mail(
                     person, "mail/reset_password.html", member=person, new_pass=new_pass)
 
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.SUCCESS,
                     "Reset email sent",
@@ -66,12 +64,9 @@ class SessionView(KosekiView):
         return render_template(
             "reset_password.html",
             form_reset_password=form_reset_password,
-            alerts=alerts,
         )
 
     def login(self):
-        alerts: list[KosekiAlert] = []
-
         form_login = LoginForm()
 
         if form_login.validate_on_submit():
@@ -87,7 +82,7 @@ class SessionView(KosekiView):
                 self.util.start_session(person.uid)
                 return redirect(request.form["redir"])
             else:
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Authentication error",
@@ -99,7 +94,6 @@ class SessionView(KosekiView):
             "login.html",
             redir=request.args.get("redir", url_for("index")),
             form_login=form_login,
-            alerts=alerts,
             sso_providers=self.util.get_alternate_logins(),
         )
 

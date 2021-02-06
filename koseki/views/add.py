@@ -30,7 +30,6 @@ class AddView(KosekiView):
 
     def enroll_member(self):
         form = EnrollForm()
-        alerts: list[KosekiAlert] = []
 
         if form.validate_on_submit():
             if (
@@ -38,7 +37,7 @@ class AddView(KosekiView):
                 .filter_by(email=form.email.data)
                 .scalar()
             ):
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Error",
@@ -51,7 +50,7 @@ class AddView(KosekiView):
                 .filter_by(stil=form.stil.data)
                 .scalar()
             ):
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Error",
@@ -73,7 +72,7 @@ class AddView(KosekiView):
                     member=person,
                 )
 
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.SUCCESS,
                         "Success",
@@ -81,6 +80,6 @@ class AddView(KosekiView):
                         % (form.fname.data, form.lname.data),
                     )
                 )
-                return render_template("message.html", alerts=alerts)
+                return render_template("message.html")
 
-        return render_template("enroll_member.html", form=form, alerts=alerts)
+        return render_template("enroll_member.html", form=form)

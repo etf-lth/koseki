@@ -51,14 +51,13 @@ class UserView(KosekiView):
         if not person:
             raise abort(404)
 
-        alerts: list[KosekiAlert] = []
         form = GeneralForm(obj=person)
 
         if form.validate_on_submit():
             form.populate_obj(person)
             self.storage.commit()
 
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.SUCCESS,
                     "Success",
@@ -68,7 +67,7 @@ class UserView(KosekiView):
             )
 
         return render_template(
-            "user_general.html", form=form, person=person, alerts=alerts
+            "user_general.html", form=form, person=person
         )
 
     def member_groups(self, uid):
@@ -77,8 +76,6 @@ class UserView(KosekiView):
             Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
-
-        alerts: list[KosekiAlert] = []
 
         if request.method == "POST":
             for group in groups:
@@ -104,7 +101,7 @@ class UserView(KosekiView):
 
             self.storage.commit()
 
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.SUCCESS,
                     "Success",
@@ -114,7 +111,7 @@ class UserView(KosekiView):
             )
 
         return render_template(
-            "user_groups.html", person=person, groups=groups, alerts=alerts
+            "user_groups.html", person=person, groups=groups
         )
 
     def member_fees(self, uid):

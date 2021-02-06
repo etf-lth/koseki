@@ -53,8 +53,6 @@ class StorePlugin(KosekiPlugin):
         return blueprint
 
     def list_products(self):
-        alerts: list[KosekiAlert] = []
-
         productForm = ProductForm()
 
         if productForm.submitAdd.data and productForm.validate_on_submit():
@@ -73,7 +71,7 @@ class StorePlugin(KosekiPlugin):
                     productForm.name.data, product.pid)
             )
 
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.SUCCESS,
                     "Success",
@@ -86,7 +84,6 @@ class StorePlugin(KosekiPlugin):
         return render_template(
             "store_list_products.html",
             form=productForm,
-            alerts=alerts,
             products=self.storage.session.query(Product)
             .order_by(Product.order.asc())
             .all(),
@@ -120,4 +117,4 @@ class StorePlugin(KosekiPlugin):
             )
             return redirect(url_for("store.list_products"))
 
-        return render_template("store_manage_product.html", form=productForm,)
+        return render_template("store_manage_product.html", form=productForm)

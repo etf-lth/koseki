@@ -60,8 +60,6 @@ class MembershipView(KosekiView):
             .scalar()
         )
 
-        alerts: list[KosekiAlert] = []
-
         form_email = EditEmailForm()
         form_password = EditPasswordForm()
 
@@ -71,7 +69,7 @@ class MembershipView(KosekiView):
             logging.info("Changed email for %s %s" %
                          (person.fname, person.lname))
 
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.SUCCESS,
                     "Email updated",
@@ -87,7 +85,7 @@ class MembershipView(KosekiView):
             logging.info("Changed password for %s %s" %
                          (person.fname, person.lname))
 
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.SUCCESS,
                     "Password changed",
@@ -96,5 +94,5 @@ class MembershipView(KosekiView):
             )
 
         return render_template(
-            "membership_edit.html", person=person, form_email=form_email, form_password=form_password, alerts=alerts
+            "membership_edit.html", person=person, form_email=form_email, form_password=form_password
         )

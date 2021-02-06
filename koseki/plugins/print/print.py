@@ -43,27 +43,26 @@ class PrintPlugin(KosekiPlugin):
 
     def print(self):
         form = PrintForm()
-        alerts: list[KosekiAlert] = []
 
         if form.validate_on_submit():
             # check if the post request has the file part
             if "file" not in request.files:
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(KosekiAlertType.DANGER,
                                 "Error", "No file part",)
                 )
-                return render_template("print.html", form=form, alerts=alerts)
+                return render_template("print.html", form=form)
             file = request.files["file"]
             # if user does not select file, browser also
             # submit an empty part without filename
             if file.filename == "":
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(KosekiAlertType.DANGER,
                                 "Error", "No selected file",)
                 )
-                return render_template("print.html", form=form, alerts=alerts)
+                return render_template("print.html", form=form)
             if not file or not self.allowed_file(file.filename):
-                alerts.append(
+                self.util.alert(
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Error",
@@ -71,7 +70,7 @@ class PrintPlugin(KosekiPlugin):
                         % (", ".join(self.app.config["ALLOWED_EXTENSIONS"])),
                     )
                 )
-                return render_template("print.html", form=form, alerts=alerts)
+                return render_template("print.html", form=form)
 
             # save file to harddrive
             filename = "".join(
@@ -92,7 +91,7 @@ class PrintPlugin(KosekiPlugin):
             )
 
             # show success message to user
-            alerts.append(
+            self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.SUCCESS,
                     "Success",
@@ -101,4 +100,4 @@ class PrintPlugin(KosekiPlugin):
             )
             form = PrintForm(None)
 
-        return render_template("print.html", form=form, alerts=alerts)
+        return render_template("print.html", form=form)
