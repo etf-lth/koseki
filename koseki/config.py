@@ -39,7 +39,9 @@ class KosekiConfig(object):
     #
     SMTP_USE_TLS = False
     SMTP_SERVER = "127.0.0.1"
-    SMTP_PORT = 25
+    @property
+    def SMTP_PORT(self) -> int:
+        return 587 if self.SMTP_USE_TLS else 25
     EMAIL_FROM = "Koseki Member management <member@acme.nu>"
     EMAIL_SUBJECT = "Koseki Member management"
 
