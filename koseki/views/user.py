@@ -68,7 +68,7 @@ class UserView(KosekiView):
             )
 
         return render_template(
-            "member_general.html", form=form, person=person, alerts=alerts
+            "user_general.html", form=form, person=person, alerts=alerts
         )
 
     def member_groups(self, uid):
@@ -114,7 +114,7 @@ class UserView(KosekiView):
             )
 
         return render_template(
-            "member_groups.html", person=person, groups=groups, alerts=alerts
+            "user_groups.html", person=person, groups=groups, alerts=alerts
         )
 
     def member_fees(self, uid):
@@ -122,18 +122,18 @@ class UserView(KosekiView):
         if not person:
             raise abort(404)
 
-        return render_template("member_fees.html", person=person)
+        return render_template("user_fees.html", person=person)
 
     def member_payments(self, uid):
         person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
-        return render_template("member_payments.html", person=person)
+        return render_template("user_payments.html", person=person)
 
     def member_admin(self, uid):
         person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
-        return render_template("member_admin.html", person=person)
+        return render_template("user_admin.html", person=person)
