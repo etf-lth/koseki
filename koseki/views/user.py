@@ -10,7 +10,7 @@ from wtforms.validators import DataRequired, Email  # type: ignore
 class GeneralForm(FlaskForm):
     fname = TextField("First name", validators=[DataRequired()])
     lname = TextField("Last name", validators=[DataRequired()])
-    email = TextField("Email", validators=[Email()])
+    email = TextField("Email", validators=[Email(), DataRequired()])
     stil = TextField("StiL")
 
 
@@ -47,7 +47,7 @@ class UserView(KosekiView):
         )
 
     def member_general(self, uid):
-        person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+        person: Person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
@@ -55,6 +55,7 @@ class UserView(KosekiView):
 
         if form.validate_on_submit():
             form.populate_obj(person)
+            person.reduce_empty_to_null()
             self.storage.commit()
 
             self.util.alert(

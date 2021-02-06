@@ -121,3 +121,8 @@ class Person(Base):
                 for paid in now_paids:
                     unpaids.remove(paid)
         return unpaids
+
+    # Note: This is *not* a @property
+    def reduce_empty_to_null(self) -> None:
+        if self.stil == "":
+            self.stil = None
