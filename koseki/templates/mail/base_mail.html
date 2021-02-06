@@ -22,11 +22,16 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{ config['EMAIL_SUBJECT']|safe }}</title>
+    <title>{{ config['EMAIL_SUBJECT'] }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <style type="text/css">
         a[x-apple-data-detectors] {
+            color: inherit !important;
+        }
+    </style>
+    <style type="text/css">
+        .im {
             color: inherit !important;
         }
     </style>
@@ -41,7 +46,8 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" width="700"
                     style="border-collapse: collapse; border: 1px solid #f0f0f0;">
                     <tr>
-                        <td align="center" style="border-bottom: 10px solid {{ config['THEME_COLOR_PRIMARY'] }}; padding: 20px 0 10px 0">
+                        <td align="center"
+                            style="border-bottom: 10px solid {{ config['THEME_COLOR_PRIMARY'] }}; padding: 20px 0 10px 0">
                             <img src="{{ config['URL_BASE'] }}/static/img/logo.png" alt="Logo" width="585"
                                 style="display: block;" />
                         </td>
@@ -51,7 +57,8 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%"
                                 style="border-collapse: collapse;">
                                 <tr>
-                                    <td style="color: {{ config['THEME_COLOR_PRIMARY'] }}; font-family: Arial, sans-serif;">
+                                    <td
+                                        style="color: {{ config['THEME_COLOR_PRIMARY'] }}; font-family: Arial, sans-serif;">
                                         <h1 style="font-size: 24px; font-weight: bold; margin: 0;">{% block title %} {%
                                             endblock %}</h1>
                                     </td>
@@ -74,10 +81,10 @@
                                         <p style="margin: 0;"><b>2021 &reg; {{ config['ORG_NAME']|safe }}</b>
                                             <br /><br />
                                             This mail was sent by the membership system and cannot<br>
-                                                be unsubscribed from. If you want to be deleted from the<br>
-                                                membership database, please <a target="_blank"
-                                                    href="mailto:{{ config['ORG_EMAIL']|safe }}">contact a
-                                                    board member</a>.
+                                            be unsubscribed from. If you want to be deleted from the<br>
+                                            membership database, please <a target="_blank"
+                                                href="mailto:{{ config['ORG_EMAIL']|safe }}">contact a
+                                                board member</a>.
                                         </p>
                                     </td>
                                     <td align="right">
