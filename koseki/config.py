@@ -5,7 +5,7 @@ class KosekiConfig(object):
     DEBUG = False
 
     #
-    # Koseki config
+    # Koseki
     #
     KOSEKI_VERSION = "MMXXI"
 
@@ -39,7 +39,9 @@ class KosekiConfig(object):
     #
     SMTP_USE_TLS = False
     SMTP_SERVER = "127.0.0.1"
-    SMTP_PORT = 25
+    @property
+    def SMTP_PORT(self) -> int:
+        return 587 if self.SMTP_USE_TLS else 25
     EMAIL_FROM = "Koseki Member management <member@acme.nu>"
     EMAIL_SUBJECT = "Koseki Member management"
 
@@ -49,7 +51,16 @@ class KosekiConfig(object):
     ORG_NAME = "Koseki"
     ORG_EMAIL = "contact@acme.nu"
 
+    #
+    # User config
+    #
+    USER_USERNAME_ENABLED = False
+    USER_ADDRESS_ENABLED = False
+    USER_PHONE_NUMBER_ENABLED = False
+
+    #
     # Payment config
+    #
     PAYMENT_DEBT_ENABLED = False
 
     #

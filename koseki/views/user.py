@@ -3,16 +3,22 @@ from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Group, Person, PersonGroup
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
-from wtforms import TextField  # type: ignore
+from wtforms import StringField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
 
 
 class GeneralForm(FlaskForm):
-    fname = TextField("First name", validators=[DataRequired()])
-    lname = TextField("Last name", validators=[DataRequired()])
-    email = TextField("Email", validators=[Email(), DataRequired()])
-    username = TextField("StiL")
-
+    fname = StringField("First name", validators=[DataRequired()])
+    lname = StringField("Last name", validators=[DataRequired()])
+    email = StringField("Email", validators=[Email(), DataRequired()])
+    username = StringField("StiL")
+    address_line1 = StringField("Address")
+    address_line2 = StringField("Address (complement)")
+    city = StringField("City")
+    postcode = StringField("Zip / Postal code")
+    region = StringField("Region / State")
+    country = StringField("Country")
+    phone_number = StringField("Phone number")
 
 class UserView(KosekiView):
     def register(self):
