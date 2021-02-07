@@ -3,7 +3,6 @@ from typing import Callable, Union
 from argon2 import PasswordHasher  # type: ignore
 from argon2.exceptions import VerifyMismatchError  # type: ignore
 from flask import abort, redirect, request, session, url_for
-from sqlalchemy.sql.elements import Null
 from werkzeug.wrappers import Response
 
 from koseki.db.types import Person
@@ -35,7 +34,7 @@ class KosekiAuth:
         return self.__ph.hash(password)
 
     def verify_password(self, person: Person, password: str) -> bool:
-        if Person.password is Null:
+        if type(person.password) is None:
             return False
         try:
             self.__ph.verify(person.password, password)

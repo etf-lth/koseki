@@ -4,6 +4,7 @@ import os
 import time
 
 from flask import session
+from flask.app import Flask
 from flask_multistatic import MultiStaticFlask  # type: ignore
 from markupsafe import Markup
 
@@ -38,7 +39,7 @@ class KosekiCore:
         app.wsgi_app = ReverseProxied(app.wsgi_app)
         app.config.from_object(KosekiConfig())
         app.config.from_pyfile(os.path.join("..", "koseki.cfg"))
-        self.app = app
+        self.app: Flask = app
 
         #
         # Theme
@@ -113,10 +114,9 @@ class KosekiCore:
             SessionView,
             UserView,
         ]
-        view: KosekiView
         for viewType in views:
-            view = viewType(self.app, self.auth, self.mail, self.plugins, self.storage,
-                            self.util)
+            view: KosekiView = viewType(self.app, self.auth, self.mail, self.plugins, self.storage,
+                                        self.util)
             view.register()
 
     def _register_context_processors(self) -> None:

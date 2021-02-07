@@ -25,8 +25,9 @@ class APIView(KosekiView):
             and_(Person.fname.like(term.split(" ")[0] + "%%"), Person.lname.like(term.split(" ")[-1] + "%%"))))
             .all()
         )
-        return jsonify(
+        res: Response = jsonify(
             data=[
                 {"label": "%s %s" % (p.fname, p.lname), "value": p.uid} for p in members
             ]
         )
+        return res
