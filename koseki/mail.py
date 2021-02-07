@@ -7,15 +7,17 @@ from email.utils import formataddr
 from typing import Union
 
 from flask import render_template
+from flask.app import Flask
 
 from koseki.db.types import Person
 
 
 class KosekiMailer:
-    def __init__(self, app):
+    def __init__(self, app: Flask) -> None:
         self.app = app
 
-    def send_mail(self, to: Union[Person, str], template: str, **kwargs):
+    def send_mail(self, to: Union[Person, str],  # type: ignore
+                  template: str, **kwargs) -> bool:
         try:
             msg = MIMEMultipart()
 
@@ -48,11 +50,13 @@ class KosekiMailer:
                 render_template(template, **kwargs), mimeType, _charset="utf8"
             ))
 
-            s = smtplib.SMTP(host=self.app.config["SMTP_SERVER"], port=self.app.config["SMTP_PORT"])
+            s = smtplib.SMTP(
+                host=self.app.config["SMTP_SERVER"], port=self.app.config["SMTP_PORT"])
             if self.app.config["SMTP_USE_TLS"]:
                 s.starttls()
             s.sendmail(from_mail, to_mail, msg.as_string())
             s.quit()
+            return True
         except (Exception, ConnectionRefusedError) as e:
             logging.exception("send_mail failed: %s" % e)
-            pass
+            return False

@@ -1,8 +1,10 @@
-from typing import Callable
+from typing import Callable, Union
 
-from argon2 import PasswordHasher # type: ignore
-from argon2.exceptions import VerifyMismatchError # type: ignore
+from argon2 import PasswordHasher  # type: ignore
+from argon2.exceptions import VerifyMismatchError  # type: ignore
 from flask import abort, redirect, request, session, url_for
+from sqlalchemy.sql.elements import Null
+from werkzeug.wrappers import Response
 
 from koseki.db.types import Person
 from koseki.util import KosekiUtil
@@ -13,8 +15,8 @@ class KosekiAuth:
         self.util = util
         self.__ph = PasswordHasher()
 
-    def require_session(self, f: Callable, groups=None):
-        def wrap(*args, **kwargs):
+    def require_session(self, f: Callable, groups: list[str] = None) -> Callable:
+        def wrap(*args, **kwargs) -> Union[str, Response]: # type: ignore
             if not "uid" in session:
                 return redirect(url_for("login", redir=request.base_url))
             else:
@@ -33,7 +35,7 @@ class KosekiAuth:
         return self.__ph.hash(password)
 
     def verify_password(self, person: Person, password: str) -> bool:
-        if Person.password is None:
+        if Person.password is Null:
             return False
         try:
             self.__ph.verify(person.password, password)

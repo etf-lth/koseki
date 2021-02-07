@@ -1,18 +1,20 @@
 import urllib.error
 import urllib.parse
 import urllib.request
+from typing import Union
 from xml.etree import ElementTree as ET
 
 from flask import Blueprint, redirect, render_template, request, url_for
 from koseki.db.types import Person
 from koseki.plugin import KosekiPlugin
+from werkzeug.wrappers import Response
 
 
 class CASPlugin(KosekiPlugin):
     def config(self) -> dict:
         return {
             "CAS_SERVER": "https://ldpv3.acme.nu/idp/profile",
-            "USER_USERNAME_ENABLED": True, # Override to enable Debt in Koseki
+            "USER_USERNAME_ENABLED": True,  # Override to enable Debt in Koseki
         }
 
     def create_blueprint(self) -> Blueprint:
@@ -32,7 +34,7 @@ class CASPlugin(KosekiPlugin):
             "color": "#875e29",
         }
 
-    def cas_ticket(self):
+    def cas_ticket(self) -> Union[str, Response]:
         if "ticket" not in request.args:
             # just pretend it failed
             return render_template("cas.html", error="cas-failed")
@@ -51,9 +53,10 @@ class CASPlugin(KosekiPlugin):
             u.close()
             root = ET.fromstring(response)
             if root[0].tag == "{http://www.yale.edu/tp/cas}authenticationSuccess":
-                uid = root[0][0].text.strip() # type: ignore
+                uid = root[0][0].text.strip()  # type: ignore
 
-                person = self.storage.session.query(Person).filter_by(username=uid).scalar()
+                person = self.storage.session.query(
+                    Person).filter_by(username=uid).scalar()
                 if person:
                     # valid user, move along
                     self.util.start_session(person.uid)
@@ -66,4 +69,5 @@ class CASPlugin(KosekiPlugin):
                 return render_template("cas.html", error="cas-failed")
         except urllib.error.URLError:
             # most likely cannot contact cas
-            return render_template("cas.html", error="cas-url-error") # TODO: move cas.html to plugin folder
+            # TODO: move cas.html to plugin folder
+            return render_template("cas.html", error="cas-url-error")

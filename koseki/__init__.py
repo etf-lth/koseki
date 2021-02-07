@@ -1,6 +1,8 @@
 import logging
 import sys
 
+from flask.app import Flask
+
 from koseki.core import KosekiCore
 
 logging_format = "%(asctime)s %(levelname)s %(message)s"
@@ -8,7 +10,7 @@ logging_handler_file = logging.FileHandler('koseki.log', 'a', 'utf-8')
 logging_handler_console = logging.StreamHandler(sys.stdout)
 
 
-def run_prod():
+def run_prod() -> Flask:
     logging.basicConfig(
         format=logging_format,
         level=logging.DEBUG,
@@ -18,7 +20,7 @@ def run_prod():
     return core.app
 
 
-def run_dev():
+def run_dev() -> Flask:
     logging.basicConfig(
         format=logging_format,
         level=logging.DEBUG,

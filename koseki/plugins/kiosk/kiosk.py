@@ -1,10 +1,13 @@
 import logging
+from typing import Union
 
-from flask import Blueprint, redirect, render_template, request, session, url_for
+from flask import (Blueprint, redirect, render_template, request, session,
+                   url_for)
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Payment, Person, Product
 from koseki.plugin import KosekiPlugin
 from koseki.util import KosekiAlert, KosekiAlertType
+from werkzeug.wrappers import Response
 from wtforms import HiddenField, PasswordField  # type: ignore
 from wtforms.validators import DataRequired  # type: ignore
 
@@ -52,7 +55,7 @@ class KioskPlugin(KosekiPlugin):
         )
         return blueprint
 
-    def kiosk_card(self):
+    def kiosk_card(self) -> Union[str, Response]:
         if (
             "kiosk_password" not in session
             or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
@@ -90,7 +93,7 @@ class KioskPlugin(KosekiPlugin):
         form.card_id.data = ""
         return render_template("kiosk_card.html", form=form)
 
-    def kiosk_register(self):
+    def kiosk_register(self) -> Union[str, Response]:
         if (
             "kiosk_password" not in session
             or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
@@ -133,7 +136,7 @@ class KioskPlugin(KosekiPlugin):
 
         return render_template("kiosk_register.html", form=form)
 
-    def kiosk_products(self):
+    def kiosk_products(self) -> Union[str, Response]:
         if (
             "kiosk_password" not in session
             or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
@@ -240,7 +243,7 @@ class KioskPlugin(KosekiPlugin):
             .all(),
         )
 
-    def kiosk_success(self):
+    def kiosk_success(self) -> Union[str, Response]:
         if (
             "kiosk_password" not in session
             or session["kiosk_password"] != self.app.config["KIOSK_KEY"]
@@ -269,7 +272,7 @@ class KioskPlugin(KosekiPlugin):
             session.pop("kiosk_uid")
         return render_template("kiosk_success.html", person=person)
 
-    def kiosk_login(self):
+    def kiosk_login(self) -> Union[str, Response]:
         if (
             "kiosk_password" in session
             and session["kiosk_password"] == self.app.config["KIOSK_KEY"]
@@ -305,7 +308,7 @@ class KioskPlugin(KosekiPlugin):
 
         return render_template("kiosk_login.html")
 
-    def kiosk_logout(self):
+    def kiosk_logout(self) -> Union[str, Response]:
         if "kiosk_password" in session:
             session.pop("kiosk_password")
         return redirect(url_for("kiosk.kiosk_login"))

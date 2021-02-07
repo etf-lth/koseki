@@ -40,7 +40,7 @@ class KosekiPluginManager:
         self.util = util
         self.plugins: dict[str, KosekiPlugin] = {}
 
-    def register_plugins(self):
+    def register_plugins(self) -> None:
         plugin: KosekiPlugin
         for plugin_name in self.app.config["PLUGINS"]:
             logging.info("Registering plugin: %s" % (plugin_name))

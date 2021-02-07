@@ -16,7 +16,7 @@ class KosekiScheduler:
         self.mail = mail
         self.__sched = BackgroundScheduler()
 
-    def start(self):
+    def start(self) -> None:
         self.__sched.start()
         self.__sched.add_job(self.__update_members, "cron",
                              hour=4, minute=0, second=0)
@@ -31,7 +31,7 @@ class KosekiScheduler:
                 second=0,
             )
 
-    def __update_members(self):
+    def __update_members(self) -> None:
         with self.app.app_context():
             logging.info("Update members")
             members = (
@@ -91,7 +91,7 @@ class KosekiScheduler:
                             days_left=days_left,
                         )
 
-    def __send_debt_mail(self):
+    def __send_debt_mail(self) -> None:
         with self.app.app_context():
             logging.info("Checking debt and sending emails")
             # This could probably be made more efficient with a .filter() on balance, but

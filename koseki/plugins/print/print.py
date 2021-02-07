@@ -1,6 +1,9 @@
 import logging
 import os
 import time
+from typing import Union
+
+from werkzeug.wrappers import Response
 
 import cups  # type: ignore
 from flask import Blueprint, render_template, request
@@ -34,14 +37,14 @@ class PrintPlugin(KosekiPlugin):
         )
         return blueprint
 
-    def allowed_file(self, filename: str):
+    def allowed_file(self, filename: str) -> bool:
         return (
             "." in filename
             and filename.rsplit(".", 1)[1].lower()
             in self.app.config["ALLOWED_EXTENSIONS"]
         )
 
-    def print(self):
+    def print(self) -> Union[str, Response]:
         form = PrintForm()
 
         if form.validate_on_submit():

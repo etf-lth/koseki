@@ -1,8 +1,11 @@
+from typing import Iterable, Union
+
 from flask import abort, render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Group, Person, PersonGroup
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
+from werkzeug.wrappers import Response
 from wtforms import StringField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
 
@@ -20,8 +23,9 @@ class GeneralForm(FlaskForm):
     country = StringField("Country")
     phone_number = StringField("Phone number")
 
+
 class UserView(KosekiView):
-    def register(self):
+    def register(self) -> None:
         self.app.add_url_rule(
             "/user/<int:uid>",
             None,
@@ -52,8 +56,9 @@ class UserView(KosekiView):
             methods=["GET", "POST"],
         )
 
-    def member_general(self, uid):
-        person: Person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+    def member_general(self, uid: int) -> Union[str, Response]:
+        person: Person = self.storage.session.query(
+            Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
@@ -77,8 +82,8 @@ class UserView(KosekiView):
             "user_general.html", form=form, person=person
         )
 
-    def member_groups(self, uid):
-        groups = self.storage.session.query(Group).all()
+    def member_groups(self, uid: int) -> Union[str, Response]:
+        groups: Iterable[Group] = self.storage.session.query(Group).all()
         person: Person = self.storage.session.query(
             Person).filter_by(uid=uid).scalar()
         if not person:
@@ -93,16 +98,16 @@ class UserView(KosekiView):
                 current_state = self.util.member_of(group, person)
                 if sum(1 for gid in list(request.form.keys()) if gid == str(group.gid)):
                     # Member of the group, add if needed
-                    not current_state and self.storage.add(
-                        PersonGroup(uid=person.uid, gid=group.gid)
-                    )
+                    if not current_state:
+                        self.storage.add(
+                            PersonGroup(uid=person.uid, gid=group.gid)
+                        )
                 else:
                     # Not a member, remove if needed
                     current_state and list(
                         map(
                             self.storage.delete,
-                            (g for g in person.groups if g.gid ==  # type: ignore
-                             group.gid),  # type: ignore
+                            (g for g in person.groups if g.gid == group.gid),
                         )
                     )
 
@@ -121,21 +126,21 @@ class UserView(KosekiView):
             "user_groups.html", person=person, groups=groups
         )
 
-    def member_fees(self, uid):
+    def member_fees(self, uid: int) -> Union[str, Response]:
         person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
         return render_template("user_fees.html", person=person)
 
-    def member_payments(self, uid):
+    def member_payments(self, uid: int) -> Union[str, Response]:
         person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
         return render_template("user_payments.html", person=person)
 
-    def member_admin(self, uid):
+    def member_admin(self, uid: int) -> Union[str, Response]:
         person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)

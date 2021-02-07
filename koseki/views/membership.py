@@ -1,4 +1,5 @@
 import logging
+from typing import Union
 
 from flask import render_template, request
 from flask_wtf import FlaskForm  # type: ignore
@@ -8,6 +9,7 @@ from koseki.view import KosekiView
 from wtforms import PasswordField, SubmitField, TextField  # type: ignore
 from wtforms.validators import DataRequired, Email, EqualTo  # type: ignore
 
+from werkzeug.wrappers import Response
 
 class EditEmailForm(FlaskForm):
     email1 = TextField("Email", validators=[DataRequired(), Email()])
@@ -24,7 +26,7 @@ class EditPasswordForm(FlaskForm):
 
 
 class MembershipView(KosekiView):
-    def register(self):
+    def register(self) -> None:
         self.app.add_url_rule(
             "/membership", None, self.auth.require_session(
                 self.membership_general)
@@ -37,7 +39,7 @@ class MembershipView(KosekiView):
         )
         self.util.nav("/membership", "user", "My membership", 100)
 
-    def membership_general(self):
+    def membership_general(self) -> Union[str, Response]:
         person = (
             self.storage.session.query(Person)
             .filter_by(uid=self.util.current_user())
@@ -53,7 +55,7 @@ class MembershipView(KosekiView):
             "membership_general.html", person=person, last_fee=last_fee
         )
 
-    def membership_edit(self):
+    def membership_edit(self) -> Union[str, Response]:
         person: Person = (
             self.storage.session.query(Person)
             .filter_by(uid=self.util.current_user())

@@ -2,6 +2,7 @@ import base64
 import datetime
 import hashlib
 import logging
+from typing import Optional, Union, cast
 
 import requests
 from flask import session
@@ -51,7 +52,7 @@ class KosekiUtil:
         self.navigation: list[KosekiNavigationEntry] = []
         self.alt_login: list[dict] = []
 
-    def nav(self, uri, icon, title, weight=0, groups=None) -> None:
+    def nav(self, uri: str, icon: str, title: str, weight: int = 0, groups: list[str] = []) -> None:
         self.navigation.append(KosekiNavigationEntry(
             uri, icon, title, weight, groups))
 
@@ -64,30 +65,33 @@ class KosekiUtil:
                 nav.append(n)
         session["nav"] = sorted(nav, key=lambda x: x.weight)
 
-    def start_session(self, uid) -> None:
-        session["uid"] = int(uid)
+    def start_session(self, uid: int) -> None:
+        session["uid"] = uid
         session.permanent = True
         session.modified = True
         self.calc_nav()
 
+    def current_user(self) -> int:
+        return session["uid"]
+
     def destroy_session(self) -> None:
         session.pop("uid", None)
 
-    def gravatar(self, mail) -> str:
+    def gravatar(self, mail: str) -> str:
         return (
             "//gravatar.com/avatar/" +
             hashlib.md5(mail.encode("utf-8")).hexdigest()
         )
 
-    def format_date(self, value: datetime.datetime, format="%Y-%m-%d") -> str:
+    def format_date(self, value: datetime.datetime, format: str = "%Y-%m-%d") -> str:
         return value.strftime(format)
 
-    def uid_to_name(self, uid) -> str:
+    def uid_to_name(self, uid: int) -> str:
         person = self.storage.session.query(
             Person).filter_by(uid=uid).scalar()
         return "%s %s" % (person.fname, person.lname) if person else "Nobody"
 
-    def swish_qrcode(self, member) -> str:
+    def swish_qrcode(self, member: Person) -> str:
         if member.balance >= 0:
             return ""
         data = dict(
@@ -111,11 +115,13 @@ class KosekiUtil:
             + str(base64.b64encode(response.content), "utf-8")
         )
 
-    def member_of(self, group, person=None) -> bool:
+    def member_of(self, group: Union[int, str, Group, None], person: Optional[Person] = None) -> bool:
+        if group is None:
+            raise ValueError("group cannot be None when checking member_of")
         if person is None:
-            person = self.current_user()
-        if type(person) in (int, int):
-            person = self.storage.query(Person).filter_by(uid=person).scalar()
+            person = self.storage.query(Person).filter_by(
+                uid=self.current_user()).scalar()
+
         if type(group) == int:
             group = self.storage.query(Group).filter_by(gid=group).scalar()
         elif type(group) == str:
@@ -124,11 +130,8 @@ class KosekiUtil:
         if group is None:
             return False
 
-        return sum(1 for x in person.groups if x.gid == group.gid) > 0
-
-    # TODO: move current_user to auth?
-    def current_user(self):
-        return session["uid"]
+        g: Group = cast(Group, group)
+        return sum(1 for x in person.groups if x.gid == g.gid) > 0
 
     def alert(self, alert: KosekiAlert) -> None:
         if "alerts" not in session:
@@ -143,6 +146,6 @@ class KosekiUtil:
     def get_alternate_logins(self) -> list[dict]:
         return self.alt_login
 
-    def alternate_login(self, alt: dict):
+    def alternate_login(self, alt: dict) -> None:
         self.alt_login.append(alt)
         logging.info("Registered alternate login provider: %s" % alt["button"])

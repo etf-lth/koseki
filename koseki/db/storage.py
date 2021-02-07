@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Type
 
 from koseki.db.types import *
 from sqlalchemy import create_engine
@@ -9,7 +9,7 @@ from sqlalchemy.sql.schema import MetaData
 
 
 class Storage:
-    def __init__(self, conn="sqlite:///koseki.db"):
+    def __init__(self, conn: str = "sqlite:///koseki.db") -> None:
         self.engine: Engine = create_engine(
             conn,
             pool_recycle=600,
@@ -38,32 +38,32 @@ class Storage:
             self.db = self.sm()
         return self.db
 
-    def add(self, obj):
+    def add(self, obj: Base) -> None:
         self.session.add(obj)
 
-    def delete(self, obj):
+    def delete(self, obj: Base) -> None:
         self.session.delete(obj)
 
-    def commit(self):
+    def commit(self) -> None:
         self.session.commit()
 
-    def query(self, obj) -> Query:
+    def query(self, obj: Type[Base]) -> Query:
         return self.session.query(obj)
 
-    def __insert_initial_values(self):
+    def __insert_initial_values(self) -> None:
         self.__insert_initial_values_group()
         self.__insert_initial_values_person()
         self.__insert_initial_values_person_group()
         self.commit()
 
-    def __insert_initial_values_group(self):
+    def __insert_initial_values_group(self) -> None:
         if self.session.query(Group).count() < 1:
             self.add(Group(name="admin", descr="System Administrator"))
             self.add(Group(name="enroll", descr="Allow enrolling new members"))
             self.add(Group(name="accounter", descr="Allow registering fees"))
             self.add(Group(name="board", descr="Allow general browsing of members"))
 
-    def __insert_initial_values_person(self):
+    def __insert_initial_values_person(self) -> None:
         # user: admin@example.com
         # pass: password
         if self.session.query(Person).count() < 1:
@@ -78,6 +78,6 @@ class Storage:
                 )
             )  # pass: password
 
-    def __insert_initial_values_person_group(self):
+    def __insert_initial_values_person_group(self) -> None:
         if self.session.query(PersonGroup).count() < 1:
             self.add(PersonGroup(uid=1, gid=1))

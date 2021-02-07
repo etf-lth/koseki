@@ -4,7 +4,7 @@ import sass  # type: ignore
 from flask import Flask
 
 
-def install_theme(app: Flask, theme_name: str, static_folders: list[str]):
+def install_theme(app: Flask, theme_name: str, static_folders: list[str]) -> None:
     folder_theme = path.join(app.root_path, "themes", theme_name)
     folder_scss = path.join(app.root_path, "themes", theme_name, "scss")
     folder_css = path.join(app.root_path, "themes", theme_name, "css")

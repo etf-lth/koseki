@@ -1,11 +1,13 @@
+from typing import Union
 from flask import jsonify, request
+from werkzeug.wrappers import Response
 from koseki.db.types import Person
 from koseki.view import KosekiView
 from sqlalchemy import or_, and_
 
 
 class APIView(KosekiView):
-    def register(self):
+    def register(self) -> None:
         self.app.add_url_rule(
             "/api/ac/members",
             None,
@@ -15,7 +17,7 @@ class APIView(KosekiView):
             methods=["GET"],
         )
 
-    def api_ac_members(self):
+    def api_ac_members(self) -> Union[str, Response]:
         term = request.args.get("term", "")
         members = (
             self.storage.session.query(Person)

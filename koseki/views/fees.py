@@ -1,10 +1,12 @@
 import logging
 from datetime import datetime, timedelta
+from typing import Union
 
 from flask import render_template, request
 from flask.helpers import url_for
 from flask_wtf import FlaskForm  # type: ignore
 from werkzeug.utils import redirect
+from werkzeug.wrappers import Response
 from koseki.db.types import Fee, Payment, Person
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
@@ -49,7 +51,7 @@ class PaymentForm(FlaskForm):
 
 
 class FeesView(KosekiView):
-    def register(self):
+    def register(self) -> None:
         self.app.add_url_rule(
             "/fees",
             None,
@@ -76,14 +78,14 @@ class FeesView(KosekiView):
         self.util.nav("/fees", "certificate", "Fees",
                       3, ["admin", "accounter"])
 
-    def list_fees(self):
+    def list_fees(self) -> Union[str, Response]:
         return render_template(
             "list_fees.html",
             fees=self.storage.session.query(
                 Fee).order_by(Fee.fid.desc()).all(),
         )
 
-    def list_payments(self):
+    def list_payments(self) -> Union[str, Response]:
         return render_template(
             "list_payments.html",
             payments=self.storage.session.query(Payment)
@@ -91,14 +93,14 @@ class FeesView(KosekiView):
             .all(),
         )
 
-    def export_csv(self):
+    def export_csv(self) -> Union[str, Response]:
         return render_template(
             "list_fees.csv",
             fees=self.storage.session.query(
                 Fee).order_by(Fee.fid.desc()).all(),
         )
 
-    def register_fee(self):
+    def register_fee(self) -> Union[str, Response]:
         feeForm = FeeForm()
         paymentForm = PaymentForm()
 

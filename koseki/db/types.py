@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Reversible
 
 from sqlalchemy import DECIMAL, Column, DateTime, Enum, ForeignKey, Integer, Unicode, Text
 from sqlalchemy.ext.declarative import declarative_base
@@ -43,9 +44,9 @@ class Payment(Base):
     __tablename__: str = "payment"
 
     pid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    uid = Column(Integer, ForeignKey("person.uid"))
+    uid = Column(Integer, ForeignKey("person.uid"), nullable=False)
     registered_by = Column(Integer, ForeignKey("person.uid"))
-    amount = Column(DECIMAL(10, 2))
+    amount = Column(DECIMAL(10, 2), nullable=False)
     registered = Column(DateTime, default=datetime.now)
     method = Column(
         Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress"),
@@ -85,24 +86,24 @@ class Person(Base):
     country = Column(Unicode(64))
     phone_number = Column(Unicode(64))
 
-    groups = relationship("PersonGroup", backref="person")
-    fees = relationship(
+    groups: Reversible[PersonGroup] = relationship("PersonGroup", backref="person")
+    fees: Reversible[Fee] = relationship(
         "Fee", primaryjoin="Fee.uid==Person.uid", order_by="desc(Fee.fid)"
     )
-    payments = relationship(
+    payments: Reversible[Payment] = relationship(
         "Payment", primaryjoin="Payment.uid==Person.uid", order_by="desc(Payment.pid)"
     )
 
     @property
-    def balance(self):
-        return sum([p.amount for p in self.payments])  # type: ignore
+    def balance(self) -> float:
+        return sum([p.amount for p in self.payments])
 
     @property
-    def unpaid_payments(self):
-        unpaids = []
-        remainder = 0
+    def unpaid_payments(self) -> list[Payment]:
+        unpaids: list[Payment] = []
+        remainder: float = 0
         # person.fees sorts in descending ID-order, therefore the list is reversed to be chronological
-        for payment in reversed(self.payments):  # type: ignore
+        for payment in reversed(self.payments):
             if payment.amount == 0:
                 continue
             if payment.amount < 0:

@@ -14,15 +14,15 @@
                 <th>Name</th>
                 <th>Description</th>
             </tr>
-            {% for grp in groups %}
+            {% for group in groups %}
             <tr>
                 <td>
-                    <input type="checkbox" name="{{ grp.gid }}" class="form-check-input mx-auto d-block mt-0"
-                        style="width: 20px;height: 20px;" {{ ' checked' if member_of(grp, person)}} {{ 'disabled' if
-                        grp.name=='admin' and not member_of('admin') }}>
+                    <input type="checkbox" name="{{ group.gid }}" class="form-check-input mx-auto d-block mt-0"
+                        style="width: 20px;height: 20px;" {{ ' checked' if member_of(group, person)}} {{ 'disabled' if
+                        group.name=='admin' and not member_of('admin') }}>
                 </td>
-                <td>{{ group(grp.name) }}</td>
-                <td>{{ grp.descr }}</td>
+                <td>{{ group(group.name) }}</td>
+                <td>{{ group.descr }}</td>
             </tr>
             {% endfor %}
         </table>

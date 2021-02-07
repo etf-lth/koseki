@@ -1,10 +1,12 @@
 import logging
+from typing import Union
 
 from flask import render_template
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Person
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
+from werkzeug.wrappers import Response
 from wtforms import TextField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
 
@@ -17,18 +19,19 @@ class EnrollForm(FlaskForm):
 
 
 class AddView(KosekiView):
-    def register(self):
+    def register(self) -> None:
         self.app.add_url_rule(
             "/enroll",
             None,
-            self.auth.require_session(self.enroll_member, ["admin", "board", "enroll"]),
+            self.auth.require_session(
+                self.enroll_member, ["admin", "board", "enroll"]),
             methods=["GET", "POST"],
         )
         self.util.nav(
             "/enroll", "plus-circle", "Enroll", 2, ["admin", "board", "enroll"]
         )
 
-    def enroll_member(self):
+    def enroll_member(self) -> Union[str, Response]:
         form = EnrollForm()
 
         if form.validate_on_submit():
@@ -65,7 +68,8 @@ class AddView(KosekiView):
 
                 logging.info("Enrolled %s %s" % (person.fname, person.lname))
 
-                self.mail.send_mail(person, "mail/member_enrolled.html", member=person)
+                self.mail.send_mail(
+                    person, "mail/member_enrolled.html", member=person)
                 self.mail.send_mail(
                     self.app.config["ORG_EMAIL"],
                     "mail/board_member_enrolled.html",

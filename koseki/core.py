@@ -30,12 +30,12 @@ from koseki.views.user import UserView
 
 
 class KosekiCore:
-    def __init__(self):
+    def __init__(self) -> None:
         #
         # Flask App
         #
         app = MultiStaticFlask("koseki")
-        app.wsgi_app = ReverseProxied(app.wsgi_app)  # type: ignore
+        app.wsgi_app = ReverseProxied(app.wsgi_app)
         app.config.from_object(KosekiConfig())
         app.config.from_pyfile(os.path.join("..", "koseki.cfg"))
         self.app = app
@@ -75,7 +75,7 @@ class KosekiCore:
         self.plugins = KosekiPluginManager(
             self.app, self.storage, self.auth, self.util)
 
-    def start(self, flask_server=True):
+    def start(self, flask_server: bool = True) -> None:
         with self.app.app_context():
             # Register own context processors
             self._register_context_processors()
@@ -100,7 +100,7 @@ class KosekiCore:
                 except SystemExit:
                     pass  # Flask shut down.
 
-    def _register_views(self):
+    def _register_views(self) -> None:
         views = [
             AddView,
             APIView,
@@ -119,7 +119,7 @@ class KosekiCore:
                             self.util)
             view.register()
 
-    def _register_context_processors(self):
+    def _register_context_processors(self) -> None:
         self.app.context_processor(lambda: dict(
             plugin_isenabled=self.plugins.isenabled))
         self.app.context_processor(lambda: dict(gravatar=self.util.gravatar))

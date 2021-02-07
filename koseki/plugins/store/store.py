@@ -1,10 +1,12 @@
 import logging
+from typing import Union
 
 from flask import Blueprint, abort, redirect, render_template, url_for
 from flask_wtf import FlaskForm  # type: ignore
 from koseki.db.types import Product
 from koseki.plugin import KosekiPlugin
 from koseki.util import KosekiAlert, KosekiAlertType
+from werkzeug.wrappers import Response
 from wtforms import SubmitField  # type: ignore
 from wtforms import DecimalField, IntegerField, TextField
 from wtforms.validators import DataRequired  # type: ignore
@@ -52,7 +54,7 @@ class StorePlugin(KosekiPlugin):
         )
         return blueprint
 
-    def list_products(self):
+    def list_products(self) -> Union[str, Response]:
         productForm = ProductForm()
 
         if productForm.submitAdd.data and productForm.validate_on_submit():
@@ -89,7 +91,7 @@ class StorePlugin(KosekiPlugin):
             .all(),
         )
 
-    def manage_product(self, pid):
+    def manage_product(self, pid: int) -> Union[str, Response]:
         product = self.storage.session.query(
             Product).filter_by(pid=pid).scalar()
         if not product:

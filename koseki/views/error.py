@@ -1,15 +1,17 @@
+from typing import Tuple, Union
 from flask import render_template
+from werkzeug.wrappers import Response
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
 
 
 class ErrorView(KosekiView):
-    def register(self):
+    def register(self) -> None:
         self.app.register_error_handler(400, self.error_bad_request)
         self.app.register_error_handler(403, self.error_forbidden)
         self.app.register_error_handler(404, self.error_not_found)
 
-    def error_bad_request(self, error):
+    def error_bad_request(self, error: Exception) -> Tuple[Union[str, Response], int]:
         self.util.alert(KosekiAlert(
             KosekiAlertType.DANGER,
             "Bad Request",
@@ -25,7 +27,7 @@ class ErrorView(KosekiView):
             400,
         )
 
-    def error_forbidden(self, error):
+    def error_forbidden(self, error: Exception) -> Tuple[Union[str, Response], int]:
         self.util.alert(KosekiAlert(
             KosekiAlertType.DANGER,
             "Forbidden",
@@ -41,7 +43,7 @@ class ErrorView(KosekiView):
             403,
         )
 
-    def error_not_found(self, error):
+    def error_not_found(self, error: Exception) -> Tuple[Union[str, Response], int]:
         self.util.alert(KosekiAlert(
             KosekiAlertType.DANGER,
             "Not Found",
