@@ -18,14 +18,11 @@ class PrintForm(FlaskForm):
 
 
 class PrintPlugin(KosekiPlugin):
-    def __init__(self) -> None:
-        self.cups_conn: cups.Connection = None
-
     def config(self) -> dict:
         return {"ALLOWED_EXTENSIONS": ["pdf"]}
 
     def plugin_enable(self) -> None:
-        self.cups_conn = cups.Connection()
+        self.cups_conn = cups.Connection() # pylint: disable=attribute-defined-outside-init
 
     def create_blueprint(self) -> Blueprint:
         self.util.nav("/print", "print", "Print", 6)
