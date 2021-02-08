@@ -6,6 +6,8 @@
 {% set htmlType = "submit" %}
 {% elif field.type == "SelectField" %}
 {% set htmlType = "select" %}
+{% elif field.type == "FileField" %}
+{% set htmlType = "file" %}
 {% else %}
 {% set htmlType = "text" %}
 {% endif %}
