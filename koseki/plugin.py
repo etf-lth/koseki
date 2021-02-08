@@ -1,5 +1,6 @@
 import importlib
 import logging
+import os
 import types
 
 from flask import Flask
@@ -54,12 +55,15 @@ class KosekiPluginManager:
             plugin = plugin_type(self.app, self.storage, self.auth, self.util)
             # Register config variables
             for key, value in plugin.config().items():
-                self.app.config.setdefault(key, value)
+                self.app.config[key] = value
             # Enable plugin
             plugin.plugin_enable()
             # Register URL handlers
             self.app.register_blueprint(plugin.create_blueprint())
             self.plugins[plugin_name] = plugin
+
+        # Re-read user config to overwrite/prioritise over plugin config
+        self.app.config.from_pyfile(os.path.join("..", "koseki.cfg"))
 
     def isenabled(self, plugin: str) -> bool:
         return plugin in (p.lower() for p in self.plugins.keys())
