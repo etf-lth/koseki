@@ -23,9 +23,9 @@ class KosekiAlert(dict):
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
-    def __init__(self, type: str, title: str, message: str):
-        dict.__init__(self, type=type, title=title, message=message)
-        self.type: str
+    def __init__(self, category: str, title: str, message: str):
+        dict.__init__(self, category=category, title=title, message=message)
+        self.category: str
         self.title: str
         self.message: str
 
@@ -52,7 +52,9 @@ class KosekiUtil:
         self.navigation: list[KosekiNavigationEntry] = []
         self.alt_login: list[dict] = []
 
-    def nav(self, uri: str, icon: str, title: str, weight: int = 0, groups: list[str] = []) -> None:
+    def nav(self, uri: str, icon: str, title: str, weight: int = 0, groups: list[str] = None) -> None:
+        if groups is None:
+            groups = []
         self.navigation.append(KosekiNavigationEntry(
             uri, icon, title, weight, groups))
 
@@ -83,8 +85,8 @@ class KosekiUtil:
             hashlib.md5(mail.encode("utf-8")).hexdigest()
         )
 
-    def format_date(self, value: datetime.datetime, format: str = "%Y-%m-%d") -> str:
-        return value.strftime(format)
+    def format_date(self, value: datetime.datetime, date_format: str = "%Y-%m-%d") -> str:
+        return value.strftime(date_format)
 
     def uid_to_name(self, uid: int) -> str:
         person = self.storage.session.query(
@@ -148,4 +150,4 @@ class KosekiUtil:
 
     def alternate_login(self, alt: dict) -> None:
         self.alt_login.append(alt)
-        logging.info("Registered alternate login provider: %s" % alt["button"])
+        logging.info("Registered alternate login provider: %s", alt["button"])

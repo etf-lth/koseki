@@ -16,7 +16,7 @@
                     {% if alerts %}
                     <div class="container py-2">
                         {% for alert in alerts %}
-                        <div class="alert {{ alert.type }}">
+                        <div class="alert {{ alert.category }}">
                             <h4>{{ alert.title }}</h4>
                             {{ alert.message }}
                         </div>

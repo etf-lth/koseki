@@ -21,7 +21,7 @@
                 <div class="mb-4"></div>
                 {% endif %}
                 {% for alert in alerts %}
-                <div class="alert {{ alert.type }} show fade">
+                <div class="alert {{ alert.category }} show fade">
                     <h1 class="mb-0"><b>{{ alert.title }}</b></h1>
                     <h3 class="mb-0">{{ alert.message }}</h3>
                 </div>
