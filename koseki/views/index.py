@@ -3,6 +3,7 @@ from typing import Union
 
 from flask import render_template
 from werkzeug.wrappers import Response
+
 from koseki.db.types import Person
 from koseki.view import KosekiView
 
@@ -15,10 +16,12 @@ class IndexView(KosekiView):
     def index(self) -> Union[str, Response]:
         if self.util.member_of("admin") or self.util.member_of("board"):
             active = (
-                self.storage.session.query(Person).filter_by(state="active").count()
+                self.storage.session.query(
+                    Person).filter_by(state="active").count()
             )
             pending = (
-                self.storage.session.query(Person).filter_by(state="pending").count()
+                self.storage.session.query(Person).filter_by(
+                    state="pending").count()
             )
             enrolled = (
                 self.storage.session.query(Person)

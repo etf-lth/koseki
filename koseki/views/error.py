@@ -1,6 +1,8 @@
 from typing import Tuple, Union
+
 from flask import render_template
 from werkzeug.wrappers import Response
+
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
 

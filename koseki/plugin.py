@@ -43,7 +43,7 @@ class KosekiPluginManager:
     def register_plugins(self) -> None:
         plugin: KosekiPlugin
         for plugin_name in self.app.config["PLUGINS"]:
-            logging.info("Registering plugin: %s" % (plugin_name))
+            logging.info("Registering plugin: %s", plugin_name)
 
             plugin_module: types.ModuleType = importlib.import_module(
                 "koseki.plugins." + plugin_name.lower()
@@ -53,8 +53,8 @@ class KosekiPluginManager:
             # Instantiate plugin
             plugin = plugin_type(self.app, self.storage, self.auth, self.util)
             # Register config variables
-            for k, v in plugin.config().items():
-                self.app.config.setdefault(k, v)
+            for key, value in plugin.config().items():
+                self.app.config.setdefault(key, value)
             # Enable plugin
             plugin.plugin_enable()
             # Register URL handlers

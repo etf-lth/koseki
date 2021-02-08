@@ -2,12 +2,13 @@ from typing import Iterable, Union
 
 from flask import abort, render_template, request
 from flask_wtf import FlaskForm  # type: ignore
-from koseki.db.types import Group, Person, PersonGroup
-from koseki.util import KosekiAlert, KosekiAlertType
-from koseki.view import KosekiView
 from werkzeug.wrappers import Response
 from wtforms import StringField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
+
+from koseki.db.types import Group, Person, PersonGroup
+from koseki.util import KosekiAlert, KosekiAlertType
+from koseki.view import KosekiView
 
 
 class GeneralForm(FlaskForm):
@@ -104,12 +105,11 @@ class UserView(KosekiView):
                         )
                 else:
                     # Not a member, remove if needed
-                    current_state and list(
+                    if current_state:
                         map(
                             self.storage.delete,
                             (g for g in person.groups if g.gid == group.gid),
                         )
-                    )
 
             self.storage.commit()
 

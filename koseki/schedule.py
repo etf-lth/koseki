@@ -53,8 +53,8 @@ class KosekiScheduler:
                 ):
                     # Membership has expired
                     logging.info(
-                        "Member %s %s no longer active" % (
-                            member.fname, member.lname)
+                        "Member %s %s no longer active",
+                        member.fname, member.lname
                     )
                     member.state = "expired"
                     self.storage.commit()
@@ -81,8 +81,8 @@ class KosekiScheduler:
                     # Send reminder to member
                     if days_left == 14:
                         logging.info(
-                            "Member %s %s has %d days left, sending reminder"
-                            % (member.fname, member.lname, days_left)
+                            "Member %s %s has %d days left, sending reminder",
+                            member.fname, member.lname, days_left
                         )
                         self.mail.send_mail(
                             member,
@@ -104,8 +104,8 @@ class KosekiScheduler:
                     continue
 
                 logging.info(
-                    "Member %s %s has %d unpaid payments, sending reminder"
-                    % (member.fname, member.lname, len(member.unpaid_payments))
+                    "Member %s %s has %d unpaid payments, sending reminder",
+                    member.fname, member.lname, len(member.unpaid_payments)
                 )
                 self.mail.send_mail(
                     member, "mail/unpaid_payments.html", member=member

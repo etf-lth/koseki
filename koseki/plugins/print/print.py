@@ -18,11 +18,14 @@ class PrintForm(FlaskForm):
 
 
 class PrintPlugin(KosekiPlugin):
+    def __init__(self) -> None:
+        self.cups_conn: cups.Connection = None
+
     def config(self) -> dict:
         return {"ALLOWED_EXTENSIONS": ["pdf"]}
 
     def plugin_enable(self) -> None:
-        self.cupsConn = cups.Connection()
+        self.cups_conn = cups.Connection()
 
     def create_blueprint(self) -> Blueprint:
         self.util.nav("/print", "print", "Print", 6)
@@ -85,12 +88,12 @@ class PrintPlugin(KosekiPlugin):
             file.save(filepath)
 
             # send file to printer
-            self.cupsConn.printFile("printer1", filepath, "", {"media": "A4"})
+            self.cups_conn.printFile("printer1", filepath, "", {"media": "A4"})
 
             # log that a document has been printed
             logging.info(
-                "Document %s printed by %s" % (
-                    form.file.name, self.util.current_user())
+                "Document %s printed by %s",
+                form.file.name, self.util.current_user()
             )
 
             # show success message to user

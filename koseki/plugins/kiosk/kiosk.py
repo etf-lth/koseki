@@ -4,12 +4,13 @@ from typing import Union
 from flask import (Blueprint, redirect, render_template, request, session,
                    url_for)
 from flask_wtf import FlaskForm  # type: ignore
-from koseki.db.types import Payment, Person, Product
-from koseki.plugin import KosekiPlugin
-from koseki.util import KosekiAlert, KosekiAlertType
 from werkzeug.wrappers import Response
 from wtforms import HiddenField, PasswordField  # type: ignore
 from wtforms.validators import DataRequired  # type: ignore
+
+from koseki.db.types import Payment, Person, Product
+from koseki.plugin import KosekiPlugin
+from koseki.util import KosekiAlert, KosekiAlertType
 
 
 class KioskCardForm(FlaskForm):
@@ -166,50 +167,50 @@ class KioskPlugin(KosekiPlugin):
 
         if form.validate_on_submit():
             # Process form input
-            productsInput = form.products_field.data.split(",")
+            products_input = form.products_field.data.split(",")
             products = []
-            productAmounts = []
-            errorProcessing = False
+            product_amounts = []
+            error_processing = False
             # Loop through each of the received products and its respective quantity
-            for p in productsInput:
-                productId = float(p.split(":")[0])
-                productQty = int(p.split(":")[1])
+            for p in products_input:
+                product_id = float(p.split(":")[0])
+                product_qty = int(p.split(":")[1])
                 # Check if QTY is valid
-                if productQty < 1 or productQty > 100:
+                if product_qty < 1 or product_qty > 100:
                     self.util.alert(
                         KosekiAlert(
                             KosekiAlertType.DANGER,
                             "Error",
-                            "Invalid Quantity %s" % (productId),
+                            "Invalid Quantity %s" % (product_id),
                         )
                     )
-                    errorProcessing = True
+                    error_processing = True
 
                 # Fetch product and add if valid
                 product = (
                     self.storage.session.query(Product)
-                    .filter_by(pid=productId)
+                    .filter_by(pid=product_id)
                     .scalar()
                 )
                 if product:
                     products.append(product)
-                    productAmounts.append(productQty)
+                    product_amounts.append(product_qty)
                 else:
                     self.util.alert(
                         KosekiAlert(
                             KosekiAlertType.DANGER,
                             "Error",
-                            "Invalid product %s" % (productId),
+                            "Invalid product %s" % (product_id),
                         )
                     )
-                    errorProcessing = True
+                    error_processing = True
                     break
 
-            if errorProcessing is not True:
+            if error_processing is not True:
                 # Store payment
                 for i in range(len(products)):
                     product = products[i]
-                    for i in range(productAmounts[i]):
+                    for j in range(product_amounts[i]):
                         payment = Payment(
                             uid=person.uid,
                             registered_by=person.uid,
@@ -222,8 +223,8 @@ class KioskPlugin(KosekiPlugin):
                         self.storage.commit()
 
                         logging.info(
-                            "Person %d bought %d for %.2f kr"
-                            % (person.uid, product.pid, product.price)
+                            "Person %d bought %d for %.2f kr",
+                            person.uid, product.pid, product.price
                         )
                         self.util.alert(
                             KosekiAlert(
@@ -282,7 +283,7 @@ class KioskPlugin(KosekiPlugin):
         if "User-Agent" in request.headers and request.headers.get(  # type: ignore
             "User-Agent"
         ).startswith("Kiosk"):
-            if ("Key=" + self.app.config["KIOSK_KEY"]) in request.headers.get(  # type: ignore
+            if "Key=" + self.app.config["KIOSK_KEY"] in request.headers.get(  # type: ignore
                 "User-Agent"
             ).split(
                 " "

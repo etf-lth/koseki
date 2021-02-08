@@ -3,13 +3,14 @@ from typing import Union
 
 from flask import Blueprint, abort, redirect, render_template, url_for
 from flask_wtf import FlaskForm  # type: ignore
-from koseki.db.types import Product
-from koseki.plugin import KosekiPlugin
-from koseki.util import KosekiAlert, KosekiAlertType
 from werkzeug.wrappers import Response
 from wtforms import SubmitField  # type: ignore
 from wtforms import DecimalField, IntegerField, TextField
 from wtforms.validators import DataRequired  # type: ignore
+
+from koseki.db.types import Product
+from koseki.plugin import KosekiPlugin
+from koseki.util import KosekiAlert, KosekiAlertType
 
 
 class ProductForm(FlaskForm):
@@ -55,22 +56,22 @@ class StorePlugin(KosekiPlugin):
         return blueprint
 
     def list_products(self) -> Union[str, Response]:
-        productForm = ProductForm()
+        product_form = ProductForm()
 
-        if productForm.submitAdd.data and productForm.validate_on_submit():
+        if product_form.submitAdd.data and product_form.validate_on_submit():
             # Store product
             product = Product(
-                name=productForm.name.data,
-                img_url=productForm.img_url.data,
-                price=productForm.price.data,
-                order=productForm.order.data,
+                name=product_form.name.data,
+                img_url=product_form.img_url.data,
+                price=product_form.price.data,
+                order=product_form.order.data,
             )
             self.storage.add(product)
             self.storage.commit()
 
             logging.info(
-                "Registered product %s #%d" % (
-                    productForm.name.data, product.pid)
+                "Registered product %s #%d",
+                product_form.name.data, product.pid
             )
 
             self.util.alert(
@@ -78,14 +79,14 @@ class StorePlugin(KosekiPlugin):
                     KosekiAlertType.SUCCESS,
                     "Success",
                     "Registered product %s #%d" % (
-                        productForm.name.data, product.pid),
+                        product_form.name.data, product.pid),
                 )
             )
-            productForm = ProductForm(None)
+            product_form = ProductForm(None)
 
         return render_template(
             "store_list_products.html",
-            form=productForm,
+            form=product_form,
             products=self.storage.session.query(Product)
             .order_by(Product.order.asc())
             .all(),
@@ -97,26 +98,26 @@ class StorePlugin(KosekiPlugin):
         if not product:
             raise abort(404)
 
-        productForm = ProductForm(obj=product)
+        product_form = ProductForm(obj=product)
 
-        if productForm.submitDelete.data and productForm.validate_on_submit():
+        if product_form.submitDelete.data and product_form.validate_on_submit():
             # Delete product
             self.storage.delete(product)
             self.storage.commit()
 
             logging.info(
-                "Deleted product %s #%d" % (productForm.name.data, product.pid)
+                "Deleted product %s #%d", product_form.name.data, product.pid
             )
             return redirect(url_for("store.list_products"))
 
-        if productForm.submitUpdate.data and productForm.validate_on_submit():
+        if product_form.submitUpdate.data and product_form.validate_on_submit():
             # Update product
-            productForm.populate_obj(product)
+            product_form.populate_obj(product)
             self.storage.commit()
 
             logging.info(
-                "Updated product %s #%d" % (productForm.name.data, product.pid)
+                "Updated product %s #%d", product_form.name.data, product.pid
             )
             return redirect(url_for("store.list_products"))
 
-        return render_template("store_manage_product.html", form=productForm)
+        return render_template("store_manage_product.html", form=product_form)

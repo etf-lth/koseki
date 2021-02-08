@@ -17,8 +17,10 @@ def install_theme(app: Flask, theme_name: str, static_folders: list[str]) -> Non
     if path.isdir(folder_scss):
         if not path.isdir(folder_css):
             mkdir(folder_css)
-        sass.compile(dirname=(folder_scss, folder_css),
-                     output_style="compressed")
+        sass.compile(
+            dirname=(folder_scss, folder_css),
+            output_style="compressed"
+        )
 
     # Install theme into MultiStaticFlask
     # Static folders are prioritized in ascending order, thereby insertion first.

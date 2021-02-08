@@ -5,12 +5,13 @@ from typing import Union
 
 from flask import redirect, render_template, request, url_for
 from flask_wtf import FlaskForm  # type: ignore
-from koseki.db.types import Person
-from koseki.util import KosekiAlert, KosekiAlertType
-from koseki.view import KosekiView
 from werkzeug.wrappers import Response
 from wtforms import PasswordField, SubmitField, TextField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
+
+from koseki.db.types import Person
+from koseki.util import KosekiAlert, KosekiAlertType
+from koseki.view import KosekiView
 
 
 class LoginForm(FlaskForm):
@@ -53,8 +54,7 @@ class SessionView(KosekiView):
                 person.password = self.auth.hash_password(new_pass)
                 self.storage.commit()
 
-                logging.info("Reset password for %s %s" %
-                             (person.fname, person.lname))
+                logging.info("Reset password for %s %s", person.fname, person.lname)
                 self.mail.send_mail(
                     person, "mail/reset_password.html", member=person, new_pass=new_pass)
 

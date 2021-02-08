@@ -3,12 +3,13 @@ from typing import Union
 
 from flask import render_template
 from flask_wtf import FlaskForm  # type: ignore
-from koseki.db.types import Person
-from koseki.util import KosekiAlert, KosekiAlertType
-from koseki.view import KosekiView
 from werkzeug.wrappers import Response
 from wtforms import TextField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
+
+from koseki.db.types import Person
+from koseki.util import KosekiAlert, KosekiAlertType
+from koseki.view import KosekiView
 
 
 class EnrollForm(FlaskForm):
@@ -66,7 +67,7 @@ class AddView(KosekiView):
                 self.storage.add(person)
                 self.storage.commit()
 
-                logging.info("Enrolled %s %s" % (person.fname, person.lname))
+                logging.info("Enrolled %s %s", person.fname, person.lname)
 
                 self.mail.send_mail(
                     person, "mail/member_enrolled.html", member=person)

@@ -1,9 +1,9 @@
-from koseki.plugin import KosekiPluginManager
 from flask import Flask
 
 from koseki.auth import KosekiAuth
 from koseki.db.storage import Storage
 from koseki.mail import KosekiMailer
+from koseki.plugin import KosekiPluginManager
 from koseki.util import KosekiUtil
 
 

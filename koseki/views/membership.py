@@ -3,18 +3,21 @@ from typing import Union
 
 from flask import render_template, request
 from flask_wtf import FlaskForm  # type: ignore
-from koseki.db.types import Fee, Person
-from koseki.util import KosekiAlert, KosekiAlertType
-from koseki.view import KosekiView
+from werkzeug.wrappers import Response
 from wtforms import PasswordField, SubmitField, TextField  # type: ignore
 from wtforms.validators import DataRequired, Email, EqualTo  # type: ignore
 
-from werkzeug.wrappers import Response
+from koseki.db.types import Fee, Person
+from koseki.util import KosekiAlert, KosekiAlertType
+from koseki.view import KosekiView
+
 
 class EditEmailForm(FlaskForm):
     email1 = TextField("Email", validators=[DataRequired(), Email()])
-    email2 = TextField("Repeat Email", validators=[DataRequired(), Email(),
-                                                   EqualTo('email1', message='Emails do not match')])
+    email2 = TextField("Repeat Email", validators=[
+        DataRequired(), Email(),
+        EqualTo('email1', message='Emails do not match')
+    ])
     submit_email = SubmitField("Save")
 
 
@@ -68,8 +71,7 @@ class MembershipView(KosekiView):
         if "submit_email" in request.form and form_email.validate():
             person.email = form_email.email1.data
             self.storage.commit()
-            logging.info("Changed email for %s %s" %
-                         (person.fname, person.lname))
+            logging.info("Changed email for %s %s", person.fname, person.lname)
 
             self.util.alert(
                 KosekiAlert(
@@ -84,8 +86,7 @@ class MembershipView(KosekiView):
             person.password = self.auth.hash_password(
                 form_password.password1.data)
             self.storage.commit()
-            logging.info("Changed password for %s %s" %
-                         (person.fname, person.lname))
+            logging.info("Changed password for %s %s", person.fname, person.lname)
 
             self.util.alert(
                 KosekiAlert(
@@ -96,5 +97,6 @@ class MembershipView(KosekiView):
             )
 
         return render_template(
-            "membership_edit.html", person=person, form_email=form_email, form_password=form_password
+            "membership_edit.html", person=person,
+            form_email=form_email, form_password=form_password
         )

@@ -7,12 +7,13 @@ from flask.helpers import url_for
 from flask_wtf import FlaskForm  # type: ignore
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Response
+from wtforms import SelectField  # type: ignore
+from wtforms import IntegerField, SubmitField, TextField
+from wtforms.validators import DataRequired  # type: ignore
+
 from koseki.db.types import Fee, Payment, Person
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
-from wtforms import SelectField  # type: ignore
-from wtforms import IntegerField, SubmitField, TextField
-from wtforms.validators import DataRequired, Optional  # type: ignore
 
 
 class FeeForm(FlaskForm):
@@ -101,14 +102,14 @@ class FeesView(KosekiView):
         )
 
     def register_fee(self) -> Union[str, Response]:
-        feeForm = FeeForm()
-        paymentForm = PaymentForm()
+        fee_form = FeeForm()
+        payment_form = PaymentForm()
 
-        if "submitFee" in request.form and feeForm.validate():
-            paymentForm = PaymentForm(None)  # Clear the other form
+        if "submitFee" in request.form and fee_form.validate():
+            payment_form = PaymentForm(None)  # Clear the other form
             person = (
                 self.storage.session.query(Person)
-                .filter_by(uid=feeForm.uid.data)
+                .filter_by(uid=fee_form.uid.data)
                 .scalar()
             )
 
@@ -118,7 +119,7 @@ class FeesView(KosekiView):
                         KosekiAlertType.DANGER,
                         "Error",
                         'No such member "%s". Did you try the auto-complete feature?'
-                        % feeForm.uid.data,
+                        % fee_form.uid.data,
                     )
                 )
                 return redirect(url_for("register_fee"))
@@ -133,30 +134,30 @@ class FeesView(KosekiView):
 
             if last_fee and last_fee.end > datetime.now():  # type: ignore
                 logging.debug(
-                    "Last fee: start=%s, end=%s" % (
-                        last_fee.start, last_fee.end)
+                    "Last fee: start=%s, end=%s",
+                    last_fee.start, last_fee.end
                 )
                 start: datetime = last_fee.end  # type: ignore
             else:
                 start = datetime.now()
             # end = start + timedelta(days=(3.65*int(form.amount.data)))
-            end = start + timedelta(days=(1.825 * int(feeForm.amount.data)))
+            end = start + timedelta(days=(1.825 * int(fee_form.amount.data)))
 
             # Store fee
             fee = Fee(
                 uid=person.uid,
                 registered_by=self.util.current_user(),
-                amount=feeForm.amount.data,
+                amount=fee_form.amount.data,
                 start=start,
                 end=end,
-                method=feeForm.method.data,
+                method=fee_form.method.data,
             )
             self.storage.add(fee)
             self.storage.commit()
 
             logging.info(
-                "Registered fee %d SEK for %d" % (
-                    feeForm.amount.data, person.uid)
+                "Registered fee %d SEK for %d",
+                fee_form.amount.data, person.uid
             )
 
             # Check for user state changes
@@ -172,8 +173,7 @@ class FeesView(KosekiView):
             ):
                 person.state = "active"
                 self.storage.commit()
-                logging.info("%s %s is now active" %
-                             (person.fname, person.lname))
+                logging.info("%s %s is now active", person.fname, person.lname)
                 self.mail.send_mail(
                     self.app.config["ORG_EMAIL"],
                     "mail/board_member_active.html",
@@ -187,16 +187,16 @@ class FeesView(KosekiView):
                     KosekiAlertType.SUCCESS,
                     "Success",
                     "Registered fee %d SEK for %s %s"
-                    % (feeForm.amount.data, person.fname, person.lname),
+                    % (fee_form.amount.data, person.fname, person.lname),
                 )
             )
-            feeForm = FeeForm(None)
+            fee_form = FeeForm(None)
 
-        elif "submitPayment" in request.form and paymentForm.validate():
-            feeForm = FeeForm(None)  # Clear the other form
+        elif "submitPayment" in request.form and payment_form.validate():
+            fee_form = FeeForm(None)  # Clear the other form
             person = (
                 self.storage.session.query(Person)
-                .filter_by(uid=feeForm.uid.data)
+                .filter_by(uid=fee_form.uid.data)
                 .scalar()
             )
 
@@ -206,7 +206,7 @@ class FeesView(KosekiView):
                         KosekiAlertType.DANGER,
                         "Error",
                         'No such member "%s". Did you try the auto-complete feature?'
-                        % paymentForm.uid.data,
+                        % payment_form.uid.data,
                     )
                 )
                 return redirect(url_for("register_fee"))
@@ -215,16 +215,16 @@ class FeesView(KosekiView):
             payment = Payment(
                 uid=person.uid,
                 registered_by=self.util.current_user(),
-                amount=paymentForm.amount.data,
-                method=paymentForm.method.data,
-                reason=paymentForm.reason.data,
+                amount=payment_form.amount.data,
+                method=payment_form.method.data,
+                reason=payment_form.reason.data,
             )
             self.storage.add(payment)
             self.storage.commit()
 
             logging.info(
-                "Registered payment %d SEK for %d" % (
-                    feeForm.amount.data, person.uid)
+                "Registered payment %d SEK for %d",
+                fee_form.amount.data, person.uid
             )
 
             self.util.alert(
@@ -232,11 +232,11 @@ class FeesView(KosekiView):
                     KosekiAlertType.SUCCESS,
                     "Success",
                     "Registered payment %d SEK for %s %s"
-                    % (feeForm.amount.data, person.fname, person.lname),
+                    % (fee_form.amount.data, person.fname, person.lname),
                 )
             )
-            paymentForm = PaymentForm(None)
+            payment_form = PaymentForm(None)
 
         return render_template(
-            "register_fee.html", feeForm=feeForm, paymentForm=paymentForm
+            "register_fee.html", feeForm=fee_form, paymentForm=payment_form
         )

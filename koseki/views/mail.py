@@ -1,9 +1,10 @@
 from typing import Union
 
 from flask import render_template
+from werkzeug.wrappers import Response
+
 from koseki.db.types import Person
 from koseki.view import KosekiView
-from werkzeug.wrappers import Response
 
 
 class MailView(KosekiView):

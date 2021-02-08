@@ -5,9 +5,10 @@ from typing import Union
 from xml.etree import ElementTree as ET
 
 from flask import Blueprint, redirect, render_template, request, url_for
+from werkzeug.wrappers import Response
+
 from koseki.db.types import Person
 from koseki.plugin import KosekiPlugin
-from werkzeug.wrappers import Response
 
 
 class CASPlugin(KosekiPlugin):
@@ -42,16 +43,16 @@ class CASPlugin(KosekiPlugin):
         ticket = request.args["ticket"]
 
         try:
-            u = urllib.request.urlopen(
+            response = urllib.request.urlopen(
                 self.app.config["CAS_SERVER"]
                 + "/cas/serviceValidate?renew=false&ticket="
                 + ticket
                 + "&service="
                 + urllib.parse.quote_plus(self.app.config["URL_BASE"] + "/cas")
             )
-            response = u.read().decode("utf-8")
-            u.close()
-            root = ET.fromstring(response)
+            contents = response.read().decode("utf-8")
+            response.close()
+            root = ET.fromstring(contents)
             if root[0].tag == "{http://www.yale.edu/tp/cas}authenticationSuccess":
                 uid = root[0][0].text.strip()  # type: ignore
 

@@ -1,7 +1,7 @@
 import secrets
 
 
-class KosekiConfig(object):
+class KosekiConfig():
     DEBUG = False
 
     #
@@ -10,7 +10,7 @@ class KosekiConfig(object):
     KOSEKI_VERSION = "MMXXI"
 
     @property
-    def FOOTER(self) -> str:
+    def FOOTER(self) -> str:  # pylint: disable=invalid-name
         return "koseki &copy; %s" % self.KOSEKI_VERSION
 
     #
@@ -18,12 +18,12 @@ class KosekiConfig(object):
     #
     URL_BASE = "http://localhost:5000"
     WEB_PORT = 5000
-    UPLOAD_FOLDER = "./data" # TODO move to print plugin?
+    UPLOAD_FOLDER = "./data"  # TODO move to print plugin?
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
 
     @property
-    def SECRET_KEY(self) -> str:
+    def SECRET_KEY(self) -> str:  # pylint: disable=invalid-name
         return secrets.token_urlsafe(16)
 
     #
@@ -39,8 +39,9 @@ class KosekiConfig(object):
     #
     SMTP_USE_TLS = False
     SMTP_SERVER = "127.0.0.1"
+
     @property
-    def SMTP_PORT(self) -> int:
+    def SMTP_PORT(self) -> int:  # pylint: disable=invalid-name
         return 587 if self.SMTP_USE_TLS else 25
     EMAIL_FROM = "Koseki Member management <member@acme.nu>"
     EMAIL_SUBJECT = "Koseki Member management"

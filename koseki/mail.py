@@ -37,26 +37,23 @@ class KosekiMailer:
             msg["From"] = Header(from_mail, "utf-8")
             msg["Subject"] = Header(self.app.config["EMAIL_SUBJECT"], "utf-8")
 
-            logging.info(
-                "send_mail to=%s, template=%s" % (
-                    to_mail, template)
-            )
+            logging.info("send_mail to=%s, template=%s", to_mail, template)
 
-            mimeType = "plain"
+            mime_type = "plain"
             if template.endswith("html"):
-                mimeType = "html"
+                mime_type = "html"
 
             msg.attach(MIMEText(
-                render_template(template, **kwargs), mimeType, _charset="utf8"
+                render_template(template, **kwargs), mime_type, _charset="utf8"
             ))
 
-            s = smtplib.SMTP(
+            mail_client = smtplib.SMTP(
                 host=self.app.config["SMTP_SERVER"], port=self.app.config["SMTP_PORT"])
             if self.app.config["SMTP_USE_TLS"]:
-                s.starttls()
-            s.sendmail(from_mail, to_mail, msg.as_string())
-            s.quit()
+                mail_client.starttls()
+            mail_client.sendmail(from_mail, to_mail, msg.as_string())
+            mail_client.quit()
             return True
-        except (Exception, ConnectionRefusedError) as e:
-            logging.exception("send_mail failed: %s" % e)
+        except (smtplib.SMTPException, ConnectionRefusedError) as error:
+            logging.exception("send_mail failed: %s", error)
             return False

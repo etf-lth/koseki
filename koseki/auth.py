@@ -14,27 +14,27 @@ class KosekiAuth:
         self.util = util
         self.__ph = PasswordHasher()
 
-    def require_session(self, f: Callable, groups: list[str] = None) -> Callable:
+    def require_session(self, func: Callable, groups: list[str] = None) -> Callable:
         def wrap(*args, **kwargs) -> Union[str, Response]: # type: ignore
-            if not "uid" in session:
+            if "uid" not in session:
                 return redirect(url_for("login", redir=request.base_url))
             else:
                 if (
                     groups is None
                     or sum(1 for group in groups if self.util.member_of(group)) > 0
                 ):
-                    return f(*args, **kwargs)
+                    return func(*args, **kwargs)
                 else:
                     abort(403)
 
-        wrap.__name__ = f.__name__
+        wrap.__name__ = func.__name__
         return wrap
 
     def hash_password(self, password: str) -> str:
         return self.__ph.hash(password)
 
     def verify_password(self, person: Person, password: str) -> bool:
-        if type(person.password) is None:
+        if person.password is None:
             return False
         try:
             self.__ph.verify(person.password, password)

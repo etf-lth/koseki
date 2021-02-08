@@ -1,11 +1,12 @@
 from typing import Optional, Type
 
-from koseki.db.types import *
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm.query import Query
 from sqlalchemy.orm.session import Session, sessionmaker
 from sqlalchemy.sql.schema import MetaData
+
+from koseki.db.types import Base, Group, Person, PersonGroup
 
 
 class Storage:
@@ -20,23 +21,23 @@ class Storage:
             pool_timeout=3,
         )
 
-        m: MetaData = Base.metadata
-        m.create_all(bind=self.engine)
-        self.sm = sessionmaker(bind=self.engine)
-        self.db: Optional[Session] = None
+        metadata: MetaData = Base.metadata
+        metadata.create_all(bind=self.engine)
+        self._sessionmaker = sessionmaker(bind=self.engine)
+        self._database: Optional[Session] = None
 
         self.__insert_initial_values()
 
     def close(self, error: Optional[Exception]) -> None:
-        if self.db is not None:
-            self.db.close()
-            self.db = None
+        if self._database is not None:
+            self._database.close()
+            self._database = None
 
     @property
     def session(self) -> Session:
-        if self.db is None:
-            self.db = self.sm()
-        return self.db
+        if self._database is None:
+            self._database = self._sessionmaker()
+        return self._database
 
     def add(self, obj: Base) -> None:
         self.session.add(obj)

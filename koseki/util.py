@@ -124,9 +124,9 @@ class KosekiUtil:
             person = self.storage.query(Person).filter_by(
                 uid=self.current_user()).scalar()
 
-        if type(group) == int:
+        if isinstance(group, int):
             group = self.storage.query(Group).filter_by(gid=group).scalar()
-        elif type(group) == str:
+        elif isinstance(group, str):
             group = self.storage.query(Group).filter_by(name=group).scalar()
 
         if group is None:

@@ -1,4 +1,5 @@
 from typing import Callable
+
 from flask.app import Flask
 from werkzeug.wrappers import Response
 
