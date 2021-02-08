@@ -1,9 +1,10 @@
 from typing import Union
+
 from flask import jsonify, request
-from werkzeug.wrappers import Response
 from koseki.db.types import Person
 from koseki.view import KosekiView
-from sqlalchemy import or_, and_
+from sqlalchemy import and_, or_
+from werkzeug.wrappers import Response
 
 
 class APIView(KosekiView):
@@ -22,7 +23,7 @@ class APIView(KosekiView):
         members = (
             self.storage.session.query(Person)
             .filter(or_(Person.fname.like(term + "%%"), Person.lname.like(term + "%%"),
-            and_(Person.fname.like(term.split(" ")[0] + "%%"), Person.lname.like(term.split(" ")[-1] + "%%"))))
+                        and_(Person.fname.like(term.split(" ")[0] + "%%"), Person.lname.like(term.split(" ")[-1] + "%%"))))
             .all()
         )
         res: Response = jsonify(
