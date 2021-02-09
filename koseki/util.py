@@ -36,14 +36,14 @@ class KosekiNavigationEntry(dict):
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
 
-    def __init__(self, uri: str, icon: str, title: str, weight: int, groups: list[str]):
+    def __init__(self, uri: str, icon: str, title: str, weight: int, groups: Optional[list[str]]):
         dict.__init__(self, uri=uri, icon=icon, title=title,
                       weight=weight, groups=groups)
         self.uri: str
         self.icon: str
         self.title: str
         self.weight: int
-        self.groups: list[str]
+        self.groups: Optional[list[str]]
 
 
 class KosekiUtil:
@@ -52,20 +52,18 @@ class KosekiUtil:
         self.navigation: list[KosekiNavigationEntry] = []
         self.alt_login: list[dict] = []
 
-    def nav(self, uri: str, icon: str, title: str, weight: int = 0, groups: list[str] = None) -> None:
-        if groups is None:
-            groups = []
+    def nav(self, uri: str, icon: str, title: str, weight: int = 0, groups: Optional[list[str]] = None) -> None:
         self.navigation.append(KosekiNavigationEntry(
             uri, icon, title, weight, groups))
 
     def calc_nav(self) -> None:
-        nav: list[KosekiNavigationEntry] = []
-        for n in self.navigation:
-            if n.groups is None or sum(
-                1 for group in n.groups if self.member_of(group)
+        nav_list: list[KosekiNavigationEntry] = []
+        for nav in self.navigation:
+            if nav.groups is None or sum(
+                1 for group in nav.groups if self.member_of(group)
             ) > 0:
-                nav.append(n)
-        session["nav"] = sorted(nav, key=lambda x: x.weight)
+                nav_list.append(nav)
+        session["nav"] = sorted(nav_list, key=lambda x: x.weight)
 
     def start_session(self, uid: int) -> None:
         session["uid"] = uid
