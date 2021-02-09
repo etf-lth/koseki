@@ -96,7 +96,7 @@ class KosekiCore:
             # Start the webserver
             if flask_server:
                 try:
-                    self.app.run(host="127.0.0.1",
+                    self.app.run(host=self.app.config["WEB_HOST"],
                                  port=self.app.config["WEB_PORT"])
                 except SystemExit:
                     pass  # Flask shut down.

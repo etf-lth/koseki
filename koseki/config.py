@@ -17,6 +17,7 @@ class KosekiConfig():
     # Hosting config
     #
     URL_BASE = "http://localhost:5000"
+    WEB_HOST = "localhost"
     WEB_PORT = 5000
     UPLOAD_FOLDER = "./data"  # TODO move to print plugin?
     SESSION_COOKIE_HTTPONLY = True
