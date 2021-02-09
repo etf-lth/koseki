@@ -1,5 +1,5 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import status, group, payment_balance %}
+{% from "macros.html" import status, group_badge, payment_balance %}
 {% block title %}List members{% endblock %}
 {% block content %}
 <h1>List members</h1>
@@ -63,7 +63,7 @@
                 {% endif %}
                 <td>
                     {% for grp in item.groups %}
-                    {{ group(grp.group.name) }}
+                    {{ group_badge(grp.group.name) }}
                     {% endfor %}
                 </td>
             </tr>

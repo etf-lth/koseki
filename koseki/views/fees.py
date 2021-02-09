@@ -196,7 +196,7 @@ class FeesView(KosekiView):
             fee_form = FeeForm(None)  # Clear the other form
             person = (
                 self.storage.session.query(Person)
-                .filter_by(uid=fee_form.uid.data)
+                .filter_by(uid=payment_form.uid.data)
                 .scalar()
             )
 
@@ -224,7 +224,7 @@ class FeesView(KosekiView):
 
             logging.info(
                 "Registered payment %d SEK for %d",
-                fee_form.amount.data, person.uid
+                payment_form.amount.data, person.uid
             )
 
             self.util.alert(
@@ -232,7 +232,7 @@ class FeesView(KosekiView):
                     KosekiAlertType.SUCCESS,
                     "Success",
                     "Registered payment %d SEK for %s %s"
-                    % (fee_form.amount.data, person.fname, person.lname),
+                    % (payment_form.amount.data, person.fname, person.lname),
                 )
             )
             payment_form = PaymentForm(None)
