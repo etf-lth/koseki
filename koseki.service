@@ -1,5 +1,6 @@
 [Unit]
 Description=Koseki
+Requires=mysqld.service
 
 [Service]
 User=root
