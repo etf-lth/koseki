@@ -1,0 +1,11 @@
+[Unit]
+Description=Koseki
+
+[Service]
+User=root
+WorkingDirectory=/srv/koseki
+ExecStart=./start_production.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
