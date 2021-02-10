@@ -4,7 +4,7 @@ Description=Koseki
 [Service]
 User=root
 WorkingDirectory=/srv/koseki
-ExecStart=./start_production.sh
+ExecStart=/srv/koseki/start_production.sh
 Restart=always
 
 [Install]
