@@ -10,15 +10,20 @@ from koseki.db.types import Base, Group, Person, PersonGroup
 
 
 class Storage:
-    def __init__(self, conn: str = "sqlite:///koseki.db") -> None:
+    def __init__(self, conn: str = "sqlite:///:memory:") -> None:
+        sql_args = {
+            "pool_recycle": 600,
+            "pool_pre_ping": True,
+        }
+        if (conn.startswith("mysql")):
+            sql_args["pool_use_lifo"] = True
+            sql_args["pool_size"] = 10
+            sql_args["max_overflow"] = 20
+            sql_args["pool_timeout"] = 3
+
         self.engine: Engine = create_engine(
             conn,
-            pool_recycle=600,
-            pool_use_lifo=True,
-            pool_pre_ping=True,
-            pool_size=10,
-            max_overflow=20,
-            pool_timeout=3,
+            **sql_args
         )
 
         metadata: MetaData = Base.metadata

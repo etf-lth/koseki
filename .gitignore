@@ -3,6 +3,7 @@
 *.swp
 *.png~
 koseki.cfg
+koseki.db
 /mariadb
 /data/*
-.vscode/settings.json
+.vscode/
