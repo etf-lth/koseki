@@ -56,15 +56,20 @@ class KosekiCore:
         #
         # Storage
         #
-        self.storage = Storage(
-            "mysql://%s:%s@%s/%s"
-            % (
-                app.config["DB_USER"],
-                app.config["DB_PASSWORD"],
-                app.config["DB_HOST"],
-                app.config["DB_DATABASE"],
+        if app.config["DB_TYPE"].lower() == "sqlite":
+            self.storage = Storage("sqlite:///%s" % app.config["DB_SQLITE_PATH"])
+        elif app.config["DB_TYPE"].lower() == "mysql":
+            self.storage = Storage(
+                "mysql://%s:%s@%s/%s"
+                % (
+                    app.config["DB_USER"],
+                    app.config["DB_PASSWORD"],
+                    app.config["DB_HOST"],
+                    app.config["DB_DATABASE"],
+                )
             )
-        )
+        else:
+            raise ValueError("DB_TYPE is unsupported. Please choose between sqlite/mysql.")
         # Return connections to db pool after closure
         self.app.teardown_appcontext(self.storage.close)
 

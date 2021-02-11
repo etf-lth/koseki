@@ -29,10 +29,12 @@ class KosekiConfig():
     #
     # Database config
     #
+    DB_TYPE = "MySQL"
     DB_HOST = "127.0.0.1"
     DB_USER = "root"
     DB_DATABASE = "koseki"
     DB_PASSWORD = "password"
+    DB_SQLITE_PATH = "koseki.db"
 
     #
     # Email config
