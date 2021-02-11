@@ -82,7 +82,7 @@ class SessionView(KosekiView):
             )
             if (
                 person
-                and self.auth.verify_password(person, form_login.password.data)
+                and self.auth.verify_password(person.password, form_login.password.data)
             ):
                 self.util.start_session(person.uid)
                 return redirect(request.form["redir"])

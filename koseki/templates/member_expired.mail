@@ -5,9 +5,9 @@ Your membership has now expired.
 
 Please renew your membership by either:
 
-A) Pay the yearly fee of {% config["PAYMENT_YEARLY_FEE"] %} kr to Bankgiro {% config["PAYMENT_METHOD_BANKGIRO"] %}. Please state your name as reference.
+A) Pay the yearly fee of {{ config["PAYMENT_YEARLY_FEE"] }} kr to Bankgiro {{ config["PAYMENT_METHOD_BANKGIRO"] }}. Please state your name as reference.
 
-or B) Pay the yearly fee of {% config["PAYMENT_YEARLY_FEE"] %} kr via Swish to {% config["PAYMENT_METHOD_SWISH"] %}.
+or B) Pay the yearly fee of {{ config["PAYMENT_YEARLY_FEE"] }} kr via Swish to {{ config["PAYMENT_METHOD_SWISH"] }}.
 
 or C) Pay the fee by cash to the treasurer.
 

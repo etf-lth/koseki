@@ -45,14 +45,14 @@ class KosekiConfig():
     @property
     def SMTP_PORT(self) -> int:  # pylint: disable=invalid-name
         return 587 if self.SMTP_USE_TLS else 25
-    EMAIL_FROM = "Koseki Member management <member@acme.nu>"
+    EMAIL_FROM = "Koseki Member management <member@example.com>"
     EMAIL_SUBJECT = "Koseki Member management"
 
     #
     # Organisation config
     #
-    ORG_NAME = "Koseki"
-    ORG_EMAIL = "contact@acme.nu"
+    ORG_NAME = "Example Org."
+    ORG_EMAIL = "contact@example.com"
 
     #
     # User config

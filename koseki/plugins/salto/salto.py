@@ -44,7 +44,7 @@ class SaltoPlugin(KosekiPlugin):
         ):
             if member.username is None or len(member.username) < 1:
                 continue
-            if self.util.member_of("sales", member):
+            if self.auth.member_of("sales", member):
                 out = out + member.username + "\r\n"
         return out
 
@@ -59,6 +59,6 @@ class SaltoPlugin(KosekiPlugin):
         ):
             if member.username is None or len(member.username) < 1:
                 continue
-            if self.util.member_of("mek", member):
+            if self.auth.member_of("mek", member):
                 out = out + member.username + "\r\n"
         return out
