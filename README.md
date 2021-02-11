@@ -16,7 +16,7 @@ To install the dependencies neccesary, please run:
 sudo python3 -m pip install -r requirements/production.txt
 ```
 
-You can also install Koseki as a system service in SystemD. Please move or place the Koseki installation at `/srv/koseki`, then make a symlink to the service file.
+You can also install Koseki as a system service in SystemD. Please move or place the Koseki installation at `/srv/koseki`, then make a symlink to the service file. Please configure Koseki before starting it...
 
 ```bash
 sudo chown root:root /srv/koseki -R
@@ -28,7 +28,7 @@ sudo systemctl start koseki
 sudo systemctl status koseki
 ```
 
-Please configure Koseki before starting it...
+It is possible to view the log by tailing the `koseki.log` file in the installations folder. It is also possible to run the system mantually (for example in a Tmux session, although this is discouraged due to no restart if machine reboots) with the `./start_production.sh` command.
 
 ## 🏠 **Configuration**
 
@@ -38,17 +38,27 @@ Copy the `koseki.cfg.templ` file to `koseki.cfg` before starting the system. Onc
 
 The default login credentials are:
 
- ⚠️ **Please change the default password and email after login!!!** ⚠️ 
-
 | Username          | Password |
 | ----------------- | -------- |
 | admin@example.com | password |
+
+⚠️ **Please change the default password and email after login!!!** ⚠️ 
 
 ## ♻️ **Updates & Support**
 
 Please note that this software is still lacking generalisation features, for example changing currency (which is still hard-coded to Krona "kr" only). See [**Issues**](https://github.com/etf-lth/koseki/issues) for a more detailed to-do list.
 
 Due to this being a student-driven project, no official/deadline-driven support can be given. Please contact whoever is DDG (IT-role) at the association and ask nicely. :-)
+
+## 💮 **Development**
+
+Standard development environment is VSCode. Please install the development dependencies with:
+
+```bash
+python3.9 -m pip install -r requirements/development.txt
+```
+
+All commits must follow PEP 8, pass pylint, pass pytests and be coded with "future-proof" in mind. Keep in mind to make features "organisation agnostic" i.e. configurable, and to make it toggable (by making it into a Plugin) if it falls outside the core features of Koseki.
 
 ## 📠 **Support & Legal**
 
