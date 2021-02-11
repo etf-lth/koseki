@@ -62,7 +62,10 @@ class KosekiConfig():
     #
     # Payment config
     #
+    PAYMENT_YEARLY_FEE = 200
     PAYMENT_DEBT_ENABLED = False
+    PAYMENT_METHOD_BANKGIRO = "XXX-YYYY"
+    PAYMENT_METHOD_SWISH = "123 XXX YY ZZ"
 
     #
     # Theme configs
