@@ -140,8 +140,9 @@ class FeesView(KosekiView):
                 start: datetime = last_fee.end  # type: ignore
             else:
                 start = datetime.now()
-            # end = start + timedelta(days=(3.65*int(form.amount.data)))
-            end = start + timedelta(days=(1.825 * int(fee_form.amount.data)))
+            end = start + timedelta(days=(
+                (365 / self.app.config["PAYMENT_YEARLY_FEE"]) * int(fee_form.amount.data))
+            )
 
             # Store fee
             fee = Fee(

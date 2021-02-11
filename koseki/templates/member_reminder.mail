@@ -4,11 +4,11 @@ Your membership will expire in {{ days_left }} days.
 
 You may renew your membership by either:
 
-1) Paying the fee specified on http://etf.nu/om-etf/ to Bankgiro 281-1362. Please state your name as reference.
+A) Pay the yearly fee of {% config["PAYMENT_YEARLY_FEE"] %} kr to Bankgiro {% config["PAYMENT_METHOD_BANKGIRO"] %}. Please state your name as reference.
 
-or 
+or B) Pay the yearly fee of {% config["PAYMENT_YEARLY_FEE"] %} kr via Swish to {% config["PAYMENT_METHOD_SWISH"] %}.
 
-2) Paying the fee cash to the treasurer. 
+or C) Pay the fee by cash to the treasurer.
 
 
 
