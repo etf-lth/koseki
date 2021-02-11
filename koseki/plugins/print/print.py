@@ -3,12 +3,12 @@ import os
 import time
 from typing import Union
 
-from werkzeug.wrappers import Response
-
 import cups  # type: ignore
 from flask import Blueprint, render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from flask_wtf.file import FileField, FileRequired  # type: ignore
+from werkzeug.wrappers import Response
+
 from koseki.plugin import KosekiPlugin
 from koseki.util import KosekiAlert, KosekiAlertType
 
@@ -19,10 +19,15 @@ class PrintForm(FlaskForm):
 
 class PrintPlugin(KosekiPlugin):
     def config(self) -> dict:
-        return {"ALLOWED_EXTENSIONS": ["pdf"]}
+        return {
+            "UPLOAD_FOLDER": "./data",
+            "ALLOWED_EXTENSIONS": ["pdf"]
+        }
 
     def plugin_enable(self) -> None:
-        self.cups_conn = cups.Connection() # pylint: disable=attribute-defined-outside-init
+        if not os.path.exists(self.app.config["UPLOAD_FOLDER"]):
+            os.makedirs(self.app.config["UPLOAD_FOLDER"])
+        self.cups_conn = cups.Connection()  # pylint: disable=attribute-defined-outside-init
 
     def create_blueprint(self) -> Blueprint:
         self.util.nav("/print", "print", "Print", 6)
@@ -69,7 +74,8 @@ class PrintPlugin(KosekiPlugin):
                     KosekiAlert(
                         KosekiAlertType.DANGER,
                         "Error",
-                        "That type of file is not allowed. Please try again or with a different file. Allowed files are: %s"
+                        """That type of file is not allowed.
+                        Please try again or with a different file. Allowed files are: %s"""
                         % (", ".join(self.app.config["ALLOWED_EXTENSIONS"])),
                     )
                 )
