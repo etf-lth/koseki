@@ -74,8 +74,8 @@ class KosekiCore:
         self.app.teardown_appcontext(self.storage.close)
 
         # Misc Utilities
-        self.util = KosekiUtil(self.storage)
-        self.auth = KosekiAuth(self.util)
+        self.auth = KosekiAuth(self.storage)
+        self.util = KosekiUtil(app, self.auth, self.storage)
         self.mail = KosekiMailer(self.app)
         self.scheduler = KosekiScheduler(app, self.storage, self.mail)
         self.plugins = KosekiPluginManager(
@@ -130,11 +130,11 @@ class KosekiCore:
         self.app.context_processor(lambda: dict(gravatar=self.util.gravatar))
         self.app.context_processor(
             lambda: dict(make_nav=lambda: session["nav"]))
-        self.app.context_processor(lambda: dict(member_of=self.util.member_of))
+        self.app.context_processor(lambda: dict(member_of=self.auth.member_of))
         self.app.context_processor(lambda:
                                    dict(now=lambda: datetime.datetime(2000, 1, 1).fromtimestamp(time.time())))
         self.app.context_processor(lambda: dict(
-            swish_qrcode=self.util.swish_qrcode))
+            generate_swish_code=self.util.generate_swish_code))
         self.app.context_processor(lambda: dict(
             uid_to_name=self.util.uid_to_name))
         self.app.context_processor(lambda: dict(

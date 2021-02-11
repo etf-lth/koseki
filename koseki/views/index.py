@@ -14,7 +14,7 @@ class IndexView(KosekiView):
         self.util.nav("/", "home", "Home", -999)
 
     def index(self) -> Union[str, Response]:
-        if self.util.member_of("admin") or self.util.member_of("board"):
+        if self.auth.member_of("admin") or self.auth.member_of("board"):
             active = (
                 self.storage.session.query(
                     Person).filter_by(state="active").count()

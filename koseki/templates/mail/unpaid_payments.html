@@ -16,7 +16,7 @@ Debt is usually for past purchase of soft drinks, sweets or pastries bought in t
 
 <br /><br />
 
-<img src="{{ swish_qrcode(member) }}" alt="Swish QR Code" width="250" border="0" />
+<img src="{{ config['URL_BASE'] }}/api/swish/{{ generate_swish_code(-member.balance, 'Debt - Kiosk') }}" alt="Swish QR Code" width="250" border="0" />
 
 <br /><br />
 
@@ -63,7 +63,7 @@ Please note the total does not always match the list if you have previously paid
 <br /><br />
 
 Payment can be done either in cash, through bank transfer with BankGiro, or Swish.
-The Swish number is {% config["PAYMENT_METHOD_SWISH"] %}, BankGiro is {% config["PAYMENT_METHOD_BANKGIRO"] %}. Cash payment can be made to any Board member.
+The Swish number is {{ config["PAYMENT_METHOD_SWISH"] }}, BankGiro is {{ config["PAYMENT_METHOD_BANKGIRO"] }}. Cash payment can be made to any Board member.
 
 <br /><br />
 

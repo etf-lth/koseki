@@ -15,17 +15,23 @@ Your membership is activated when your membership fee has been registered.<br />
 If you have already paid the fee, please disregard this mail. Otherwise please:
 
 <br /><br />
+<br /><br />
 
-A) Pay the yearly fee of {% config["PAYMENT_YEARLY_FEE"] %} kr to Bankgiro {% config["PAYMENT_METHOD_BANKGIRO"] %}. Please state your name as reference.
+A) Pay the yearly fee of {{ config["PAYMENT_YEARLY_FEE"] }} kr to Bankgiro {{ config["PAYMENT_METHOD_BANKGIRO"] }}. Please state your name as reference.
 
 <br /><br />
 
-<b>or</b> B) Pay the yearly fee of {% config["PAYMENT_YEARLY_FEE"] %} kr via Swish to {% config["PAYMENT_METHOD_SWISH"] %}.
+<b>or</b> B) Pay the yearly fee of {{ config["PAYMENT_YEARLY_FEE"] }} kr via Swish to {{ config["PAYMENT_METHOD_SWISH"] }}.
+
+<br /><br />
+
+<img src="{{ config['URL_BASE'] }}/api/swish/{{ generate_swish_code(config['PAYMENT_YEARLY_FEE'], 'Debt - Kiosk') }}" alt="Swish QR Code" width="250" border="0" />
 
 <br /><br />
 
 <b>or</b> C) Pay the fee by cash to the treasurer.
 
+<br /><br />
 <br /><br />
 
 You may visit your membership profile for more information about your membership.<br />

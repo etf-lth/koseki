@@ -1,14 +1,16 @@
 import base64
-import datetime
 import hashlib
 import logging
-from typing import Optional, Union, cast
+from datetime import datetime
+from typing import Optional, Tuple
 
-import requests
 from flask import session
+from flask.app import Flask
+from requests.utils import requote_uri
 
+from koseki.auth import KosekiAuth
 from koseki.db.storage import Storage
-from koseki.db.types import Group, Person
+from koseki.db.types import Person
 
 
 class KosekiAlertType:
@@ -47,7 +49,9 @@ class KosekiNavigationEntry(dict):
 
 
 class KosekiUtil:
-    def __init__(self, storage: Storage):
+    def __init__(self, app: Flask, auth: KosekiAuth, storage: Storage):
+        self.app = app
+        self.auth = auth
         self.storage = storage
         self.navigation: list[KosekiNavigationEntry] = []
         self.alt_login: list[dict] = []
@@ -60,7 +64,7 @@ class KosekiUtil:
         nav_list: list[KosekiNavigationEntry] = []
         for nav in self.navigation:
             if nav.groups is None or sum(
-                1 for group in nav.groups if self.member_of(group)
+                1 for group in nav.groups if self.auth.member_of(group)
             ) > 0:
                 nav_list.append(nav)
         session["nav"] = sorted(nav_list, key=lambda x: x.weight)
@@ -83,55 +87,13 @@ class KosekiUtil:
             hashlib.md5(mail.encode("utf-8")).hexdigest()
         )
 
-    def format_date(self, value: datetime.datetime, date_format: str = "%Y-%m-%d") -> str:
+    def format_date(self, value: datetime, date_format: str = "%Y-%m-%d") -> str:
         return value.strftime(date_format)
 
     def uid_to_name(self, uid: int) -> str:
         person = self.storage.session.query(
             Person).filter_by(uid=uid).scalar()
         return "%s %s" % (person.fname, person.lname) if person else "Nobody"
-
-    def swish_qrcode(self, member: Person) -> str:
-        if member.balance >= 0:
-            return ""
-        data = dict(
-            format="png",
-            size=350,
-            message={"value": member.username, "editable": False},
-            amount={"value": -float(member.balance), "editable": False},
-            payee={"value": "123 019 24 76", "editable": False},
-        )
-        headers = {"Content-type": "application/json"}
-        response = requests.post(
-            "https://mpc.getswish.net/qrg-swish/api/v1/prefilled",
-            headers=headers,
-            json=data,
-        )
-        return (
-            "data:"
-            + response.headers["Content-Type"]
-            + ";"
-            + "base64,"
-            + str(base64.b64encode(response.content), "utf-8")
-        )
-
-    def member_of(self, group: Union[int, str, Group, None], person: Optional[Person] = None) -> bool:
-        if group is None:
-            raise ValueError("group cannot be None when checking member_of")
-        if person is None:
-            person = self.storage.query(Person).filter_by(
-                uid=self.current_user()).scalar()
-
-        if isinstance(group, int):
-            group = self.storage.query(Group).filter_by(gid=group).scalar()
-        elif isinstance(group, str):
-            group = self.storage.query(Group).filter_by(name=group).scalar()
-
-        if group is None:
-            return False
-
-        g: Group = cast(Group, group)
-        return sum(1 for x in person.groups if x.gid == g.gid) > 0
 
     def alert(self, alert: KosekiAlert) -> None:
         if "alerts" not in session:
@@ -149,3 +111,29 @@ class KosekiUtil:
     def alternate_login(self, alt: dict) -> None:
         self.alt_login.append(alt)
         logging.info("Registered alternate login provider: %s", alt["button"])
+
+    def generate_swish_code(self, amount: float, message: str) -> str:
+        if amount < 0:
+            return "ERROR_CODE:NEGATIVE_AMOUNT"
+
+        res = "C%s;%.2f;%s;0;%.0f" % (
+            self.app.config["PAYMENT_METHOD_SWISH"], amount,
+            requote_uri(message), datetime.timestamp(datetime.now()))
+
+        res += "#" + \
+            self.auth.hash_password(res + self.app.config["SECRET_KEY"])
+
+        return str(base64.urlsafe_b64encode(res.encode("utf-8")), "utf-8")
+
+    def validate_swish_code(self, code: str) -> Tuple[bool, Optional[str]]:
+        code = str(base64.urlsafe_b64decode(code.encode("utf-8")), "utf-8")
+        code_parts = code.split("#")
+        if len(code_parts) != 2:
+            return False, None
+
+        message = code_parts[0]
+        signature = code_parts[1]
+        if not self.auth.verify_password(signature, message + self.app.config["SECRET_KEY"]):
+            return False, None
+
+        return True, message

@@ -93,10 +93,10 @@ class UserView(KosekiView):
         if request.method == "POST":
             for group in groups:
                 # Only admin can add or remove admin!
-                if not self.util.member_of("admin") and group.name == "admin":
+                if not self.auth.member_of("admin") and group.name == "admin":
                     continue
 
-                current_state = self.util.member_of(group, person)
+                current_state = self.auth.member_of(group, person)
                 if sum(1 for gid in list(request.form.keys()) if gid == str(group.gid)):
                     # Member of the group, add if needed
                     if not current_state:
