@@ -6,6 +6,7 @@ from typing import Optional, Tuple
 
 from flask import session
 from flask.app import Flask
+from flask.globals import request
 from requests.utils import requote_uri
 
 from koseki.auth import KosekiAuth
@@ -101,6 +102,8 @@ class KosekiUtil:
         session["alerts"].append(alert)
 
     def render_alerts(self) -> list[KosekiAlert]:
+        if not request:
+            return []
         alerts: list[KosekiAlert] = session.pop("alerts", [])
         session["alerts"] = []
         return alerts
