@@ -18,8 +18,10 @@ class CASPlugin(KosekiPlugin):
             "USER_USERNAME_ENABLED": True,  # Override to enable Debt in Koseki
         }
 
-    def create_blueprint(self) -> Blueprint:
+    def plugin_enable(self) -> None:
         self.util.alternate_login(self.cas_login())
+
+    def create_blueprint(self) -> Blueprint:
         blueprint: Blueprint = Blueprint("cas", __name__)
         blueprint.add_url_rule("/cas", None, self.cas_ticket)
         return blueprint

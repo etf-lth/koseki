@@ -1,4 +1,5 @@
 import importlib
+from koseki.schedule import KosekiScheduler
 import logging
 import os
 import types
@@ -12,11 +13,12 @@ from koseki.util import KosekiUtil
 
 
 class KosekiPlugin:
-    def __init__(self, app: Flask, storage: Storage, auth: KosekiAuth, util: KosekiUtil):
+    def __init__(self, app: Flask, storage: Storage, auth: KosekiAuth, util: KosekiUtil, scheduler: KosekiScheduler):
         self.app = app
         self.storage = storage
         self.auth = auth
         self.util = util
+        self.scheduler = scheduler
 
     def config(self) -> dict:
         return {}
@@ -33,12 +35,13 @@ class KosekiPlugin:
 
 class KosekiPluginManager:
     def __init__(
-        self, app: Flask, storage: Storage, auth: KosekiAuth, util: KosekiUtil
+        self, app: Flask, storage: Storage, auth: KosekiAuth, util: KosekiUtil, scheduler: KosekiScheduler
     ):
         self.app = app
         self.storage = storage
         self.auth = auth
         self.util = util
+        self.scheduler = scheduler
         self.plugins: dict[str, KosekiPlugin] = {}
 
     def register_plugins(self) -> None:
@@ -55,7 +58,7 @@ class KosekiPluginManager:
                 "koseki.plugins." + plugin_name.lower()
             )
             plugin_type: type = getattr(plugin_module, plugin_name + "Plugin")
-            plugin = plugin_type(self.app, self.storage, self.auth, self.util)
+            plugin = plugin_type(self.app, self.storage, self.auth, self.util, self.scheduler)
             self.plugins[plugin_name] = plugin
 
             # Register config variables

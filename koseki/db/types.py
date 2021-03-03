@@ -37,7 +37,7 @@ class Fee(Base):
     start = Column(DateTime)
     end = Column(DateTime)
     method = Column(Enum("swish", "cash", "bankgiro",
-                    "creditcard"), default="swish")
+                         "creditcard"), default="swish")
 
 
 class Payment(Base):
@@ -86,7 +86,8 @@ class Person(Base):
     country = Column(Unicode(64))
     phone_number = Column(Unicode(64))
 
-    groups: Reversible[PersonGroup] = relationship("PersonGroup", backref="person")
+    groups: Reversible[PersonGroup] = relationship(
+        "PersonGroup", backref="person")
     fees: Reversible[Fee] = relationship(
         "Fee", primaryjoin="Fee.uid==Person.uid", order_by="desc(Fee.fid)"
     )
@@ -142,3 +143,12 @@ class Person(Base):
             self.country = None
         if self.phone_number == "":
             self.phone_number = None
+
+
+class Metric(Base):
+    __tablename__: str = "metric"
+
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    type = Column(Unicode(length=255), nullable=False)
+    time = Column(DateTime, nullable=False)
+    value = Column(DECIMAL(10, 2), nullable=False)

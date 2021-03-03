@@ -15,6 +15,7 @@ class KosekiScheduler:
         self.storage = storage
         self.mail = mail
         self.__sched = BackgroundScheduler()
+        self.add_job = self.__sched.add_job
 
     def start(self) -> None:
         self.__sched.start()

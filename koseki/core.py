@@ -79,7 +79,7 @@ class KosekiCore:
         self.mail = KosekiMailer(self.app)
         self.scheduler = KosekiScheduler(app, self.storage, self.mail)
         self.plugins = KosekiPluginManager(
-            self.app, self.storage, self.auth, self.util)
+            self.app, self.storage, self.auth, self.util, self.scheduler)
 
     def start(self, flask_server: bool = True) -> None:
         with self.app.app_context():
