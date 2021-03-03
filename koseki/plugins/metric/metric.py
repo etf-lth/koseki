@@ -4,7 +4,7 @@ from typing import List, Union
 from flask import Blueprint
 from werkzeug.wrappers import Response
 
-from koseki.db.types import Metric, Payment
+from koseki.db.types import Fee, Metric, Payment
 from koseki.plugin import KosekiPlugin
 
 
@@ -15,10 +15,50 @@ class MetricPlugin(KosekiPlugin):
     def plugin_enable(self) -> None:
         # register clock
         self.scheduler.add_job(self.calc_metric, "cron", minute=0, second=0)
+        self.calc_metric()
 
     def calc_metric(self) -> None:
         with self.app.app_context():
+            self.__calc_metric_active_fees()
             self.__calc_metric_payment()
+
+    def __calc_metric_active_fees(self) -> None:
+        if self.storage.session.query(Fee).count() == 0:
+            return
+
+        fees: List[Fee] = (
+            self.storage.session.query(Fee)
+            .order_by(Fee.fid.asc())
+            .all()
+        )
+        time: datetime
+        metrics: List[Metric] = (
+            self.storage.query(Metric)
+            .filter_by(type="fee-current-active")
+            .order_by(Metric.time.asc())
+            .all()
+        )
+        if len(metrics) == 0:
+            time = datetime.combine(
+                fees[0].start.date(), datetime.min.time())
+        else:
+            time = metrics[0].time
+        while time <= datetime.now():
+            # Only insert the metric row if it doesn't already exist.
+            if sum(1 for metric in metrics if metric.time == time) == 0:
+                total: float = 0.0
+                for fee in fees:
+                    if fee.start < time and fee.end > time:
+                        total += 1
+                self.storage.add(Metric(
+                    type="fee-current-active",
+                    value=total,
+                    time=time
+                ))
+            time += timedelta(days=1)
+
+        self.storage.commit()
+        return
 
     def __calc_metric_payment(self) -> None:
         if self.storage.session.query(Payment).count() == 0:
@@ -30,24 +70,24 @@ class MetricPlugin(KosekiPlugin):
             .all()
         )
         time: datetime
-        last_metric: Union[Metric, None] = (
+        metrics: List[Metric] = (
             self.storage.query(Metric)
-            .order_by(Metric.time.desc())
-            .first()
+            .filter_by(type="payment-running-total")
+            .order_by(Metric.time.asc())
+            .all()
         )
-        if last_metric is None:
-            time = datetime.combine(payments[0].registered.date(), datetime.min.time())
+        if len(metrics) == 0:
+            time = datetime.combine(
+                payments[0].registered.date(), datetime.min.time())
         else:
-            time = last_metric.time
+            time = metrics[0].time
         while time <= datetime.now():
-            total: float = 0.0
-            for payment in payments:
-                if payment.registered < time:
-                    total += float(payment.amount)
             # Only insert the metric row if it doesn't already exist.
-            if (self.storage.query(Metric)
-                .filter_by(type="payment-running-total", value=total, time=time)
-                .count()) == 0:
+            if sum(1 for metric in metrics if metric.time == time) == 0:
+                total: float = 0.0
+                for payment in payments:
+                    if payment.registered < time:
+                        total += float(payment.amount)
                 self.storage.add(Metric(
                     type="payment-running-total",
                     value=total,

@@ -32,10 +32,10 @@ class Fee(Base):
     fid = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     uid = Column(Integer, ForeignKey("person.uid"))
     registered_by = Column(Integer, ForeignKey("person.uid"))
-    amount = Column(Integer)
+    amount = Column(Integer, nullable=False)
     registered = Column(DateTime, default=datetime.now)
-    start = Column(DateTime)
-    end = Column(DateTime)
+    start = Column(DateTime, nullable=False)
+    end = Column(DateTime, nullable=False)
     method = Column(Enum("swish", "cash", "bankgiro",
                          "creditcard"), default="swish")
 
