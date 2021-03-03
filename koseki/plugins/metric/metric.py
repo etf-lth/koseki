@@ -59,7 +59,7 @@ class MetricPlugin(KosekiPlugin):
         return
 
     def create_blueprint(self) -> Blueprint:
-        blueprint: Blueprint = Blueprint("cas", __name__)
+        blueprint: Blueprint = Blueprint("metric", __name__)
         blueprint.add_url_rule("/metric", None, self.metric)
         return blueprint
 
