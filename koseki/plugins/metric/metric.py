@@ -15,7 +15,6 @@ class MetricPlugin(KosekiPlugin):
     def plugin_enable(self) -> None:
         # register clock
         self.scheduler.add_job(self.calc_metric, "cron", minute=0, second=0)
-        self.calc_metric()
 
     def calc_metric(self) -> None:
         with self.app.app_context():
