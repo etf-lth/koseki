@@ -1,5 +1,4 @@
 import importlib
-from koseki.schedule import KosekiScheduler
 import logging
 import os
 import types
@@ -9,11 +8,13 @@ from flask.blueprints import Blueprint
 
 from koseki.auth import KosekiAuth
 from koseki.db.storage import Storage
+from koseki.schedule import KosekiScheduler
 from koseki.util import KosekiUtil
 
 
 class KosekiPlugin:
-    def __init__(self, app: Flask, storage: Storage, auth: KosekiAuth, util: KosekiUtil, scheduler: KosekiScheduler):
+    def __init__(self, app: Flask, storage: Storage, auth: KosekiAuth,
+                 util: KosekiUtil, scheduler: KosekiScheduler):
         self.app = app
         self.storage = storage
         self.auth = auth
@@ -30,12 +31,13 @@ class KosekiPlugin:
         pass
 
     def create_blueprint(self) -> Blueprint:
-        pass
+        return Blueprint(__name__, __name__)
 
 
 class KosekiPluginManager:
     def __init__(
-        self, app: Flask, storage: Storage, auth: KosekiAuth, util: KosekiUtil, scheduler: KosekiScheduler
+        self, app: Flask, storage: Storage, auth: KosekiAuth,
+        util: KosekiUtil, scheduler: KosekiScheduler
     ):
         self.app = app
         self.storage = storage
@@ -58,7 +60,8 @@ class KosekiPluginManager:
                 "koseki.plugins." + plugin_name.lower()
             )
             plugin_type: type = getattr(plugin_module, plugin_name + "Plugin")
-            plugin = plugin_type(self.app, self.storage, self.auth, self.util, self.scheduler)
+            plugin = plugin_type(self.app, self.storage,
+                                 self.auth, self.util, self.scheduler)
             self.plugins[plugin_name] = plugin
 
             # Register config variables

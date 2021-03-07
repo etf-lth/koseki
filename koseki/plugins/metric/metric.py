@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
-from typing import List, Union
+from typing import List
 
-from flask import Blueprint
-from werkzeug.wrappers import Response
+from logging_prometheus import export_stats_on_root_logger # type: ignore
+from prometheus_flask_exporter import PrometheusMetrics  # type: ignore
 
 from koseki.db.types import Fee, Metric, Payment
 from koseki.plugin import KosekiPlugin
@@ -13,7 +13,9 @@ class MetricPlugin(KosekiPlugin):
         return {}
 
     def plugin_enable(self) -> None:
-        # register clock
+        PrometheusMetrics(self.app)
+        export_stats_on_root_logger()
+        # Register clock
         self.scheduler.add_job(self.calc_metric, "cron", minute=0, second=0)
         self.calc_metric()
 
@@ -48,7 +50,7 @@ class MetricPlugin(KosekiPlugin):
             if sum(1 for metric in metrics if metric.time == time) == 0:
                 total: float = 0.0
                 for fee in fees:
-                    if fee.start < time and fee.end > time:
+                    if fee.start < time < fee.end:
                         total += 1
                 self.storage.add(Metric(
                     type="fee-current-active",
@@ -97,11 +99,3 @@ class MetricPlugin(KosekiPlugin):
 
         self.storage.commit()
         return
-
-    def create_blueprint(self) -> Blueprint:
-        blueprint: Blueprint = Blueprint("metric", __name__)
-        blueprint.add_url_rule("/metric", None, self.metric)
-        return blueprint
-
-    def metric(self) -> Union[str, Response]:
-        return "metric on"

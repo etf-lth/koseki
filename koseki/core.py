@@ -57,7 +57,8 @@ class KosekiCore:
         # Storage
         #
         if app.config["DB_TYPE"].lower() == "sqlite":
-            self.storage = Storage("sqlite:///%s" % app.config["DB_SQLITE_PATH"])
+            self.storage = Storage("sqlite:///%s" %
+                                   app.config["DB_SQLITE_PATH"])
         elif app.config["DB_TYPE"].lower() == "mysql":
             self.storage = Storage(
                 "mysql://%s:%s@%s/%s"
@@ -69,7 +70,8 @@ class KosekiCore:
                 )
             )
         else:
-            raise ValueError("DB_TYPE is unsupported. Please choose between sqlite/mysql.")
+            raise ValueError(
+                "DB_TYPE is unsupported. Please choose between sqlite/mysql.")
         # Return connections to db pool after closure
         self.app.teardown_appcontext(self.storage.close)
 
@@ -131,8 +133,8 @@ class KosekiCore:
         self.app.context_processor(
             lambda: dict(make_nav=lambda: session["nav"]))
         self.app.context_processor(lambda: dict(member_of=self.auth.member_of))
-        self.app.context_processor(lambda:
-                                   dict(now=lambda: datetime.datetime(2000, 1, 1).fromtimestamp(time.time())))
+        self.app.context_processor(lambda: dict(now=lambda: datetime.datetime(2000, 1, 1)
+                                                .fromtimestamp(time.time())))
         self.app.context_processor(lambda: dict(
             generate_swish_code=self.util.generate_swish_code))
         self.app.context_processor(lambda: dict(

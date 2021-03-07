@@ -76,8 +76,7 @@ class KosekiScheduler:
                         .filter_by(uid=member.uid)
                         .order_by(Fee.end.desc()).first()
                     )
-                    days_left = (last_fee.end - datetime.now()  # type: ignore
-                                 ).days
+                    days_left = (last_fee.end - datetime.now()).days
 
                     # Send reminder to member
                     if days_left == 14:
