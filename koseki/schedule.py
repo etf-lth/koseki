@@ -20,7 +20,7 @@ class KosekiScheduler:
     def start(self) -> None:
         self.__sched.start()
         self.__sched.add_job(self.__update_members, "cron",
-                             hour=4, minute=0, second=0)
+                             hour=4, minute=13, second=0)
         if self.app.config["PAYMENT_DEBT_ENABLED"]:
             self.__sched.add_job(
                 self.__send_debt_mail,
@@ -28,7 +28,7 @@ class KosekiScheduler:
                 month="*/3",
                 day=28,
                 hour=5,
-                minute=0,
+                minute=24,
                 second=0,
             )
 
