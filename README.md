@@ -21,7 +21,7 @@ You can also install Koseki as a system service in SystemD. Please move or place
 ```bash
 sudo chown root:root /srv/koseki -R
 sudo chmod 770 /srv/koseki -R
-sudo ln -s a /srv/koseki/koseki.service /etc/systemd/system/koseki.service
+sudo ln -s /srv/koseki/koseki.service /etc/systemd/system/koseki.service
 
 sudo systemctl enable koseki
 sudo systemctl start koseki
