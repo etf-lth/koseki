@@ -91,6 +91,9 @@ class UserView(KosekiView):
             raise abort(404)
 
         if request.method == "POST":
+            # Only enroll can add or remove groups
+            if not self.auth.member_of("enroll") and not self.auth.member_of("admin"):
+                abort(403)
             for group in groups:
                 # Only admin can add or remove admin!
                 if not self.auth.member_of("admin") and group.name == "admin":

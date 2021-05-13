@@ -19,7 +19,7 @@
                 <td>
                     <input type="checkbox" name="{{ group.gid }}" class="form-check-input mx-auto d-block mt-0"
                         style="width: 20px;height: 20px;" {{ ' checked' if member_of(group, person)}} {{ 'disabled' if
-                        group.name=='admin' and not member_of('admin') }}>
+                        (group.name=='admin' and not member_of('admin')) or (not member_of('admin') and not member_of('enroll')) }}>
                 </td>
                 <td>{{ group_badge(group.name) }}</td>
                 <td>{{ group.descr }}</td>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="">
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary" {{ 'disabled' if (not member_of('admin') and not member_of('enroll')) }}>
             <i class="fa fa-check me-1"></i> Save
         </button>
     </div>
