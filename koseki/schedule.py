@@ -7,13 +7,15 @@ from flask import Flask
 from koseki.db.storage import Storage
 from koseki.db.types import Fee, Person
 from koseki.mail import KosekiMailer
+from koseki.util import KosekiUtil
 
 
 class KosekiScheduler:
-    def __init__(self, app: Flask, storage: Storage, mail: KosekiMailer):
+    def __init__(self, app: Flask, storage: Storage, mail: KosekiMailer, util: KosekiUtil):
         self.app = app
         self.storage = storage
         self.mail = mail
+        self.util = util
         self.__sched = BackgroundScheduler()
         self.add_job = self.__sched.add_job
 
@@ -23,7 +25,7 @@ class KosekiScheduler:
                              hour=4, minute=13, second=0)
         if self.app.config["PAYMENT_DEBT_ENABLED"]:
             self.__sched.add_job(
-                self.__send_debt_mail,
+                self.util.send_debt_mail,
                 "cron",
                 month="*/3",
                 day=28,
@@ -90,23 +92,3 @@ class KosekiScheduler:
                             member=member,
                             days_left=days_left,
                         )
-
-    def __send_debt_mail(self) -> None:
-        with self.app.app_context():
-            logging.info("Checking debt and sending emails")
-            # This could probably be made more efficient with a .filter() on balance, but
-            # difficult right now to implement as SQLAlchy wouldn't know how to structure
-            # the SQL query due to .balance being a @property.
-            members = self.storage.session.query(Person).all()
-
-            for member in members:
-                if member.balance >= 0:
-                    continue
-
-                logging.info(
-                    "Member %s %s has %d unpaid payments, sending reminder",
-                    member.fname, member.lname, len(member.unpaid_payments)
-                )
-                self.mail.send_mail(
-                    member, "mail/unpaid_payments.html", member=member
-                )

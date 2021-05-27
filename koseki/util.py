@@ -12,6 +12,7 @@ from requests.utils import requote_uri
 from koseki.auth import KosekiAuth
 from koseki.db.storage import Storage
 from koseki.db.types import Person
+from koseki.mail import KosekiMailer
 
 
 class KosekiAlertType:
@@ -50,14 +51,16 @@ class KosekiNavigationEntry(dict):
 
 
 class KosekiUtil:
-    def __init__(self, app: Flask, auth: KosekiAuth, storage: Storage):
+    def __init__(self, app: Flask, auth: KosekiAuth, storage: Storage, mail: KosekiMailer):
         self.app = app
         self.auth = auth
         self.storage = storage
+        self.mail = mail
         self.navigation: list[KosekiNavigationEntry] = []
         self.alt_login: list[dict] = []
 
-    def nav(self, uri: str, icon: str, title: str, weight: int = 0, groups: Optional[list[str]] = None) -> None:
+    def nav(self, uri: str, icon: str, title: str, weight: int = 0,
+        groups: Optional[list[str]] = None) -> None:
         self.navigation.append(KosekiNavigationEntry(
             uri, icon, title, weight, groups))
 
@@ -72,8 +75,8 @@ class KosekiUtil:
 
     def start_session(self, uid: int) -> None:
         session["uid"] = uid
-        session.permanent = True
-        session.modified = True
+        session["permanent"] = True
+        session["modified"] = True
         self.calc_nav()
 
     def current_user(self) -> int:
@@ -140,3 +143,26 @@ class KosekiUtil:
             return False, None
 
         return True, message
+    
+    def send_debt_mail(self) -> None:
+        with self.app.app_context():
+            logging.info("Checking debt and sending emails")
+            # This could probably be made more efficient with a .filter() on balance, but
+            # difficult right now to implement as SQLAlchy wouldn't know how to structure
+            # the SQL query due to .balance being a @property.
+            members = self.storage.session.query(Person).all()
+
+            for member in members:
+                if len(member.email) == 0:
+                    logging.warning("Member %s %s (%d) has no email.", member.fname, member.lname, member.uid)
+                    continue
+                if member.balance >= 0:
+                    continue
+
+                logging.info(
+                    "Member %s %s (%d) has %d unpaid payments, sending reminder",
+                    member.fname, member.lname, member.uid, len(member.unpaid_payments)
+                )
+                self.mail.send_mail(
+                    member, "mail/unpaid_payments.html", member=member
+                )

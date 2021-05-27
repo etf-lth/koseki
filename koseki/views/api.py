@@ -15,12 +15,20 @@ from koseki.view import KosekiView
 class APIView(KosekiView):
     def register(self) -> None:
         self.app.add_url_rule(
-            "/api/ac/members",
+            "/api/admin/members",
             None,
             self.auth.require_session(
-                self.api_ac_members, ["admin", "accounter", "board"]
+                self.api_admin_members, ["admin", "accounter", "board"]
             ),
             methods=["GET"],
+        )
+        self.app.add_url_rule(
+            "/api/admin/debug/send_debt_reminder_email",
+            None,
+            self.auth.require_session(
+                self.api_admin_send_debt_reminder_email, ["admin"]
+            ),
+            methods=["POST"],
         )
         self.app.add_url_rule(
             "/api/swish/<string:code>",
@@ -29,7 +37,7 @@ class APIView(KosekiView):
             methods=["GET"],
         )
 
-    def api_ac_members(self) -> Union[str, Response]:
+    def api_admin_members(self) -> Union[str, Response]:
         term = request.args.get("term")
         if term is None:
             return jsonify(data=[])
@@ -50,6 +58,10 @@ class APIView(KosekiView):
             ]
         )
         return res
+
+    def api_admin_send_debt_reminder_email(self) -> Union[str, Response]:
+        self.util.send_debt_mail()
+        return "ok"
 
     def api_swish(self, code: str) -> Union[str, Response]:
         # return self.util.generate_swish_code(100, "Test")

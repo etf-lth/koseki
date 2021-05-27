@@ -6,7 +6,7 @@
     $(function () {
         $(".autocomplete_member").autocomplete({
             source: function (req, resp) {
-                $.getJSON("{{ config['URL_BASE']|safe }}/api/ac/members", {
+                $.getJSON("{{ config['URL_BASE']|safe }}/api/admin/members", {
                     term: req.term
                 }).done(function (data) {
                     resp(data.data);

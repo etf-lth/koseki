@@ -20,6 +20,7 @@ from koseki.util import KosekiUtil
 from koseki.view import KosekiView
 from koseki.views.add import AddView
 from koseki.views.api import APIView
+from koseki.views.debug import DebugView
 from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
 from koseki.views.index import IndexView
@@ -77,9 +78,9 @@ class KosekiCore:
 
         # Misc Utilities
         self.auth = KosekiAuth(self.storage)
-        self.util = KosekiUtil(app, self.auth, self.storage)
         self.mail = KosekiMailer(self.app)
-        self.scheduler = KosekiScheduler(app, self.storage, self.mail)
+        self.util = KosekiUtil(app, self.auth, self.storage, self.mail)
+        self.scheduler = KosekiScheduler(app, self.storage, self.mail, self.util)
         self.plugins = KosekiPluginManager(
             self.app, self.storage, self.auth, self.util, self.scheduler)
 
@@ -112,6 +113,7 @@ class KosekiCore:
         views = [
             AddView,
             APIView,
+            DebugView,
             ErrorView,
             FeesView,
             IndexView,

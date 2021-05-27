@@ -1,0 +1,24 @@
+{% extends "base_main.html" %}
+{% from "macros.html" import render_field %}
+{% block title %}Debug{% endblock %}
+{% block content %}
+
+<script>
+    $(function () {
+        $("#admin_debug_send_debt_reminder_email").click(() => {
+            $.post("{{ config['URL_BASE']|safe }}/api/admin/debug/send_debt_reminder_email")
+            .done(function (data) {
+                resp(data.data);
+            })
+            .fail(function () { response(); });
+        });
+    });
+</script>
+
+<h1>Debug</h1>
+
+<button id="admin_debug_send_debt_reminder_email"type="submit" class="btn btn-danger">
+    <i class="fa fa-envelope me-1"></i> Send Debt Reminder Email
+</button>
+
+{% endblock %}
