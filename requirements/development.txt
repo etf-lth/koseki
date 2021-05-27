@@ -1,5 +1,5 @@
 -r common.txt
 git+https://github.com/matangover/mypyls.git#egg=mypyls
-sqlalchemy-stubs>=0.3
-mypy>=0.800
+sqlalchemy-stubs>=0.4
+mypy>=0.812
 pylint-flask>=0.6

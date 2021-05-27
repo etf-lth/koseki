@@ -2,8 +2,7 @@ from datetime import datetime
 from typing import Reversible
 
 from sqlalchemy import DECIMAL, Column, DateTime, Enum, ForeignKey, Integer, Unicode, Text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.declarative.api import DeclarativeMeta
+from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from sqlalchemy.orm import relationship
 
 Base: DeclarativeMeta = declarative_base()
