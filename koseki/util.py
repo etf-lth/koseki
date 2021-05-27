@@ -143,7 +143,7 @@ class KosekiUtil:
             return False, None
 
         return True, message
-    
+
     def send_debt_mail(self) -> None:
         with self.app.app_context():
             logging.info("Checking debt and sending emails")
@@ -154,7 +154,8 @@ class KosekiUtil:
 
             for member in members:
                 if len(member.email) == 0:
-                    logging.warning("Member %s %s (%d) has no email.", member.fname, member.lname, member.uid)
+                    logging.warning("Member %s %s (%d) has no email.",
+                        member.fname, member.lname, member.uid)
                     continue
                 if member.balance >= 0:
                     continue
