@@ -151,3 +151,12 @@ class Metric(Base):
     type = Column(Unicode(length=255), nullable=False)
     time = Column(DateTime, nullable=False)
     value = Column(DECIMAL(10, 2), nullable=False)
+
+class OIDC(Base):
+    __tablename__: str = "oidc"
+
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    type = Column(Unicode(length=255), nullable=False)
+    time = Column(DateTime, nullable=False)
+    value = Column(DECIMAL(10, 2), nullable=False)
+

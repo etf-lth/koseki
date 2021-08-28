@@ -38,7 +38,7 @@ class KosekiAuth:
     def require_session(self, func: Callable, groups: list[str] = None) -> Callable:
         def wrap(*args, **kwargs) -> Union[str, Response]:  # type: ignore
             if "uid" not in session:
-                return redirect(url_for("login", redir=request.base_url))
+                return redirect(url_for("login", redir=request.url))
             else:
                 if (
                     groups is None

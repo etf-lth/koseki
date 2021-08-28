@@ -7,3 +7,4 @@ koseki.db
 /mariadb
 /data/*
 .vscode/
+signing_key.pem

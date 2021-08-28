@@ -15,7 +15,7 @@ class CASPlugin(KosekiPlugin):
     def config(self) -> dict:
         return {
             "CAS_SERVER": "https://ldpv3.acme.nu/idp/profile",
-            "USER_USERNAME_ENABLED": True,  # Override to enable Debt in Koseki
+            "USER_USERNAME_ENABLED": True,
         }
 
     def plugin_enable(self) -> None:

@@ -75,8 +75,6 @@ class KosekiUtil:
 
     def start_session(self, uid: int) -> None:
         session["uid"] = uid
-        session["permanent"] = True
-        session["modified"] = True
         self.calc_nav()
 
     def current_user(self) -> int:

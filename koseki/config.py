@@ -80,10 +80,11 @@ class KosekiConfig():
     #
     # Default:
     #   CAS - Integration with Lund University login system (Central Authentication System)
+    #   OIDC - Allows login to 3rd party systems with Koseki account
     #   Salto - Integration with Lund University card system
     #   Kiosk - Touch interface store solution
     #   Store - Handles product registration
     #   Print - Allows sending documents to CUPS for printing (Linux-only!)
     #
-    PLUGINS: list[str] = ["CAS", "Salto", "Kiosk", "Store"]
+    PLUGINS: list[str] = ["CAS", "OIDC", "Salto", "Kiosk", "Store"]
     #PLUGINS: list[str] = list()
