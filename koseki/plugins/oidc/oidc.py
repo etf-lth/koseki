@@ -49,7 +49,7 @@ class OIDCPlugin(KosekiPlugin):
             "grant_types_supported": ["authorization_code", "implicit"],
             "claim_types_supported": ["normal"],
             "claims_parameter_supported": True,
-            "claims_supported": ["sub" "name", "given_name", "family_name", "email", "profile"],
+            "claims_supported": ["sub", "name", "given_name", "family_name", "email", "profile"],
             "scopes_supported": ["openid", "email", "profile"]
         }
         subject_id_factory = HashBasedSubjectIdentifierFactory(
