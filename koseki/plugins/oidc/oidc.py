@@ -6,7 +6,7 @@ import logging
 from flask import (Blueprint, jsonify, redirect, render_template, request,
                    session, url_for)
 from jwkest.jwk import RSAKey, rsa_load
-from oic.oic.message import (AuthorizationRequest, Claims, EndSessionRequest,AccessTokenRequest,
+from oic.oic.message import (AuthorizationRequest, Claims, EndSessionRequest, AccessTokenRequest,
                              TokenErrorResponse, UserInfoErrorResponse)
 from pyop.access_token import AccessToken
 from pyop.authz_state import AuthorizationState
@@ -19,6 +19,8 @@ from pyop.subject_identifier import HashBasedSubjectIdentifierFactory
 from pyop.userinfo import Userinfo
 from pyop.util import should_fragment_encode
 from werkzeug.wrappers import Response
+
+from koseki.db.storage import SQLWrapper, PersonWrapper
 
 from koseki.plugin import KosekiPlugin
 
@@ -54,22 +56,17 @@ class OIDCPlugin(KosekiPlugin):
             self.app.config["SECRET_KEY"])
         # pylint: disable=attribute-defined-outside-init
         self.provider = Provider(self.signing_key, self.oidc_configuration_information,
-                                 AuthorizationState(subject_id_factory),
-                                 {
-                                     "kbyuFDidLLm280LIwVFiazOqjO3ty8KH": {
-                                         "client_secret": "60Op4HFM0I8ajz0WdiStAbziZ-VFQttXuxixHHs2R7r7-CW8GR79l-mmLqMhc-Sa",
-                                         "token_endpoint_auth_method": "client_secret_basic",
-                                     }
-                                 },
-                                 Userinfo({
-                                     1: {
-                                         "sub": "admin123",
-                                         "name": "Admin Adminsson",
-                                         "given_name": "Admin",
-                                         "family_name": "Adminsson",
-                                         "email": "admin@foorack.com",
-                                     }
-                                 }))
+                                 AuthorizationState(
+                                     subject_id_factory,
+                                     SQLWrapper(self.storage, 'authz_codes'),
+                                     SQLWrapper(self.storage, 'access_tokens'),
+                                     SQLWrapper(
+                                         self.storage, 'refresh_tokens'),
+                                     SQLWrapper(
+                                         self.storage, 'subject_identifiers', True),
+                                 ),
+                                 SQLWrapper(self.storage, 'clients'),
+                                 Userinfo(PersonWrapper(self.storage)))
 
     def create_blueprint(self) -> Blueprint:
         blueprint: Blueprint = Blueprint("oidc", __name__)

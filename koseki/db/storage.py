@@ -1,13 +1,15 @@
+import json
 from typing import Optional, Type
 
+from pyop.storage import StorageBase
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm.query import Query
 from sqlalchemy.orm.session import Session, sessionmaker
 from sqlalchemy.sql.schema import MetaData
 
-from koseki.db.types import Base, Group, Person, PersonGroup
-
+from koseki.db.types import Base, Group, OIDCEntry, Person, PersonGroup
+from datetime import datetime
 
 class Storage:
     def __init__(self, conn: str = "sqlite:///:memory:") -> None:
@@ -87,3 +89,76 @@ class Storage:
     def __insert_initial_values_person_group(self) -> None:
         if self.session.query(PersonGroup).count() < 1:
             self.add(PersonGroup(uid=1, gid=1))
+
+class SQLWrapper(StorageBase):
+    def __init__(self, storage: Storage, key_type: str, force_key_int: bool = False):
+        self.storage = storage
+        self._type = key_type
+        self._force_key_int = force_key_int
+
+    def __setitem__(self, key, value):
+        entry = self.storage.session.query(OIDCEntry).filter_by(type=self._type, key=key).scalar()
+        if not entry:
+            self.storage.add(
+                OIDCEntry(
+                    type=self._type,
+                    key=key,
+                    value=json.dumps(value)
+                )
+            )
+            self.storage.commit()
+        else:
+            entry.value = json.dumps(value)
+            entry.last_modified = datetime.now()
+            self.storage.commit()
+        return value
+
+    def __getitem__(self, key):
+        entry = self.storage.session.query(OIDCEntry).filter_by(type=self._type, key=key).scalar()
+        if not entry:
+            raise KeyError(key)
+        return json.loads(entry.value)
+
+    def __delitem__(self, key):
+        entry = self.storage.session.query(OIDCEntry).filter_by(type=self._type, key=key).scalar()
+        if not entry:
+            raise KeyError(key)
+        self.storage.delete(entry)
+
+    def __contains__(self, key):
+        count = self.storage.session.query(OIDCEntry).filter_by(type=self._type, key=key).scalar()
+        return bool(count)
+
+    def items(self):
+        for entry in self.storage.session.query(OIDCEntry).filter_by(type=self._type).all():
+            if self._force_key_int:
+                yield (int(entry.key), json.loads(entry.value))
+            else:
+                yield (entry.key, json.loads(entry.value))
+
+class PersonWrapper(StorageBase):
+    def __init__(self, storage: Storage):
+        self.storage = storage
+
+    def __setitem__(self, key, value):
+        # Read-only interface: OIDC PersonWrapper not allowed to delete users
+        raise NotImplementedError
+
+    def __getitem__(self, key):
+        person = self.storage.session.query(Person).filter_by(uid=key).scalar()
+        if not person:
+            raise KeyError(key)
+        return vars(person)
+
+    def __delitem__(self, key):
+        # Read-only interface: OIDC PersonWrapper not allowed to delete users
+        raise NotImplementedError
+
+    def __contains__(self, key):
+        count = self.storage.session.query(Person).filter_by(uid=key).scalar()
+        return bool(count)
+
+    def items(self):
+        #for person in self.storage.session.query(Person).filter_by(state="active").all():
+        for person in self.storage.session.query(Person).all():
+            yield (person.uid, vars(person))

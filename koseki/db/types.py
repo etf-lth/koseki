@@ -152,11 +152,11 @@ class Metric(Base):
     time = Column(DateTime, nullable=False)
     value = Column(DECIMAL(10, 2), nullable=False)
 
-class OIDC(Base):
+class OIDCEntry(Base):
     __tablename__: str = "oidc"
 
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    type = Column(Unicode(length=255), nullable=False)
-    time = Column(DateTime, nullable=False)
-    value = Column(DECIMAL(10, 2), nullable=False)
-
+    type = Column(Unicode(length=255), index=True, nullable=False)
+    key = Column(Unicode(length=255), index=True, nullable=False)
+    value = Column(Text(), nullable=False)
+    last_modified = Column(DateTime, default=datetime.now, nullable=False)
