@@ -114,19 +114,40 @@ class OIDCPlugin(KosekiPlugin):
             }})
             logging.debug(authn_req)
             authn_req.verify()
-        except InvalidAuthenticationRequest as err:
-            error_url = err.to_error_url()
+            if authn_req["client_id"] not in self.provider.clients:
+                self.util.alert(
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Invalid Client",
+                        "Unknown Client ID. All applications must be pre-registered.",
+                    )
+                )
+                return render_template("oidc.html")
+            client = self.provider.clients[authn_req["client_id"]]
+            if client["redirect_uri"] != authn_req["redirect_uri"]:
+                self.util.alert(
+                    KosekiAlert(
+                        KosekiAlertType.DANGER,
+                        "Incorrect Redirect URI",
+                        "Unauthorized redirect URI for this client.",
+                    )
+                )
+                return render_template("oidc.html")
 
-            if error_url:
-                return Response(error_url, status=303)
-            else:
-                return Response("Something went wrong: {}".format(str(err)), status=400)
-
-        authn_response = self.provider.authorize(
-            authn_req, self.util.current_user())
-        return_url = authn_response.request(
-            authn_req["redirect_uri"], should_fragment_encode(authn_req))
-        return redirect(return_url)
+            authn_response = self.provider.authorize(
+                authn_req, self.util.current_user())
+            return_url = authn_response.request(
+                authn_req["redirect_uri"], should_fragment_encode(authn_req))
+            return redirect(return_url)
+        except Exception as err:  # pylint: disable=broad-except
+            self.util.alert(
+                KosekiAlert(
+                    KosekiAlertType.DANGER,
+                    "OIDC Error",
+                    "Error: {}".format(str(err)),
+                )
+            )
+            return render_template("oidc.html")
 
     def oidc_token(self) -> Union[str, Response]:
         print(request)
