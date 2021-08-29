@@ -9,7 +9,6 @@ from oic.oic.message import (AuthorizationRequest, TokenErrorResponse,
 from pyop.access_token import AccessToken
 from pyop.authz_state import AuthorizationState
 from pyop.exceptions import (BearerTokenError, InvalidAccessToken,
-                             InvalidAuthenticationRequest,
                              InvalidClientAuthentication, OAuthError)
 from pyop.provider import Provider
 from pyop.subject_identifier import HashBasedSubjectIdentifierFactory
@@ -20,7 +19,6 @@ from werkzeug.wrappers import Response
 from koseki.db.storage import PersonWrapper, SQLWrapper
 from koseki.db.types import Person
 from koseki.plugin import KosekiPlugin
-
 from koseki.util import KosekiAlert, KosekiAlertType
 
 
@@ -93,7 +91,8 @@ class OIDCPlugin(KosekiPlugin):
         person: Person = self.storage.session.query(
             Person).filter_by(uid=self.util.current_user()).scalar()
         if person.state != "active":
-            logging.warn("User {} tried to log in via OIDC without membership!".format(person.uid))
+            logging.warning(
+                "User {} tried to log in via OIDC without membership!", person.uid)
             self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.DANGER,
