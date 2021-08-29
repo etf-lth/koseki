@@ -140,6 +140,7 @@ class OIDCPlugin(KosekiPlugin):
                 authn_req["redirect_uri"], should_fragment_encode(authn_req))
             return redirect(return_url)
         except Exception as err:  # pylint: disable=broad-except
+            logging.error(err)
             self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.DANGER,
