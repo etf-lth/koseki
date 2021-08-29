@@ -93,6 +93,7 @@ class OIDCPlugin(KosekiPlugin):
         person: Person = self.storage.session.query(
             Person).filter_by(uid=self.util.current_user()).scalar()
         if person.state != "active":
+            logging.warn("User {} tried to log in via OIDC without membership!".format(person.uid))
             self.util.alert(
                 KosekiAlert(
                     KosekiAlertType.DANGER,
