@@ -1,4 +1,6 @@
 import json
+import logging
+from datetime import datetime
 from typing import Optional, Type
 
 from pyop.storage import StorageBase
@@ -9,7 +11,7 @@ from sqlalchemy.orm.session import Session, sessionmaker
 from sqlalchemy.sql.schema import MetaData
 
 from koseki.db.types import Base, Group, OIDCEntry, Person, PersonGroup
-from datetime import datetime
+
 
 class Storage:
     def __init__(self, conn: str = "sqlite:///:memory:") -> None:
@@ -17,7 +19,7 @@ class Storage:
             "pool_recycle": 600,
             "pool_pre_ping": True,
         }
-        if (conn.startswith("mysql")):
+        if conn.startswith("mysql"):
             sql_args["pool_use_lifo"] = True
             sql_args["pool_size"] = 10
             sql_args["max_overflow"] = 20
@@ -36,6 +38,8 @@ class Storage:
         self.__insert_initial_values()
 
     def close(self, error: Optional[Exception]) -> None:
+        if error:
+            logging.error(error)
         if self._database is not None:
             self._database.close()
             self._database = None
@@ -90,6 +94,7 @@ class Storage:
         if self.session.query(PersonGroup).count() < 1:
             self.add(PersonGroup(uid=1, gid=1))
 
+
 class SQLWrapper(StorageBase):
     def __init__(self, storage: Storage, key_type: str, force_key_int: bool = False):
         self.storage = storage
@@ -97,7 +102,8 @@ class SQLWrapper(StorageBase):
         self._force_key_int = force_key_int
 
     def __setitem__(self, key, value):
-        entry = self.storage.session.query(OIDCEntry).filter_by(type=self._type, key=key).scalar()
+        entry = self.storage.session.query(OIDCEntry).filter_by(
+            type=self._type, key=key).scalar()
         if not entry:
             self.storage.add(
                 OIDCEntry(
@@ -114,19 +120,22 @@ class SQLWrapper(StorageBase):
         return value
 
     def __getitem__(self, key):
-        entry = self.storage.session.query(OIDCEntry).filter_by(type=self._type, key=key).scalar()
+        entry = self.storage.session.query(OIDCEntry).filter_by(
+            type=self._type, key=key).scalar()
         if not entry:
             raise KeyError(key)
         return json.loads(entry.value)
 
     def __delitem__(self, key):
-        entry = self.storage.session.query(OIDCEntry).filter_by(type=self._type, key=key).scalar()
+        entry = self.storage.session.query(OIDCEntry).filter_by(
+            type=self._type, key=key).scalar()
         if not entry:
             raise KeyError(key)
         self.storage.delete(entry)
 
     def __contains__(self, key):
-        count = self.storage.session.query(OIDCEntry).filter_by(type=self._type, key=key).scalar()
+        count = self.storage.session.query(OIDCEntry).filter_by(
+            type=self._type, key=key).scalar()
         return bool(count)
 
     def items(self):
@@ -135,6 +144,7 @@ class SQLWrapper(StorageBase):
                 yield (int(entry.key), json.loads(entry.value))
             else:
                 yield (entry.key, json.loads(entry.value))
+
 
 class PersonWrapper(StorageBase):
     def __init__(self, storage: Storage):
@@ -159,6 +169,6 @@ class PersonWrapper(StorageBase):
         return bool(count)
 
     def items(self):
-        #for person in self.storage.session.query(Person).filter_by(state="active").all():
+        # for person in self.storage.session.query(Person).filter_by(state="active").all():
         for person in self.storage.session.query(Person).all():
             yield (person.uid, vars(person))

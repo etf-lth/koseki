@@ -130,21 +130,21 @@ class UserView(KosekiView):
         )
 
     def member_fees(self, uid: int) -> Union[str, Response]:
-        person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+        person: Person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
         return render_template("user_fees.html", person=person)
 
     def member_payments(self, uid: int) -> Union[str, Response]:
-        person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+        person: Person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 
         return render_template("user_payments.html", person=person)
 
     def member_admin(self, uid: int) -> Union[str, Response]:
-        person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
+        person: Person = self.storage.session.query(Person).filter_by(uid=uid).scalar()
         if not person:
             raise abort(404)
 

@@ -1,35 +1,32 @@
 
+import logging
 from typing import Union
 
-import logging
-
-from flask import (Blueprint, jsonify, redirect, render_template, request,
-                   session, url_for)
+from flask import Blueprint, jsonify, redirect, render_template, request
 from jwkest.jwk import RSAKey, rsa_load
-from oic.oic.message import (AuthorizationRequest, Claims, EndSessionRequest, AccessTokenRequest,
-                             TokenErrorResponse, UserInfoErrorResponse)
+from oic.oic.message import (AuthorizationRequest, TokenErrorResponse,
+                             UserInfoErrorResponse)
 from pyop.access_token import AccessToken
 from pyop.authz_state import AuthorizationState
 from pyop.exceptions import (BearerTokenError, InvalidAccessToken,
                              InvalidAuthenticationRequest,
-                             InvalidClientAuthentication,
-                             InvalidSubjectIdentifier, OAuthError)
+                             InvalidClientAuthentication, OAuthError)
 from pyop.provider import Provider
 from pyop.subject_identifier import HashBasedSubjectIdentifierFactory
 from pyop.userinfo import Userinfo
 from pyop.util import should_fragment_encode
 from werkzeug.wrappers import Response
 
-from koseki.db.storage import SQLWrapper, PersonWrapper
-
+from koseki.db.storage import PersonWrapper, SQLWrapper
+from koseki.db.types import Person
 from koseki.plugin import KosekiPlugin
+
+from koseki.util import KosekiAlert, KosekiAlertType
 
 
 class OIDCPlugin(KosekiPlugin):
     def config(self) -> dict:
-        return {
-            "OIDC_": "https://ldpv3.acme.nu/idp/profile",
-        }
+        return {}
 
     def plugin_enable(self) -> None:
         # pylint: disable=attribute-defined-outside-init
@@ -69,13 +66,16 @@ class OIDCPlugin(KosekiPlugin):
                                  Userinfo(PersonWrapper(self.storage)))
 
     def create_blueprint(self) -> Blueprint:
-        blueprint: Blueprint = Blueprint("oidc", __name__)
+        blueprint: Blueprint = Blueprint(
+            "oidc", __name__, template_folder="./templates")
         blueprint.add_url_rule(
             "/.well-known/openid-configuration", None, self.oidc_config, methods=["GET"])
         blueprint.add_url_rule(
             "/oidc/jwks", None, self.oidc_jwks, methods=["GET"])
-        blueprint.add_url_rule("/oidc/authorization",
-                               None, self.auth.require_session(self.oidc_authorization, None), methods=["GET"])
+        blueprint.add_url_rule("/oidc/authorization", None,
+                               self.auth.require_session(
+                                   self.oidc_authorization, None),
+                               methods=["GET"])
         blueprint.add_url_rule("/oidc/token", None,
                                self.oidc_token, methods=["GET", "POST"])
         blueprint.add_url_rule("/oidc/userinfo", None,
@@ -88,7 +88,21 @@ class OIDCPlugin(KosekiPlugin):
     def oidc_jwks(self) -> Union[str, Response]:
         return jsonify(self.provider.jwks)
 
+    # require_session
     def oidc_authorization(self) -> Union[str, Response]:
+        person: Person = self.storage.session.query(
+            Person).filter_by(uid=self.util.current_user()).scalar()
+        if person.state != "active":
+            self.util.alert(
+                KosekiAlert(
+                    KosekiAlertType.DANGER,
+                    "Missing membership!",
+                    "OpenID Connect login was successful, but active " +
+                    "membership is required to log in to 3rd party services.",
+                )
+            )
+            return render_template("oidc.html")
+
         try:
             # Override claims to always only and at least return email for CF
             authn_req = AuthorizationRequest().from_dict({**request.args, "claims": {
@@ -99,7 +113,7 @@ class OIDCPlugin(KosekiPlugin):
                 }
             }})
             logging.debug(authn_req)
-            assert authn_req.verify()
+            authn_req.verify()
         except InvalidAuthenticationRequest as err:
             error_url = err.to_error_url()
 
