@@ -135,7 +135,7 @@ class OIDCPlugin(KosekiPlugin):
                 return render_template("oidc.html")
 
             authn_response = self.provider.authorize(
-                authn_req, self.util.current_user())
+                authn_req, str(self.util.current_user()))
             return_url = authn_response.request(
                 authn_req["redirect_uri"], should_fragment_encode(authn_req))
             return redirect(return_url)

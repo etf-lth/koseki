@@ -155,7 +155,7 @@ class PersonWrapper(StorageBase):
         raise NotImplementedError
 
     def __getitem__(self, key):
-        person = self.storage.session.query(Person).filter_by(uid=key).scalar()
+        person = self.storage.session.query(Person).filter_by(uid=int(key)).scalar()
         if not person:
             raise KeyError(key)
         return vars(person)
@@ -165,7 +165,7 @@ class PersonWrapper(StorageBase):
         raise NotImplementedError
 
     def __contains__(self, key):
-        count = self.storage.session.query(Person).filter_by(uid=key).scalar()
+        count = self.storage.session.query(Person).filter_by(uid=int(key)).scalar()
         return bool(count)
 
     def items(self):
