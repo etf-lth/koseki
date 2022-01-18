@@ -1,3 +1,4 @@
+import logging
 from typing import Iterable, Union
 
 from flask import abort, render_template, request
@@ -103,16 +104,17 @@ class UserView(KosekiView):
                 if sum(1 for gid in list(request.form.keys()) if gid == str(group.gid)):
                     # Member of the group, add if needed
                     if not current_state:
+                        logging.info("Adding group %s to %s %s", group.name, person.fname, person.lname)
                         self.storage.add(
                             PersonGroup(uid=person.uid, gid=group.gid)
                         )
                 else:
                     # Not a member, remove if needed
                     if current_state:
-                        map(
-                            self.storage.delete,
-                            (g for g in person.groups if g.gid == group.gid),
-                        )
+                        for g in person.groups:
+                            if g.gid == group.gid:
+                                logging.info("Deleting group %s from %s %s", group.name, person.fname, person.lname)
+                                self.storage.delete(g)
 
             self.storage.commit()
 
