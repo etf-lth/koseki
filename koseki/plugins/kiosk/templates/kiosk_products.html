@@ -154,6 +154,8 @@
 <div class="row border-bottom border-5 border-success pt-3 pb-2 h4">
     <div class="col-4 fw-bold">User ID:</div>
     <div class="col-8">{{ person.uid }}</div>
+    <div class="col-4 fw-bold">Balance:</div>
+    <div class="col-8">{{ person.balance }} kr</div>
     <div class="col-4 fw-bold">Logged in:</div>
     <div class="col-8">{{ person.fname }} {{ person.lname }}
         <a href="{{ url_for('kiosk.kiosk_card') }}" class="btn btn-warning ms-3">Logout</a>
