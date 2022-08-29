@@ -5,7 +5,7 @@ from flask import Blueprint, abort, redirect, render_template, url_for
 from flask_wtf import FlaskForm  # type: ignore
 from werkzeug.wrappers import Response
 from wtforms import SubmitField  # type: ignore
-from wtforms import DecimalField, IntegerField, TextField
+from wtforms import DecimalField, IntegerField, StringField
 from wtforms.validators import DataRequired  # type: ignore
 
 from koseki.db.types import Product
@@ -14,8 +14,8 @@ from koseki.util import KosekiAlert, KosekiAlertType
 
 
 class ProductForm(FlaskForm):
-    name = TextField("Product name", validators=[DataRequired()])
-    img_url = TextField("Image URL", validators=[DataRequired()])
+    name = StringField("Product name", validators=[DataRequired()])
+    img_url = StringField("Image URL", validators=[DataRequired()])
     price = DecimalField("Price", validators=[DataRequired()])
     order = IntegerField("Order", validators=[DataRequired()])
     submitAdd = SubmitField("Add product")

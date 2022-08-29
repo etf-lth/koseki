@@ -4,7 +4,7 @@ from typing import Union
 from flask import render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from werkzeug.wrappers import Response
-from wtforms import PasswordField, SubmitField, TextField  # type: ignore
+from wtforms import PasswordField, SubmitField, StringField  # type: ignore
 from wtforms.validators import DataRequired, Email, EqualTo  # type: ignore
 
 from koseki.db.types import Fee, Person
@@ -13,8 +13,8 @@ from koseki.view import KosekiView
 
 
 class EditEmailForm(FlaskForm):
-    email1 = TextField("Email", validators=[DataRequired(), Email()])
-    email2 = TextField("Repeat Email", validators=[
+    email1 = StringField("Email", validators=[DataRequired(), Email()])
+    email2 = StringField("Repeat Email", validators=[
         DataRequired(), Email(),
         EqualTo('email1', message='Emails do not match')
     ])

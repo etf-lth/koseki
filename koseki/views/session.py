@@ -6,7 +6,7 @@ from typing import Union
 from flask import redirect, render_template, request, url_for
 from flask_wtf import FlaskForm  # type: ignore
 from werkzeug.wrappers import Response
-from wtforms import PasswordField, SubmitField, TextField  # type: ignore
+from wtforms import PasswordField, SubmitField, StringField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
 
 from koseki.db.types import Person
@@ -15,7 +15,7 @@ from koseki.view import KosekiView
 
 
 class LoginForm(FlaskForm):
-    email = TextField("Email", validators=[DataRequired(
+    email = StringField("Email", validators=[DataRequired(
         "Email required"), Email("Invalid email")])
     password = PasswordField("Password", validators=[
                              DataRequired("Password required")])
@@ -23,7 +23,7 @@ class LoginForm(FlaskForm):
 
 
 class ResetPasswordForm(FlaskForm):
-    email = TextField("Email", validators=[DataRequired(
+    email = StringField("Email", validators=[DataRequired(
         "Email required"), Email("Invalid email")])
     submit_reset = SubmitField("Reset password")
 

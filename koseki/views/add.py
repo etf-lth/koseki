@@ -4,7 +4,7 @@ from typing import Union
 from flask import render_template
 from flask_wtf import FlaskForm  # type: ignore
 from werkzeug.wrappers import Response
-from wtforms import TextField  # type: ignore
+from wtforms import StringField  # type: ignore
 from wtforms.validators import DataRequired, Email  # type: ignore
 
 from koseki.db.types import Person
@@ -13,10 +13,10 @@ from koseki.view import KosekiView
 
 
 class EnrollForm(FlaskForm):
-    fname = TextField("First name", validators=[DataRequired()])
-    lname = TextField("Last name", validators=[DataRequired()])
-    email = TextField("Email", validators=[Email()])
-    username = TextField("StiL")
+    fname = StringField("First name", validators=[DataRequired()])
+    lname = StringField("Last name", validators=[DataRequired()])
+    email = StringField("Email", validators=[Email()])
+    username = StringField("StiL")
 
 
 class AddView(KosekiView):

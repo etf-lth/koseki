@@ -8,7 +8,7 @@ from flask_wtf import FlaskForm  # type: ignore
 from werkzeug.utils import redirect
 from werkzeug.wrappers import Response
 from wtforms import SelectField  # type: ignore
-from wtforms import IntegerField, SubmitField, TextField
+from wtforms import IntegerField, SubmitField, StringField
 from wtforms.validators import DataRequired  # type: ignore
 
 from koseki.db.types import Fee, Payment, Person
@@ -17,7 +17,7 @@ from koseki.view import KosekiView
 
 
 class FeeForm(FlaskForm):
-    uid = TextField("Member ID", validators=[DataRequired()])
+    uid = StringField("Member ID", validators=[DataRequired()])
     amount = IntegerField("Amount (SEK)")
     method = SelectField(
         "Payment Method",
@@ -33,7 +33,7 @@ class FeeForm(FlaskForm):
 
 
 class PaymentForm(FlaskForm):
-    uid = TextField("Member ID", validators=[DataRequired()])
+    uid = StringField("Member ID", validators=[DataRequired()])
     amount = IntegerField("Amount (SEK)", validators=[DataRequired()])
     method = SelectField(
         "Payment Method",
@@ -47,7 +47,7 @@ class PaymentForm(FlaskForm):
         ],
         validators=[DataRequired()]
     )
-    reason = TextField("Reason", validators=[DataRequired()])
+    reason = StringField("Reason", validators=[DataRequired()])
     submitPayment = SubmitField("Register")
 
 
