@@ -99,6 +99,20 @@ class PrintPlugin(KosekiPlugin):
                 form.file.name, self.util.current_user()
             )
 
+            # delete file after sending it to printer
+            file.close()
+            try:
+                os.remove(filepath)
+
+                logging.info(
+                    "Deleted file after sending it to the printer."
+                )
+            except Exception as error:
+                logging.warning(
+                    """Failed to delete file after printing,
+                    delete it manually from {project-root}/data."""
+                )
+
             # show success message to user
             self.util.alert(
                 KosekiAlert(
