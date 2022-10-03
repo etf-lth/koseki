@@ -7,6 +7,8 @@ import cups  # type: ignore
 from flask import Blueprint, render_template, request
 from flask_wtf import FlaskForm  # type: ignore
 from flask_wtf.file import FileField, FileRequired  # type: ignore
+from wtforms.fields import IntegerField
+from wtforms.validators import DataRequired, NumberRange
 from werkzeug.wrappers import Response
 
 from koseki.plugin import KosekiPlugin
@@ -15,13 +17,22 @@ from koseki.util import KosekiAlert, KosekiAlertType
 
 class PrintForm(FlaskForm):
     file = FileField("Select Document", validators=[FileRequired()])
+    copies = IntegerField(
+        "Number of copies",
+        default = 1)
 
+    def __init__(self, maxCopies: int, *args, **kwargs):
+        super(PrintForm, self).__init__(*args, **kwargs)
+        self.copies.validators = [
+            DataRequired(),
+            NumberRange(min=1, max=maxCopies)]
 
 class PrintPlugin(KosekiPlugin):
     def config(self) -> dict:
         return {
             "UPLOAD_FOLDER": "./data",
-            "ALLOWED_EXTENSIONS": ["pdf"]
+            "ALLOWED_EXTENSIONS": ["pdf"],
+            "MAX_COPIES": 100
         }
 
     def plugin_enable(self) -> None:
@@ -50,7 +61,7 @@ class PrintPlugin(KosekiPlugin):
         )
 
     def print(self) -> Union[str, Response]:
-        form = PrintForm()
+        form = PrintForm(self.app.config["MAX_COPIES"])
 
         if form.validate_on_submit():
             # check if the post request has the file part
@@ -81,6 +92,8 @@ class PrintPlugin(KosekiPlugin):
                 )
                 return render_template("print.html", form=form)
 
+            numberCopies: int = int(form.copies.data)
+
             # save file to harddrive
             filename = "".join(
                 [c for c in file.filename if c.isalpha() or c.isdigit() or c == ' ']).rstrip()
@@ -91,12 +104,12 @@ class PrintPlugin(KosekiPlugin):
             file.save(filepath)
 
             # send file to printer
-            self.cups_conn.printFile("printer1", filepath, "", {"media": "A4"})
+            self.cups_conn.printFile("printer1", filepath, "", {"media": "A4", "copies": str(numberCopies)})
 
             # log that a document has been printed
             logging.info(
-                "Document %s printed by %s",
-                form.file.name, self.util.current_user()
+                "%d copies of document %s by %s",
+                numberCopies, form.file.name, self.util.current_user()
             )
 
             # delete file after sending it to printer
