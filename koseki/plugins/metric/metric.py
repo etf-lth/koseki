@@ -83,9 +83,13 @@ class MetricPlugin(KosekiPlugin):
                 payments[0].registered.date(), datetime.min.time())
         else:
             time = metrics[0].time
+
+        metrics_idx : int = 0
         while time <= datetime.now():
             # Only insert the metric row if it doesn't already exist.
-            if sum(1 for metric in metrics if metric.time == time) == 0:
+            while metrics_idx < (len(metrics) - 1) and metrics[metrics_idx].time < time:
+                metrics_idx += 1
+            if len(metrics) == 0 or metrics[metrics_idx].time != time:
                 total: float = 0.0
                 for payment in payments:
                     if payment.registered < time:

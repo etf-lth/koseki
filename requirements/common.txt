@@ -3,7 +3,7 @@ argon2-cffi>=20.1.0
 email-validator>=1.1.2
 flask-multistatic>=1.0
 flask-wtf>=0.14.3
-flask>=1.1.2
+flask==1.1.2
 libsass>=0.20.1
 logging_prometheus>=0.1.0
 lxml>=4.6.2
@@ -12,4 +12,5 @@ prometheus-flask-exporter>=0.18.1
 pyop>=3.2.0
 pyjwkest>=1.4.2
 requests>=2.25.1
-SQLAlchemy>=1.4.15
+SQLAlchemy==1.4.15
+markupsafe==2.0.1
