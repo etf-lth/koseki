@@ -31,7 +31,7 @@ class KosekiPlugin:
         pass
 
     def create_blueprint(self) -> Blueprint:
-        return Blueprint(__name__, __name__)
+        return Blueprint("kosekiplugin", __name__)
 
 
 class KosekiPluginManager:
