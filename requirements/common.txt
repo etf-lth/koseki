@@ -1,7 +1,7 @@
 apscheduler==3.7.0
 argon2-cffi==20.1.0
 email-validator==1.1.2
-flask-multistatic==1.0
+flask-multistatic@git+https://github.com/understreck/flask-multistatic.git@1.1
 flask-wtf==1.0.1
 flask==2.2.5
 libsass==0.20.1
