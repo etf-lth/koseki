@@ -14,7 +14,7 @@ pyjwkest==1.4.2
 requests==2.25.1
 SQLAlchemy==1.4.15
 markupsafe==2.0.1
-Jinja2==3.0.1
+Jinja2==3.1.4
 itsdangerous==1.1.0
 Werkzeug==1.0.1
 pycups==1.9.73
