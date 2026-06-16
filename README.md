@@ -12,7 +12,18 @@ Koseki requires Python 3.9 or above. For production it also requires a MySQL or 
 
 To install the dependencies neccesary, please run:
 
+in the system, correct for os
 ```bash
+sudo apt install libcups2-dev gcc python3-dev cups libxml2-dev libxslt-dev python3.13-venv
+sudo systemctl enable cups
+```
+
+Create a venv for koseki specific dependencies
+
+```bash
+cd /srv/koseki
+python3 -m venv .venv
+. .venv/bin/activate
 sudo python3 -m pip install -r requirements/production.txt
 ```
 
