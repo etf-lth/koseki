@@ -6,7 +6,7 @@ flask-wtf==0.14.3
 flask==1.1.2
 libsass==0.20.1
 logging_prometheus==0.1.0
-lxml==5.2.1
+lxml==6.1.0
 mysqlclient==2.0.3
 prometheus-flask-exporter==0.18.1
 pyop==3.2.0
