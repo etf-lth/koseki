@@ -1,4 +1,4 @@
-apscheduler==3.7.0
+APScheduler==3.11.2
 argon2-cffi==20.1.0
 email-validator==1.1.2
 flask-multistatic@git+https://github.com/understreck/flask-multistatic.git@1.1
@@ -16,4 +16,5 @@ SQLAlchemy==1.4.15
 markupsafe==2.1.1
 Jinja2==3.0.1
 Werkzeug==2.2.3
-pycups==1.9.73
+itsdangerous==1.1.0
+pycups==2.0.4
