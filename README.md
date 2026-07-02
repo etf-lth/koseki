@@ -66,7 +66,11 @@ Due to this being a student-driven project, no official/deadline-driven support 
 Standard development environment is VSCode. Please install the development dependencies with:
 
 ```bash
-python3.9 -m pip install -r requirements/development.txt
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements/development.txt
+openssl genrsa -out signing_key.pem 4096
+./start_development.sh
 ```
 
 All commits must follow PEP 8, pass pylint, pass pytests and be coded with "future-proof" in mind. Keep in mind to make features "organisation agnostic" i.e. configurable, and to make it toggable (by making it into a Plugin) if it falls outside the core features of Koseki.
