@@ -1,0 +1,46 @@
+{% extends "base_main.html" %}
+{% from "macros.html" import render_field, store_tabs, fee_method, fee_id %}
+{% block title %}Swish{% endblock %}
+{% block content %}
+
+<h1>Swish</h1>
+
+{% if person.balance < 0 %} <div class="col-8">Hey, you have a negative balance, please pay your debts</div>
+    <div class="col-8">{{ person.balance }}</div>
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        {{ render_field(form.amount) }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-12 col-md-2 mb-0">
+                        {{ render_field(form.submitPay, class="btn-primary") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endif %}
+
+
+
+
+
+
+
+
+    <div class="col-4 fw-bold">User ID:</div>
+    <div class="col-8">{{ person.uid }}</div>
+    <div class="col-4 fw-bold">Balance:</div>
+    <div class="col-8">{{ person.balance }} kr</div>
+    <div class="col-4 fw-bold">Logged in:</div>
+    <div class="col-8">{{ person.fname }} {{ person.lname }}
+
+        {% endblock %}

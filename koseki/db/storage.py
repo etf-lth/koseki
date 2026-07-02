@@ -12,6 +12,12 @@ from sqlalchemy.sql.schema import MetaData
 
 from koseki.db.types import Base, Group, OIDCEntry, Person, PersonGroup
 
+DEFAULT_GROUPS = {
+    "admin": "System Administrator",
+    "enroll": "Allow enrolling new members",
+    "accounter": "Allow registering fees",
+    "board": "Allow general browsing of members"
+}
 
 class Storage:
     def __init__(self, conn: str = "sqlite:///:memory:") -> None:
@@ -36,6 +42,9 @@ class Storage:
         self._database: Optional[Session] = None
 
         self.__insert_initial_values()
+
+    def create_tables(self) -> None:
+        Base.metadata.create_all(bind=self.engine)
 
     def close(self, error: Optional[Exception]) -> None:
         if error:
@@ -70,10 +79,8 @@ class Storage:
 
     def __insert_initial_values_group(self) -> None:
         if self.session.query(Group).count() < 1:
-            self.add(Group(name="admin", descr="System Administrator"))
-            self.add(Group(name="enroll", descr="Allow enrolling new members"))
-            self.add(Group(name="accounter", descr="Allow registering fees"))
-            self.add(Group(name="board", descr="Allow general browsing of members"))
+            for name, descr in DEFAULT_GROUPS.items():
+                        self.add(Group(name=name, descr=descr))
 
     def __insert_initial_values_person(self) -> None:
         # user: admin@example.com
@@ -88,7 +95,7 @@ class Storage:
                     username="admin",
                     password="$argon2id$v=19$m=16,t=2,p=1$S1AwUjlDVXVnbFNBV2J3cg$ErwAfuI1RV2nl/B17lfQWg",
                 )
-            )  # pass: password
+            )
 
     def __insert_initial_values_person_group(self) -> None:
         if self.session.query(PersonGroup).count() < 1:
@@ -158,7 +165,11 @@ class PersonWrapper(StorageBase):
         person = self.storage.session.query(Person).filter_by(uid=int(key)).scalar()
         if not person:
             raise KeyError(key)
-        return vars(person)
+        data = vars(person).copy()
+        data['given_name'] = person.fname
+        data['family_name'] = person.lname
+        data['name'] = f"{person.fname} {person.lname}".strip()
+        return data
 
     def __delitem__(self, key):
         # Read-only interface: OIDC PersonWrapper not allowed to delete users

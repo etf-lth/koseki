@@ -14,7 +14,7 @@ To install the dependencies neccesary, please run:
 
 in the system, correct for os
 ```bash
-sudo apt install libcups2-dev gcc python3-dev cups libxml2-dev libxslt-dev python3.13-venv
+sudo apt install libcups2-dev gcc python3-dev cups libxml2-dev libxslt-dev python3.13-venv default-libmysqlclient-dev
 sudo systemctl enable cups
 ```
 

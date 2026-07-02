@@ -54,6 +54,9 @@ class Payment(Base):
     reason = Column(Unicode(length=255))
 
 
+
+
+
 class Product(Base):
     __tablename__: str = "product"
 

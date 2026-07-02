@@ -15,8 +15,8 @@ services:
       MYSQL_DATABASE: koseki
       MYSQL_USER: root
       MYSQL_PASSWORD: password
-  mail:
-    image: bytemark/smtp
-    restart: always
-    ports:
-      - "127.0.0.1:25:25"
+  # mail:
+  #   image: bytemark/smtp
+  #   restart: always
+  #   ports:
+  #     - "127.0.0.1:25:25"

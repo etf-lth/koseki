@@ -72,7 +72,7 @@ class SessionView(KosekiView):
         )
 
     def login(self) -> Union[str, Response]:
-        form_login = LoginForm()
+        form_login = LoginForm(email='admin@example.com', password='password')
 
         if form_login.validate_on_submit():
             person = (
