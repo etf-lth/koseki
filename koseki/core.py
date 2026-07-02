@@ -3,8 +3,9 @@ import datetime
 import os
 import time
 
-from flask import session, send_from_directory
+from flask import session
 from flask.app import Flask
+from flask_multistatic import MultiStaticFlask
 from markupsafe import Markup
 
 from koseki.auth import KosekiAuth
@@ -30,30 +31,6 @@ from koseki.views.membership import MembershipView
 from koseki.views.session import SessionView
 from koseki.views.user import UserView
 
-
-class MultiStaticFlask(Flask):
-    @property
-    def static_folder(self):
-        if hasattr(self, '_static_folders'):
-            return self._static_folders
-        return self._static_folder
-
-    @static_folder.setter
-    def static_folder(self, value):
-        if isinstance(value, list):
-            self._static_folders = value
-        else:
-            from flask.sansio.scaffold import Scaffold
-            Scaffold.static_folder.fset(self, value)
-
-    def send_static_file(self, filename: str):
-        folders = getattr(self, '_static_folders', None)
-        if not folders:
-            return super().send_static_file(filename)
-        for folder in folders:
-            if os.path.isfile(os.path.join(folder, filename)):
-                return send_from_directory(folder, filename)
-        return send_from_directory(folders[0], filename)
 
 class KosekiCore:
     def __init__(self) -> None:
