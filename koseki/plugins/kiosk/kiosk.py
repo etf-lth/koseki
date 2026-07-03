@@ -29,7 +29,8 @@ class KioskPlugin(KosekiPlugin):
     def config(self) -> dict:
         return {
             "KIOSK_KEY": "123456",
-            "PAYMENT_DEBT_ENABLED": True,  # Override to enable Debt in Koseki
+            "PAYMENT_DEBT_ENABLED": True,  # Override to enable Debt in Koseki,
+            "MAX_ALLOWED_DEBT": -200
         }
 
     def create_blueprint(self) -> Blueprint:
@@ -161,6 +162,26 @@ class KioskPlugin(KosekiPlugin):
                 )
             )
             return redirect(url_for("kiosk.kiosk_card"))
+
+        if person.balance < self.app.config["MAX_ALLOWED_DEBT"]:
+            self.util.alert(
+                KosekiAlert(
+                    KosekiAlertType.DANGER,
+                    "Error",
+                    "Please pay your debts before you can use the kiosk!",
+                )
+            )
+            return render_template("kiosk_login.html")
+        elif person.state != "active":
+            self.util.alert(
+                KosekiAlert(
+                    KosekiAlertType.DANGER,
+                    "Error",
+                    "You need to be an active member to use the kiosk!",
+                )
+            )
+            return render_template("kiosk_login.html")
+
 
         form = KioskProductForm()
         product: Product
