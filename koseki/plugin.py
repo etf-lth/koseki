@@ -15,33 +15,6 @@ from koseki.schedule import KosekiScheduler
 from koseki.util import KosekiUtil
 
 
-class KosekiPlugin:
-    def __init__(self, app: Flask, storage: Storage, auth: KosekiAuth,
-                 util: KosekiUtil, scheduler: KosekiScheduler):
-        self.app = app
-        self.storage = storage
-        self.auth = auth
-        self.util = util
-        self.scheduler = scheduler
-
-    def config(self) -> dict:
-        return {}
-
-    def plugin_enable(self) -> None:
-        pass
-
-    def plugin_disable(self) -> None:
-        pass
-
-    def create_blueprint(self) -> Blueprint:
-        return Blueprint("kosekiplugin", __name__)
-    
-    def register_hooks(self, plugin_manager: KosekiPluginManager) -> None:
-        pass # plugins add hooks here (tabs and extra html stuff)
-
-    def register_models(self) -> None:
-        pass  # plugins add models here
-
 
 class KosekiPluginManager:
     def __init__(
@@ -114,3 +87,31 @@ class KosekiPluginManager:
 
     def isenabled(self, plugin: str) -> bool:
         return plugin in (p.lower() for p in self.plugins.keys())
+
+
+class KosekiPlugin:
+    def __init__(self, app: Flask, storage: Storage, auth: KosekiAuth,
+                 util: KosekiUtil, scheduler: KosekiScheduler):
+        self.app = app
+        self.storage = storage
+        self.auth = auth
+        self.util = util
+        self.scheduler = scheduler
+
+    def config(self) -> dict:
+        return {}
+
+    def plugin_enable(self) -> None:
+        pass
+
+    def plugin_disable(self) -> None:
+        pass
+
+    def create_blueprint(self) -> Blueprint:
+        return Blueprint("kosekiplugin", __name__)
+    
+    def register_hooks(self, plugin_manager: KosekiPluginManager) -> None:
+        pass # plugins add hooks here (tabs and extra html stuff)
+
+    def register_models(self) -> None:
+        pass  # plugins add models here
