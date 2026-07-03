@@ -7,8 +7,8 @@ class Accesskey(Base):
     __tablename__: str = "accesskey"
 
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    key = Column(Unicode(), unique=True)
-    descr = Column(Unicode())
+    key = Column(Unicode(255), unique=True)
+    descr = Column(Unicode(255))
 
     rules = relationship("AccessRule", back_populates="key", cascade="all, delete-orphan")
 
@@ -34,6 +34,6 @@ class AccessRule(Base):
     rule_groups = relationship("AccessRuleGroup", back_populates="rule", cascade="all, delete-orphan")
     groups = relationship("Group", secondary="access_rule_group")
 
-    endpoint = Column(Unicode())
-    attribute = Column(Unicode())
-    descr = Column(Unicode())
+    endpoint = Column(Unicode(255))
+    attribute = Column(Unicode(255))
+    descr = Column(Unicode(255))
