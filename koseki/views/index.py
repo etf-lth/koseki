@@ -45,9 +45,9 @@ class IndexView(KosekiView):
                 )
                 .join(Payment, Payment.uid == Person.uid)
                 .filter(Payment.registered >= year_start)
-                .filter(Payment.amount > 0)
+                .filter(Payment.amount < 0)
                 .group_by(Person.uid)
-                .order_by(func.sum(Payment.amount).desc())
+                .order_by(func.sum(Payment.amount).asc())
                 .first()
             )
 
