@@ -165,11 +165,13 @@ class PersonWrapper(StorageBase):
         person = self.storage.session.query(Person).filter_by(uid=int(key)).scalar()
         if not person:
             raise KeyError(key)
-        data = vars(person).copy()
-        data['given_name'] = person.fname
-        data['family_name'] = person.lname
-        data['name'] = f"{person.fname} {person.lname}".strip()
-        return data
+        return {
+            "given_name": person.fname,
+            "family_name": person.lname,
+            "name": f"{person.fname} {person.lname}".strip(),
+            "email": person.email,
+            "email_verified": True,
+        }
 
     def __delitem__(self, key):
         # Read-only interface: OIDC PersonWrapper not allowed to delete users
