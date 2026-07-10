@@ -34,7 +34,8 @@ class KosekiMailer:
             else:
                 raise TypeError("Mail target was neither string nor Person")
 
-            msg["From"] = Header(from_mail, "utf-8")
+            # TODO: look into if Header() should be used and how, removed from "From" for now, as gmail didnt add dkim otherwise
+            msg["From"] = from_mail
             msg["Subject"] = Header(self.app.config["EMAIL_SUBJECT"], "utf-8")
 
             logging.info("send_mail to=%s, template=%s", to_mail, template)

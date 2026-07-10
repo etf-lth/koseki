@@ -88,7 +88,7 @@ class Storage:
                     username="admin",
                     password="$argon2id$v=19$m=16,t=2,p=1$S1AwUjlDVXVnbFNBV2J3cg$ErwAfuI1RV2nl/B17lfQWg",
                 )
-            )  # pass: password
+            )
 
     def __insert_initial_values_person_group(self) -> None:
         if self.session.query(PersonGroup).count() < 1:
@@ -158,7 +158,13 @@ class PersonWrapper(StorageBase):
         person = self.storage.session.query(Person).filter_by(uid=int(key)).scalar()
         if not person:
             raise KeyError(key)
-        return vars(person)
+        return {
+            "given_name": person.fname,
+            "family_name": person.lname,
+            "name": f"{person.fname} {person.lname}".strip(),
+            "email": person.email,
+            "email_verified": True,
+        }
 
     def __delitem__(self, key):
         # Read-only interface: OIDC PersonWrapper not allowed to delete users
