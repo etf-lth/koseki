@@ -8,3 +8,4 @@ koseki.db
 /data/*
 .vscode/
 signing_key.pem
+.venv

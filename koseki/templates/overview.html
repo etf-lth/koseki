@@ -22,4 +22,21 @@
         </div>
     </div>
 </div>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <div class="bg-light p-5">
+            <h1 class="text-center display-1 fw-bold">{{ income }}</h1>
+            <h3 class="text-center">income this year</h3>
+        </div>
+    </div>
+    {% if top_spender %}
+    <div class="col-md-4">
+        <div class="bg-light p-5">
+            <h1 class="text-center fw-bold">{{ top_spender[0].fname }} {{ top_spender[0].lname }}</h1>
+            <h3 class="text-center">biggest spender this year - {{ -top_spender[1] }} SEK</h3>
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

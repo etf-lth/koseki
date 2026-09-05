@@ -5,7 +5,7 @@ import time
 
 from flask import session
 from flask.app import Flask
-from flask_multistatic import MultiStaticFlask  # type: ignore
+from flask_multistatic import MultiStaticFlask
 from markupsafe import Markup
 
 from koseki.auth import KosekiAuth
@@ -25,6 +25,7 @@ from koseki.views.error import ErrorView
 from koseki.views.fees import FeesView
 from koseki.views.index import IndexView
 from koseki.views.list import ListView
+from koseki.views.groups import GroupsView
 from koseki.views.mail import MailView
 from koseki.views.membership import MembershipView
 from koseki.views.session import SessionView
@@ -118,6 +119,7 @@ class KosekiCore:
             FeesView,
             IndexView,
             ListView,
+            GroupsView,
             MailView,
             MembershipView,
             SessionView,
@@ -131,18 +133,15 @@ class KosekiCore:
     def _register_context_processors(self) -> None:
         self.app.context_processor(lambda: dict(
             plugin_isenabled=self.plugins.isenabled))
+        self.app.context_processor(lambda: dict(render_hooks=self.plugins.render_hooks))
+        self.app.context_processor(lambda: dict(get_tabs=self.plugins.get_tabs))
         self.app.context_processor(lambda: dict(gravatar=self.util.gravatar))
-        self.app.context_processor(
-            lambda: dict(make_nav=lambda: session["nav"]))
+        self.app.context_processor(lambda: dict(make_nav=lambda: session["nav"]))
         self.app.context_processor(lambda: dict(member_of=self.auth.member_of))
-        self.app.context_processor(lambda: dict(now=lambda: datetime.datetime(2000, 1, 1)
-                                                .fromtimestamp(time.time())))
-        self.app.context_processor(lambda: dict(
-            generate_swish_code=self.util.generate_swish_code))
-        self.app.context_processor(lambda: dict(
-            uid_to_name=self.util.uid_to_name))
-        self.app.context_processor(lambda: dict(
-            alerts=self.util.render_alerts()))
+        self.app.context_processor(lambda: dict(now=lambda: datetime.datetime(2000, 1, 1).fromtimestamp(time.time())))
+        self.app.context_processor(lambda: dict(generate_swish_code=self.util.generate_swish_code))
+        self.app.context_processor(lambda: dict(uid_to_name=self.util.uid_to_name))
+        self.app.context_processor(lambda: dict(alerts=self.util.render_alerts()))
         self.app.add_template_filter(self.util.format_date, "date")
         self.app.add_template_filter(lambda x: x if x is not None else Markup(
             '<span class="text-muted">None</span>'), "pretty_none")

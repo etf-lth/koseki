@@ -27,5 +27,30 @@ $(document).ready(function(){
             }
         });
     });
+
+    var balanceSortAsc = true;
+
+    $('#balance_header').click(function(){
+        var $rows = $('#member_list tr').get();
+
+        if ($rows.length <= 1 && $($rows[0]).find('td[colspan]').length) {
+            return;
+        }
+
+        $rows.sort(function(a, b){
+            var balA = parseFloat($(a).data('balance')) || 0;
+            var balB = parseFloat($(b).data('balance')) || 0;
+            return balanceSortAsc ? (balA - balB) : (balB - balA);
+        });
+
+        var $tbody = $('#member_list');
+        $.each($rows, function(i, row){
+            $tbody.append(row);
+        });
+
+        balanceSortAsc = !balanceSortAsc;
+        $('#balance_sort_icon').text(balanceSortAsc ? '▲' : '▼');
+    });
+
 })
 })(jQuery);

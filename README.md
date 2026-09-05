@@ -14,7 +14,7 @@ To install the dependencies neccesary, please run:
 
 in the system, correct for os
 ```bash
-sudo apt install libcups2-dev gcc python3-dev cups libxml2-dev libxslt-dev python3.13-venv
+sudo apt install libcups2-dev gcc python3-dev cups libxml2-dev libxslt-dev python3.13-venv default-libmysqlclient-dev pkg-config
 sudo systemctl enable cups
 ```
 
@@ -24,7 +24,7 @@ Create a venv for koseki specific dependencies
 cd /srv/koseki
 python3 -m venv .venv
 . .venv/bin/activate
-sudo python3 -m pip install -r requirements/production.txt
+pip install -r requirements/production.txt
 ```
 
 You can also install Koseki as a system service in SystemD. Please move or place the Koseki installation at `/srv/koseki`, then make a symlink to the service file. Please configure Koseki before starting it...
@@ -66,7 +66,11 @@ Due to this being a student-driven project, no official/deadline-driven support 
 Standard development environment is VSCode. Please install the development dependencies with:
 
 ```bash
-python3.9 -m pip install -r requirements/development.txt
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements/development.txt
+openssl genrsa -out signing_key.pem 4096
+./start_development.sh
 ```
 
 All commits must follow PEP 8, pass pylint, pass pytests and be coded with "future-proof" in mind. Keep in mind to make features "organisation agnostic" i.e. configurable, and to make it toggable (by making it into a Plugin) if it falls outside the core features of Koseki.
