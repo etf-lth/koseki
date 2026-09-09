@@ -74,6 +74,13 @@ class SessionView(KosekiView):
     def login(self) -> Union[str, Response]:
         form_login = LoginForm()
 
+        redir = request.args.get("redir", url_for("index"))
+        if not self.util.is_safe_redir(redir):
+            self.util.alert(
+                KosekiAlert(KosekiAlertType.DANGER, "Invalid redirect", "The requested redirect target is not allowed.")
+            )
+            redir = url_for("index")
+
         if form_login.validate_on_submit():
             person = (
                 self.storage.session.query(Person)
@@ -85,7 +92,10 @@ class SessionView(KosekiView):
                 and self.auth.verify_password(person.password, form_login.password.data)
             ):
                 self.util.start_session(person.uid)
-                return redirect(request.form["redir"])
+                form_redir = request.form["redir"]
+
+                # return redirect(request.form["redir"])
+                return redirect(form_redir if self.util.is_safe_redir(form_redir) else url_for("index"))
             else:
                 self.util.alert(
                     KosekiAlert(
@@ -97,9 +107,9 @@ class SessionView(KosekiView):
 
         return render_template(
             "login.html",
-            redir=request.args.get("redir", url_for("index")),
+            redir=redir,
             form_login=form_login,
-            sso_providers=self.util.get_alternate_logins(),
+            sso_providers=self.util.get_alternate_logins(redir),
         )
 
     def logout(self) -> Union[str, Response]:

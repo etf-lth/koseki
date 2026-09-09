@@ -3,7 +3,7 @@ import datetime
 import os
 import time
 
-from flask import session
+from flask import session, request
 from flask.app import Flask
 from flask_multistatic import MultiStaticFlask  # type: ignore
 from markupsafe import Markup
@@ -41,6 +41,11 @@ class KosekiCore:
         app.config.from_object(KosekiConfig())
         app.config.from_pyfile(os.path.join("..", "koseki.cfg"))
         self.app: Flask = app
+
+        @app.before_request
+        def set_koseki_user_id() -> None:
+            if "uid" in session:
+                request.environ["KOSEKI_USER_ID"] = str(session["uid"])
 
         #
         # Theme
