@@ -93,8 +93,6 @@ class SessionView(KosekiView):
             ):
                 self.util.start_session(person.uid)
                 form_redir = request.form["redir"]
-
-                # return redirect(request.form["redir"])
                 return redirect(form_redir if self.util.is_safe_redir(form_redir) else url_for("index"))
             else:
                 self.util.alert(
