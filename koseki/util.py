@@ -2,12 +2,13 @@ import base64
 import hashlib
 import logging
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Callable
 
 from flask import session
 from flask.app import Flask
 from flask.globals import request
 from requests.utils import requote_uri
+from urllib.parse import urlparse
 
 from koseki.auth import KosekiAuth
 from koseki.db.storage import Storage
@@ -57,7 +58,7 @@ class KosekiUtil:
         self.storage = storage
         self.mail = mail
         self.navigation: list[KosekiNavigationEntry] = []
-        self.alt_login: list[dict] = []
+        self.alt_login: list[Callable[[str], dict]] = []
 
     def nav(self, uri: str, icon: str, title: str, weight: int = 0,
         groups: Optional[list[str]] = None) -> None:
@@ -109,12 +110,20 @@ class KosekiUtil:
         session["alerts"] = []
         return alerts
 
-    def get_alternate_logins(self) -> list[dict]:
-        return self.alt_login
+    def get_alternate_logins(self, redir: str) -> list[dict]:
+        return [alt(redir) for alt in self.alt_login]
 
-    def alternate_login(self, alt: dict) -> None:
-        self.alt_login.append(alt)
-        logging.info("Registered alternate login provider: %s", alt["button"])
+    def alternate_login(self, provider:str, func: Callable[[str], dict]) -> None:
+        self.alt_login.append(func)
+        logging.info("Registered alternate login provider: %s", provider)
+    
+    def is_safe_redir(self, redir: str) -> bool:
+        parsed = urlparse(redir)
+
+        if not parsed.scheme and not parsed.netloc:
+            return True
+
+        return parsed.hostname in self.app.config["ALLOWED_REDIR_DOMAINS"]
 
     def generate_swish_code(self, amount: float, message: str) -> str:
         if amount < 0:
