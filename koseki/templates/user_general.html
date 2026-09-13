@@ -1,5 +1,5 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import render_field, status, person_header, member_tabs %}
+{% from "macros.html" import render_field, status, person_header, member_tabs, payment_balance %}
 {% block title %}{{ person.fname }} {{ person.lname }}{% endblock %}
 {% block content %}
 
@@ -42,7 +42,8 @@
                 </div>
             </div>
         </div>
-        {% if config["USER_USERNAME_ENABLED"] or config["USER_PHONE_NUMBER_ENABLED"] %}
+        {% if config["USER_USERNAME_ENABLED"] or config["USER_PHONE_NUMBER_ENABLED"] or config["PAYMENT_DEBT_ENABLED"]
+        %}
         <h3 class="card-header">Ancillary information</h3>
         <div class="card-body">
             <div class="row">
@@ -54,6 +55,13 @@
                 {% if config["USER_PHONE_NUMBER_ENABLED"] %}
                 <div class="col-12 col-sm-6 col-xl-4">
                     {{ render_field(form.phone_number) }}
+                </div>
+                {% endif %}
+                {% if config["PAYMENT_DEBT_ENABLED"] %}
+                <div class="col-12 col-sm-6 col-xl-4 mb-3">
+                    <label class="control-label">Balance</label>
+                    <br />
+                    {{ payment_balance(person.balance) }}
                 </div>
                 {% endif %}
             </div>
