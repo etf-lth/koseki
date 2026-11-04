@@ -208,13 +208,39 @@ name="{{ field.name }}" type="submit">
             </a>
         </li>
 
-        {% for p in range(1, pagination.pages + 1) %}
-        <li class="page-item {% if p == pagination.page %}active{% endif %}">
-            <a class="page-link" href="{{ url_for(current, page=p) }}">
-                {{ p }}
-            </a>
-        </li>
-        {% endfor %}
+        {% if pagination.pages <= 8 %}
+            {% for p in range(1, pagination.pages + 1) %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for(current, page=p) }}">
+                    {{ p }}
+                </a>
+            </li>
+            {% endfor %}
+        {% else %}
+
+            <li class="page-item active">
+                <span class="page-link">{{ pagination.page }}</span>
+            </li>
+
+            <li class="page-item dropdown">
+                <a class="page-link dropdown-toggle" href="#" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                    page
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end"
+                    style="max-height: 250px; overflow-y: auto;">
+                    {% for p in range(1, pagination.pages + 1) %}
+                    <li>
+                        <a class="dropdown-item {% if p == pagination.page %}active{% endif %}"
+                        href="{{ url_for(current, page=p) }}">
+                            {{ p }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endif %}
 
         <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
             <a class="page-link"
