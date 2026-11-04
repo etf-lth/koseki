@@ -32,7 +32,8 @@ class PrintPlugin(KosekiPlugin):
         return {
             "UPLOAD_FOLDER": "./data",
             "ALLOWED_EXTENSIONS": ["pdf"],
-            "MAX_COPIES": 100
+            "MAX_COPIES": 100,
+            "PRINTER_NAME": "printer"
         }
 
     def plugin_enable(self) -> None:
@@ -104,7 +105,7 @@ class PrintPlugin(KosekiPlugin):
             file.save(filepath)
 
             # send file to printer
-            self.cups_conn.printFile("printer1", filepath, "", {"media": "A4", "copies": str(numberCopies)})
+            self.cups_conn.printFile(self.app.config["PRINTER_NAME"], filepath, "", {"media": "A4", "copies": str(numberCopies)})
 
             # log that a document has been printed
             logging.info(

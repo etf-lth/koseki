@@ -44,8 +44,8 @@ class OIDCPlugin(KosekiPlugin):
             "grant_types_supported": ["authorization_code", "implicit"],
             "claim_types_supported": ["normal"],
             "claims_parameter_supported": True,
-            "claims_supported": ["sub", "name", "given_name", "family_name", "email", "profile", "email_verified"],
-            "scopes_supported": ["openid", "email", "profile"]
+            "claims_supported": ["sub", "name", "given_name", "family_name", "email", "profile", "email_verified", "groups"],
+            "scopes_supported": ["openid", "email", "profile", "groups"]
         }
         subject_id_factory = HashBasedSubjectIdentifierFactory(
             self.app.config["SECRET_KEY"])
@@ -61,7 +61,11 @@ class OIDCPlugin(KosekiPlugin):
                                          self.storage, 'subject_identifiers', True),
                                  ),
                                  SQLWrapper(self.storage, 'clients'),
-                                 Userinfo(PersonWrapper(self.storage)))
+                                 Userinfo(PersonWrapper(self.storage)),
+                                 extra_scopes={
+                                    "groups": ["groups"]
+                                 }
+        )
 
     def create_blueprint(self) -> Blueprint:
         blueprint: Blueprint = Blueprint(
@@ -112,7 +116,6 @@ class OIDCPlugin(KosekiPlugin):
                     }
                 }
             }})
-            logging.debug(authn_req)
             authn_req.verify()
             if authn_req["client_id"] not in self.provider.clients:
                 self.util.alert(

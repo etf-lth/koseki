@@ -171,6 +171,10 @@ class PersonWrapper(StorageBase):
             "name": f"{person.fname} {person.lname}".strip(),
             "email": person.email,
             "email_verified": True,
+            "groups": [
+                person_group.group.name
+                for person_group in person.groups
+            ],
         }
 
     def __delitem__(self, key):
