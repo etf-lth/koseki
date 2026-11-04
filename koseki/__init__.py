@@ -14,7 +14,7 @@ logging_handler_console = logging.StreamHandler(sys.stdout)
 def run_prod() -> Flask:
     logging.basicConfig(
         format=LOGGING_FORMAT,
-        level=logging.DEBUG,
+        level=logging.INFO,
         handlers=[logging_handler_file])
     core = KosekiCore()
     core.start(flask_server=False)
