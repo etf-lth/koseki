@@ -21,3 +21,6 @@ VALUES (
 
 Some systems may require an `token_endpoint_auth_method` in the value
 - outline needs `client_secret_post`
+
+callback:
+- outline uses `/auth/oidc.callback`

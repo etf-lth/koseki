@@ -21,6 +21,7 @@ class KosekiConfig():
     WEB_PORT = 5000
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
+    ALLOWED_REDIR_DOMAINS = { "localhost" }
 
     @property
     def SECRET_KEY(self) -> str:  # pylint: disable=invalid-name

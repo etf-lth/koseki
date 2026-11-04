@@ -19,20 +19,21 @@ class CASPlugin(KosekiPlugin):
         }
 
     def plugin_enable(self) -> None:
-        self.util.alternate_login(self.cas_login())
+        self.util.alternate_login("Sign in with LU", self.cas_login)
 
     def create_blueprint(self) -> Blueprint:
         blueprint: Blueprint = Blueprint("cas", __name__)
         blueprint.add_url_rule("/cas", None, self.cas_ticket)
         return blueprint
 
-    def cas_login(self) -> dict:
+    def cas_login(self, redir: str) -> dict:
+        service = self.app.config["URL_BASE"] + "/cas?redir=" + urllib.parse.quote(redir, safe="")
         return {
             "text": "If you are a student or employee at Lund University, please sign in with your LU account.",
             "url": self.app.config["CAS_SERVER"]
             + "/cas/login?service="
-            + self.app.config["URL_BASE"]
-            + "/cas&renew=false",
+            + urllib.parse.quote_plus(service)
+            + "&renew=false",
             "button": "Sign in with LU",
             "color": "#875e29",
         }
@@ -43,6 +44,12 @@ class CASPlugin(KosekiPlugin):
             return render_template("cas.html", error="cas-failed")
 
         ticket = request.args["ticket"]
+        redir = request.args.get("redir", url_for("index"))
+
+        if not self.util.is_safe_redir(redir):
+            return render_template("cas.html", error="bad-redir")
+
+        service = self.app.config["URL_BASE"] + "/cas?redir=" + urllib.parse.quote(redir, safe="")
 
         try:
             response = urllib.request.urlopen(
@@ -50,7 +57,7 @@ class CASPlugin(KosekiPlugin):
                 + "/cas/serviceValidate?renew=false&ticket="
                 + ticket
                 + "&service="
-                + urllib.parse.quote_plus(self.app.config["URL_BASE"] + "/cas")
+                + urllib.parse.quote_plus(service)
             )
             contents = response.read().decode("utf-8")
             response.close()
@@ -63,7 +70,7 @@ class CASPlugin(KosekiPlugin):
                 if person:
                     # valid user, move along
                     self.util.start_session(person.uid)
-                    return redirect(url_for("index"))
+                    return redirect(redir)
                 else:
                     # authenticated by cas but unknown to us
                     return render_template("cas.html", error="unknown-uid")
