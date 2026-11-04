@@ -14,6 +14,7 @@ from wtforms.validators import DataRequired  # type: ignore
 from koseki.db.types import Fee, Payment, Person
 from koseki.util import KosekiAlert, KosekiAlertType
 from koseki.view import KosekiView
+from koseki.db.util import paginate, PAGINATION_DEFAULT_PER_PAGE
 
 
 class FeeForm(FlaskForm):
@@ -80,18 +81,29 @@ class FeesView(KosekiView):
                       3, ["admin", "accounter"])
 
     def list_fees(self) -> Union[str, Response]:
+        pagination = paginate(
+            self.storage.session.query(Fee).order_by(Fee.fid.desc()),
+            page=request.args.get("page", 1, type=int),
+            per_page=request.args.get("per_page", PAGINATION_DEFAULT_PER_PAGE, type=int)
+        )
+
         return render_template(
             "list_fees.html",
-            fees=self.storage.session.query(
-                Fee).order_by(Fee.fid.desc()).all(),
+            fees=pagination["items"],
+            pagination=pagination,
         )
 
     def list_payments(self) -> Union[str, Response]:
+        pagination = paginate(
+            self.storage.session.query(Payment).order_by(Payment.pid.desc()),
+            page=request.args.get("page", 1, type=int),
+            per_page=request.args.get("per_page", PAGINATION_DEFAULT_PER_PAGE, type=int)
+        )
+
         return render_template(
             "list_payments.html",
-            payments=self.storage.session.query(Payment)
-            .order_by(Payment.pid.desc())
-            .all(),
+            payments=pagination["items"],
+            pagination=pagination,
         )
 
     def export_csv(self) -> Union[str, Response]:

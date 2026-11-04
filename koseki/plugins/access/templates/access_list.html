@@ -1,0 +1,52 @@
+{% extends "base_main.html" %}
+{% from "macros.html" import render_field, store_tabs, group_tabs, fee_id %}
+{% block title %}Access{% endblock %}
+{% block content %}
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th>Key</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody id="member_list">
+            {% if keys: %}
+            {% for item in keys %}
+            <tr>
+                <td class="text-center">{{ item.id }}</td>
+                <td><a href="{{ url_for('access_general', key_id=item.id) }}">{{ item.key[:12] }}...</a></td>
+                <td>{{ item.descr }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6"><i>No api keys, why not make one?</i></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="card mb-3">
+        <h3 class="card-header">Add Key</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    {{ render_field(form.descr) }}
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-plus-circle me-1"></i> Add key
+            </button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

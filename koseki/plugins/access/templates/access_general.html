@@ -1,0 +1,130 @@
+{% extends "base_main.html" %}
+{% from "macros.html" import render_field, store_tabs, group_tabs, fee_id, group_badge %}
+{% block title %}Access{% endblock %}
+{% block content %}
+
+<form action="" method="post">
+    {{ keyform.hidden_tag() }}
+    <div class="card mb-3">
+        <h3 class="card-header">Key data</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-sm-6 col-xl-6">
+                    <code>{{ key.key }}</code>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-12 col-sm-6 col-xl-6">
+                    {{ render_field(keyform.descr) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer d-flex gap-2">
+            {{ render_field(keyform.submitUpdate, class="btn-primary") }}
+            {{ render_field(keyform.submitDelete, class="btn-danger") }}
+            <a href="{{ url_for('access_list') }}" type="submit" class="btn btn-secondary">
+                Go Back
+            </a>
+        </div>
+    </div>
+</form>
+
+<div class="card mb-3">
+    <h3 class="card-header">Access Rules</h3>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Description</th>
+                    <th>Endpoint</th>
+                    <th>Attribute</th>
+                    <th>Members</th>
+                    <th></th>
+                </tr>
+                {% for rule in rules %}
+                <tr>
+                    <td class="text-center">{{ rule.id }}</td>
+                    <td>{{ rule.descr }}</td>
+                    <td><code>{{ rule.endpoint }}</code></td>
+                    <td><code>{{ rule.attribute }}</code></td>
+                    <td>
+                        {% for g in rule.groups %}
+                        {{ group_badge(g.name) }}
+                        {% else %}
+                        <span class="text-muted">All active members</span>
+                        {% endfor %}
+                    </td>
+                    <td class="d-flex gap-1">
+                        <form action="" method="post">
+                            {{ access_rule_delete_form.hidden_tag() }}
+                            <input type="hidden" name="delete_rule_id" value="{{ rule.id }}">
+                            {{ render_field(access_rule_delete_form.submitDelete, class="btn-danger btn-sm") }}
+                        </form>
+                        <a class="btn btn-success btn-sm" target="_blank" href="{{ config['URL_BASE']|safe }}/access/{{ rule.key.key }}/{{ rule.endpoint }}">
+                            Open link
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-muted text-center">No access rules defined</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+<form action="" method="post">
+    {{ access_rule_form.hidden_tag() }}
+    <div class="card mb-3">
+        <h3 class="card-header">Add Access Rule</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    {{ render_field(access_rule_form.descr) }}
+                </div>
+                <div class="col-6 col-md-3">
+                    {{ render_field(access_rule_form.endpoint) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 col-md-3">
+                    {{ render_field(access_rule_form.attribute) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <p>Adding without any groups will list all active members</p>
+                <table class="col table table-striped table-sm align-middle">
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                    {% for group in groups %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="{{ group.gid }}" class="form-check-input mx-auto d-block mt-0"
+                                style="width: 20px;height: 20px;">
+                        </td>
+                        <td>{{ group_badge(group.name) }}</td>
+                        <td>{{ group.descr }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+
+        </div>
+        <div class="card-footer">
+            {{ render_field(access_rule_form.submit, class="btn-primary") }}
+        </div>
+    </div>
+</form>
+
+{% endblock %}

@@ -72,7 +72,7 @@ class SessionView(KosekiView):
         )
 
     def login(self) -> Union[str, Response]:
-        form_login = LoginForm()
+        form_login = LoginForm(email='admin@example.com', password='password')
 
         redir = request.args.get("redir", url_for("index"))
         if not self.util.is_safe_redir(redir):

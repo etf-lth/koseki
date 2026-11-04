@@ -1,0 +1,108 @@
+{% extends "base_main.html" %}
+{% from "macros.html" import render_field, status, person_header, group_tabs, group_badge, payment_balance %}
+{% block title %}{{ group.name }} {% endblock %}
+{% block content %}
+
+{{ group_tabs("", group, get_tabs("group__tabs")) }}
+
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="card mb-3">
+        <h3 class="card-header">Group data</h3>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-sm-6 col-xl-4">
+                    {{ render_field(form.name, disabled=is_default_role) }}
+                </div>
+                <div class="col-12 col-sm-6 col-xl-4">
+                    {{ render_field(form.descr, disabled=is_default_role) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="d-flex gap-2">
+                {{ render_field(form.submitUpdate, icon="check", class="btn btn-primary", disabled=is_default_role) }}
+                {{ render_field(form.submitDelete, class="btn btn-danger", disabled=is_default_role) }}
+                <a href="{{ url_for('list_groups') }}" type="submit" class="btn btn-secondary">
+                    Go Back
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Mail</th>
+                <th>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#">Status <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div style="display: block; padding: 3px 20px;">Filter:</div>
+                            </li>
+                            <li>
+                                <div style="display: block; padding: 3px 20px;"><label class="checkbox-inline">
+                                        <input id="member_state_active" class="member_state_filter" type="checkbox"
+                                            checked>
+                                        <span class="badge bg-success">Active</span></label>
+                                </div>
+                            </li>
+                            <li>
+                                <div style="display: block; padding: 3px 20px;"><label class="checkbox-inline">
+                                        <input id="member_state_pending" class="member_state_filter" type="checkbox"
+                                            checked>
+                                        <span class="badge bg-warning">Pending</span></label>
+                                </div>
+                            </li>
+                            <li>
+                                <div style="display: block; padding: 3px 20px;"><label class="checkbox-inline">
+                                        <input id="member_state_expired" class="member_state_filter" type="checkbox"
+                                            checked>
+                                        <span class="badge bg-danger">Expired</span></label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </th>
+                {% if config["PAYMENT_DEBT_ENABLED"] %}
+                <th>Balance</th>
+                {% endif %}
+                <th>Groups</th>
+            </tr>
+        </thead>
+        <tbody id="member_list">
+            {% if persons: %}
+            {% for item in persons %}
+            <tr data-state="{{ item.state }}">
+                <td class="text-center">{{ item.uid }}</td>
+                <td><a href="{{ url_for('member_general', uid=item.uid) }}">{{ item.fname }}</a></td>
+                <td><a href="{{ url_for('member_general', uid=item.uid) }}">{{ item.lname }}</a></td>
+                <td><a href="mailto:{{ item.email }}">{{ item.email }}</a></td>
+                <td>{{ status(item.state) }}</td>
+                {% if config["PAYMENT_DEBT_ENABLED"] %}
+                <td>{{ payment_balance(item.balance) }}</td>
+                {% endif %}
+                <td>
+                    {% for grp in item.groups %}
+                    {{ group_badge(grp.group.name) }}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6"><i>No members yet!</i></td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

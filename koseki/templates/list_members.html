@@ -44,7 +44,7 @@
                     </div>
                 </th>
                 {% if config["PAYMENT_DEBT_ENABLED"] %}
-                <th>Balance</th>
+                <th id="balance_header" style="cursor: pointer;">Balance <span id="balance_sort_icon"></span></th>
                 {% endif %}
                 <th>Groups</th>
             </tr>
@@ -52,7 +52,7 @@
         <tbody id="member_list">
             {% if persons: %}
             {% for item in persons %}
-            <tr data-state="{{ item.state }}">
+            <tr data-state="{{ item.state }}" data-balance="{{ item.balance }}">
                 <td class="text-center">{{ item.uid }}</td>
                 <td><a href="{{ url_for('member_general', uid=item.uid) }}">{{ item.fname }}</a></td>
                 <td><a href="{{ url_for('member_general', uid=item.uid) }}">{{ item.lname }}</a></td>
