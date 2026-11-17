@@ -44,6 +44,7 @@ class PaymentForm(FlaskForm):
             ("creditcard", "Credit card"),
             ("Kiosk", "Fridge Kiosk"),
             ("wordpress", "Wordpress"),
+            ("reimbursement", "Reimbursement"),
         ],
         validators=[DataRequired()]
     )
