@@ -48,7 +48,7 @@ class Payment(Base):
     amount = Column(DECIMAL(10, 2), nullable=False)
     registered = Column(DateTime, default=datetime.now)
     method = Column(
-        Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress"),
+        Enum("swish", "cash", "bankgiro", "creditcard", "kiosk", "wordpress", "reimbursement"),
         default="swish",
     )
     reason = Column(Unicode(length=255))
