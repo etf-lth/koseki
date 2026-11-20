@@ -1,5 +1,5 @@
 {% extends "base_main.html" %}
-{% from "macros.html" import fee_tabs, fee_method %}
+{% from "macros.html" import fee_tabs, fee_method, paginator %}
 {% block title %}List payments{% endblock %}
 {% block content %}
 
@@ -61,4 +61,5 @@
         </tbody>
     </table>
 </div>
+{{ paginator('list_payments', pagination) }}
 {% endblock %}
