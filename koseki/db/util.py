@@ -1,11 +1,24 @@
-
-
 import math
+from typing import Generic, TypeVar
+from typing_extensions import TypedDict
 from sqlalchemy.orm import Query
+
+T = TypeVar("T")
 
 PAGINATION_DEFAULT_PER_PAGE = 100
 
-def paginate(query: Query, page: int = 1, per_page = PAGINATION_DEFAULT_PER_PAGE) -> dict:
+class Page(TypedDict, Generic[T]):
+    items: list[T]
+    page: int
+    per_page: int
+    total: int
+    pages: int
+    has_prev: bool
+    has_next: bool
+    prev_num: int | None
+    next_num: int | None
+
+def paginate(query: Query[T], page: int | None = 1, per_page: int = PAGINATION_DEFAULT_PER_PAGE) -> Page[T]:
     page = max(1, page or 1)
     per_page = max(1, per_page)
 
